@@ -35,6 +35,9 @@ public class PlayerMove : MonoBehaviour
             return;
         }
 
+        Debug.Log("대쉬가능여부는" + canDash);
+        Debug.Log("현재 대쉬상태는" + isDashing);
+
     }
 
     private void FixedUpdate()
