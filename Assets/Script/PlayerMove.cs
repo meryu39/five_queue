@@ -1,28 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMove: MonoBehaviour
+[RequireComponent(typeof(Rigidbody2D))]
+public class PlayerMove : MonoBehaviour
 {
-    public float moveSpeed = 5.0f; // 이동 속도 조절 변수
-
-    private Rigidbody2D rb; // 캐릭터의 Rigidbody2D 컴포넌트
-
-    void Start()
+    private Rigidbody2D playerRb;
+    private Animator myAnim;
+    public float playerMoveSpeed;
+    private void Awake()
     {
-        rb = GetComponent<Rigidbody2D>(); // Rigidbody2D 컴포넌트 가져오기
+        playerRb = GetComponent<Rigidbody2D>();
+        myAnim = GetComponent<Animator>();
     }
 
-    void Update()
+    private void FixedUpdate()
     {
-        // 사용자 입력 처리
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
 
-        // 이동 벡터 계산
-        Vector2 moveDirection = new Vector2(horizontalInput, verticalInput).normalized;
 
-        // 캐릭터 이동
-        rb.velocity = moveDirection * moveSpeed;
+        playerRb.velocity = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.deltaTime;
+
+        myAnim.SetFloat("MoveX", playerRb.velocity.x);
+        myAnim.SetFloat("MoveY", playerRb.velocity.y);
+
+
+        if (Input.GetAxisRaw("Horizontal") == 1 || Input.GetAxisRaw("Horizontal") == -1 || Input.GetAxisRaw("Vertical") == 1 || Input.GetAxisRaw("Vertical") == -1)
+        {
+            myAnim.SetFloat("LastMoveX", Input.GetAxisRaw("Horizontal"));
+            myAnim.SetFloat("LastMoveY", Input.GetAxisRaw("Vertical"));
+        }
     }
 }
