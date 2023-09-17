@@ -4,6 +4,10 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMove : MonoBehaviour
 {
+
+    public UI_CoolTime coolTimeUI; // UI_CoolTime 클래스의 인스턴스에 접근하기 위한 변수
+
+
     private Rigidbody2D playerRb;
     private Animator myAnim;
     public float playerMoveSpeed;
@@ -13,7 +17,7 @@ public class PlayerMove : MonoBehaviour
     private bool isDashing; //대쉬여부
     private float dashingPower = 50; //대쉬이동거리
     private float dashingTime = 0.2f; //대쉬이동시간
-    private float dashingCooldown = 1f; //대쉬 쿨타임
+    private float dashingCooldown = 2f; //대쉬 쿨타임
 
     [SerializeField] private TrailRenderer tr;
 
@@ -62,7 +66,11 @@ public class PlayerMove : MonoBehaviour
 
     private IEnumerator Dash()
     {
-        
+
+        if (coolTimeUI != null)
+        {
+            coolTimeUI.Trigger_Skill();
+        }
         canDash = false;
         isDashing = true;
         float originalGravity = playerRb.gravityScale; //중력 수치 
