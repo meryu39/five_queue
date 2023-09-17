@@ -4,13 +4,13 @@
  
 # =============== #
  
-Temp/
+/Temp/
  
-Obj/
+/Obj/
  
-UnityGenerated/
+/UnityGenerated/
  
-/Library/
+Library/
  
  
  
@@ -20,25 +20,25 @@ UnityGenerated/
  
 # ===================================== #
  
-ExportedObj/
+/ExportedObj/
  
-*.svd
+/*.svd
  
-*.userprefs
+/*.userprefs
  
-*.csproj
+/*.csproj
  
-*.pidb
+/*.pidb
  
-*.suo
+/*.suo
  
-*.sln
+/*.sln
  
-*.user
+/*.user
  
-*.unityproj
+/*.unityproj
  
-*.booproj
+/*.booproj
  
  
  
@@ -48,24 +48,24 @@ ExportedObj/
  
 # ============ #
  
-.DS_Store
+/.DS_Store
  
-.DS_Store?
+/.DS_Store?
  
-._*
+/._*
  
-.Spotlight-V100
+/.Spotlight-V100
  
-.Trashes
+/.Trashes
  
-Icon?
+/Icon?
  
-ehthumbs.db
+/ehthumbs.db
  
-Thumbs.db
+/Thumbs.db
  
-GraphicsSettings.asset
+/GraphicsSettings.asset
  
-ProjectSettings.asset
+/ProjectSettings.asset
  
-ProjectVersion.txt
+/ProjectVersion.txt
