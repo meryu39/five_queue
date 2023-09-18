@@ -35,8 +35,8 @@ public class PlayerMove : MonoBehaviour
             return;
         }
 
-        Debug.Log("대쉬가능여부는" + canDash);
-        Debug.Log("현재 대쉬상태는" + isDashing);
+        //Debug.Log("대쉬가능여부는" + canDash);
+        //Debug.Log("현재 대쉬상태는" + isDashing);
 
     }
 
@@ -64,11 +64,18 @@ public class PlayerMove : MonoBehaviour
         {
             return;
         }
+        //A키를 눌렀을 때 + Attack 애니메이션이 진행중이지 않을 때,
+        if (Input.GetKeyDown(KeyCode.A) && !myAnim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+        {
+            myAnim.SetTrigger("isAttack"); //공격애니메이션 실행
+        }
+
 
     }
 
     private IEnumerator Dash()
     {
+        Debug.Log("대쉬버튼눌림");
 
         if (coolTimeUI != null)
         {
