@@ -12,7 +12,7 @@ public class PlayerMove : MonoBehaviour
     private Animator myAnim;
     public float playerMoveSpeed;
 
-
+    private bool isRun; //달리기 여부 
     private bool canDash = true; //대쉬가능여부
     private bool isDashing; //대쉬여부
     private float dashingPower = 50; //대쉬이동거리
@@ -44,7 +44,6 @@ public class PlayerMove : MonoBehaviour
     {
 
         playerRb.velocity = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.fixedDeltaTime; //사용자 방향키 입력받아 이동속도 계산
-        playerRb = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.fixedDeltaTime; //사용자 방향키 입력받아 이동속도 계산
         Debug.Log(new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.fixedDeltaTime);
 
         myAnim.SetFloat("MoveX", playerRb.velocity.x);             //파라미터 선언
@@ -56,7 +55,7 @@ public class PlayerMove : MonoBehaviour
             myAnim.SetFloat("LastMoveX", Input.GetAxisRaw("Horizontal"));                    //마지막으로 이동한 방향 확인하기 위한 파라미터 선언
             myAnim.SetFloat("LastMoveY", Input.GetAxisRaw("Vertical"));
         }
-        if (Input.GetKeyDown(KeyCode.LeftShift) && (canDash))   //왼쪽 쉬프트키 + 대쉬가능여부
+        if (Input.GetKeyDown(KeyCode.LeftAlt) && (canDash))   //왼쪽 쉬프트키 + 대쉬가능여부
         {
             StartCoroutine(Dash());            //대쉬 코루틴 실행
         }
@@ -66,11 +65,24 @@ public class PlayerMove : MonoBehaviour
             return;
         }
         //A키를 눌렀을 때 + Attack 애니메이션이 진행중이지 않을 때,
-        if (Input.GetKeyDown(KeyCode.A) && !myAnim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+        if ((Input.GetMouseButtonDown(0)) && !myAnim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
         {
             myAnim.SetTrigger("isAttack"); //공격애니메이션 실행
         }
 
+        if (Input.GetKey(KeyCode.LeftShift) && !isDashing) // 왼쪽 Shift 키를 누르고 대쉬 중이 아닌 경우
+        {
+            isRun = true; // 달리기 상태로 설정
+            playerMoveSpeed = 50f; //달리기 20 증가 
+            myAnim.SetBool("isRun", true);
+        }
+        else
+        {
+            isRun = false; // 달리기 x
+            playerMoveSpeed = 30f; // 달리지않을 때, 원래 속도로
+            myAnim.SetBool("isRun", false);
+
+        }
 
     }
 
