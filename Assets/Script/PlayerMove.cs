@@ -43,8 +43,9 @@ public class PlayerMove : MonoBehaviour
     private void FixedUpdate()
     {
 
-
-        playerRb.velocity = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.deltaTime; //사용자 방향키 입력받아 이동속도 계산
+        playerRb.velocity = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.fixedDeltaTime; //사용자 방향키 입력받아 이동속도 계산
+        playerRb = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.fixedDeltaTime; //사용자 방향키 입력받아 이동속도 계산
+        Debug.Log(new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.fixedDeltaTime);
 
         myAnim.SetFloat("MoveX", playerRb.velocity.x);             //파라미터 선언
         myAnim.SetFloat("MoveY", playerRb.velocity.y);               
