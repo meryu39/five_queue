@@ -7,6 +7,11 @@ public class PlayerMove : MonoBehaviour
 
     public UI_CoolTime coolTimeUI; // UI_CoolTime 클래스의 인스턴스에 접근하기 위한 변수
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+            //충돌 처리 
+        Physics2D.IgnoreCollision(GetComponent<Collider2D>(), collision, false);
+    }
 
     private Rigidbody2D playerRb;
     private Animator myAnim;
