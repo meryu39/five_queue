@@ -56,7 +56,7 @@ public class PlayerMove : MonoBehaviour
             myAnim.SetFloat("LastMoveX", Input.GetAxisRaw("Horizontal"));                    //마지막으로 이동한 방향 확인하기 위한 파라미터 선언
             myAnim.SetFloat("LastMoveY", Input.GetAxisRaw("Vertical"));
         }
-        if (Input.GetKeyDown(KeyCode.LeftAlt) && (canDash))   //왼쪽 쉬프트키 + 대쉬가능여부
+        if (Input.GetKeyDown(KeyCode.F) && (canDash))   //왼쪽 쉬프트키 + 대쉬가능여부
         {
             StartCoroutine(Dash());            //대쉬 코루틴 실행
         }
@@ -111,6 +111,7 @@ public class PlayerMove : MonoBehaviour
         tr.emitting = false; //이펙트 종료 
         playerRb.gravityScale = originalGravity; 
         isDashing = false;
+        
         yield return new WaitForSeconds(dashingCooldown);  //해당 변수만큼 기다림
         canDash = true; 
     }

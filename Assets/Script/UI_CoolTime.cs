@@ -58,12 +58,12 @@ public class UI_CoolTime : MonoBehaviour
     {
         if (!isEnded)
         {
-            Debug.LogError("Hold On");
+            Debug.Log("Hold On");
             return;
         }
 
         Reset_CoolTime();
-        Debug.LogError("Trigger_Skill!");
+        Debug.Log("Trigger_Skill!");
     }
 
     private void Reset_CoolTime()
