@@ -14,6 +14,7 @@ public class PlayerMove : MonoBehaviour
     public float playerMoveSpeed;
 
     private bool isRun; //달리기 여부 
+
     private bool canDash = true; //대쉬가능여부
     private bool isDashing; //대쉬여부
     private float dashingPower = 50; //대쉬이동거리
@@ -31,7 +32,7 @@ public class PlayerMove : MonoBehaviour
 
     private void Update()
     {
-        if (isDashing)             //대쉬여부리턴
+        if (isDashing)
         {
             return;
         }
@@ -39,13 +40,16 @@ public class PlayerMove : MonoBehaviour
         //Debug.Log("대쉬가능여부는" + canDash);
         //Debug.Log("현재 대쉬상태는" + isDashing);
 
+        if (Input.GetKeyDown(KeyCode.F) && (canDash))
+        {
+            StartCoroutine(Dash());  // 대쉬 코루틴 실행
+        }
     }
-
     private void FixedUpdate()
     {
 
         playerRb.velocity = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.fixedDeltaTime; //사용자 방향키 입력받아 이동속도 계산
-        Debug.Log(new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.fixedDeltaTime);
+        //Debug.Log(new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.fixedDeltaTime);
 
         myAnim.SetFloat("MoveX", playerRb.velocity.x);             //파라미터 선언
         myAnim.SetFloat("MoveY", playerRb.velocity.y);               
@@ -96,6 +100,7 @@ public class PlayerMove : MonoBehaviour
             coolTimeUI.Trigger_Skill();
         }
         canDash = false;
+        Debug.Log("버튼이 눌려서 canDash가 false됨");
         isDashing = true;
         float originalGravity = playerRb.gravityScale; //중력 수치 
         playerRb.gravityScale = 0f; //중력 0으로 만듬 
@@ -113,6 +118,8 @@ public class PlayerMove : MonoBehaviour
         isDashing = false;
         
         yield return new WaitForSeconds(dashingCooldown);  //해당 변수만큼 기다림
-        canDash = true; 
+        canDash = true;
+        Debug.Log("시간이 지나서 canDash가 true");
+
     }
 }

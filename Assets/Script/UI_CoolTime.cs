@@ -58,7 +58,6 @@ public class UI_CoolTime : MonoBehaviour
     {
         if (!isEnded)
         {
-            Debug.Log("Hold On");
             return;
         }
 
