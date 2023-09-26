@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;  // Silder class 사용하기 위해 추가합니다.
 
-public class Hp : MonoBehaviour
+
+
+public float HPbar.value;
+
+public class State : MonoBehaviour
 {
     Slider HPbar;
-    float SliderBarTime;
+    
+   
 
+    
     void Start()
     {
         HPbar = GetComponent<Slider>();
@@ -17,6 +23,8 @@ public class Hp : MonoBehaviour
 
     void Update()
     {
+        
+
         if (HPbar.value <= 0)
             transform.Find("Fill Area").gameObject.SetActive(false);
         else

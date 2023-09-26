@@ -42,8 +42,13 @@ public class PlayerMove : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F) && (canDash))
         {
-            StartCoroutine(Dash());  // 대쉬 코루틴 실행
+            if (!isDashing)
+            {
+                StartCoroutine(Dash());  // 대쉬 코루틴 실행
+            }
+        
         }
+
     }
     private void FixedUpdate()
     {
@@ -60,9 +65,13 @@ public class PlayerMove : MonoBehaviour
             myAnim.SetFloat("LastMoveX", Input.GetAxisRaw("Horizontal"));                    //마지막으로 이동한 방향 확인하기 위한 파라미터 선언
             myAnim.SetFloat("LastMoveY", Input.GetAxisRaw("Vertical"));
         }
-        if (Input.GetKeyDown(KeyCode.F) && (canDash))   //왼쪽 쉬프트키 + 대쉬가능여부
+        if (Input.GetKeyDown(KeyCode.F) && (canDash))
         {
-            StartCoroutine(Dash());            //대쉬 코루틴 실행
+            if (!isDashing)
+            {
+                StartCoroutine(Dash());  // 대쉬 코루틴 실행
+            }
+
         }
 
         if (isDashing)
