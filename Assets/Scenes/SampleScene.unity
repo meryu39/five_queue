@@ -638,8 +638,8 @@ Rigidbody2D:
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
+  m_UseAutoMass: 1
+  m_Mass: 0.06504691
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 0
@@ -1252,7 +1252,9 @@ EdgeCollider2D:
   m_Offset: {x: 0.04, y: -0.32}
   m_EdgeRadius: 0
   m_Points:
-  - {x: -3.8378053, y: -2.43585}
+  - {x: 3.8186111, y: -0.026457995}
+  - {x: 1.290145, y: 0.9156808}
+  - {x: -3.7456353, y: -2.4819212}
   - {x: -0.8723666, y: -3.853883}
   - {x: 3.8000004, y: 0}
   m_AdjacentStartPoint: {x: 0, y: 0}

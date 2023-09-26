@@ -39,16 +39,14 @@ public class PlayerMove : MonoBehaviour
 
         //Debug.Log("대쉬가능여부는" + canDash);
         //Debug.Log("현재 대쉬상태는" + isDashing);
-
-        if (Input.GetKeyDown(KeyCode.F) && (canDash))
+        /*
+        if (Input.GetKeyDown(KeyCode.F) && (canDash) && !isDashing)
         {
-            if (!isDashing)
-            {
-                StartCoroutine(Dash());  // 대쉬 코루틴 실행
-            }
-        
-        }
+            StartCoroutine(Dash());  // 대쉬 코루틴 실행
 
+
+        }
+        */
     }
     private void FixedUpdate()
     {
@@ -65,12 +63,12 @@ public class PlayerMove : MonoBehaviour
             myAnim.SetFloat("LastMoveX", Input.GetAxisRaw("Horizontal"));                    //마지막으로 이동한 방향 확인하기 위한 파라미터 선언
             myAnim.SetFloat("LastMoveY", Input.GetAxisRaw("Vertical"));
         }
-        if (Input.GetKeyDown(KeyCode.F) && (canDash))
+
+
+        if (Input.GetKeyDown(KeyCode.F) && (canDash) && !isDashing)
         {
-            if (!isDashing)
-            {
-                StartCoroutine(Dash());  // 대쉬 코루틴 실행
-            }
+            StartCoroutine(Dash());  // 대쉬 코루틴 실행
+
 
         }
 
@@ -118,14 +116,17 @@ public class PlayerMove : MonoBehaviour
         float dashDirectionX = Input.GetAxisRaw("Horizontal");
         float dashDirectionY = Input.GetAxisRaw("Vertical");
 
-
-        playerRb.velocity = new Vector2(dashDirectionX * dashingPower, dashDirectionY * dashingPower); //x,y축 각각 대쉬파워랑 계산
+        Debug.Log("가로" + dashDirectionX);
+        Debug.Log("세로" + dashDirectionY);
+        Vector2 dashDirection = new Vector2(dashDirectionX, dashDirectionY).normalized;
+        playerRb.velocity = dashDirection * dashingPower;
+        Debug.Log("대쉬파워량" + playerRb.velocity);
         tr.emitting = true;
         yield return new WaitForSeconds(dashingTime); //해당 변수만큼 기다림
         tr.emitting = false; //이펙트 종료 
         playerRb.gravityScale = originalGravity; 
         isDashing = false;
-        
+
         yield return new WaitForSeconds(dashingCooldown);  //해당 변수만큼 기다림
         canDash = true;
         Debug.Log("시간이 지나서 canDash가 true");
