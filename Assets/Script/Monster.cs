@@ -1,10 +1,10 @@
 using UnityEngine;
 
-//public State State;
 
 public class Monster : MonoBehaviour
 {
     float MonsterAttack = 5f;
+
     float moveSpeed = 2f;
     Transform playerTransform;
     bool isfollow = false;
@@ -12,8 +12,7 @@ public class Monster : MonoBehaviour
 
     void Start()
     {
-        //MyClassA State = GetComponent<MyClassA>();
-        //int PlayerHP = otherClass.myVariable;
+        //State State = State.instance;
     }
     private void Update()
     {
@@ -37,7 +36,9 @@ public class Monster : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-          // State
+           // State State = State.instance;
+    
+            //stateScipt.HPbar.value -= MonsterAttack;
         }
     }
 }
