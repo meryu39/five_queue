@@ -5,7 +5,7 @@ using UnityEngine.UI;  // Silder class 사용하기 위해 추가합니다.
 
 
 
-public float HPbar.value;
+//public float HPbar.value;
 
 public class State : MonoBehaviour
 {
