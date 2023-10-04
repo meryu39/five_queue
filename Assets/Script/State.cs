@@ -1,39 +1,46 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;  // Silder class 사용하기 위해 추가합니다.
+using UnityEngine.UI; 
 
 
-//public float HPbar.value;
 
 public class State : MonoBehaviour
 {
-    
-    public Slider HPbar;
-  //  public static State instance; // 다른 스크립트에서 접근하기 위한 인스턴스 변수
+    public int MaxHP = 100; //최대체력 100
+    public int currentHP; //현재 hp
 
+    public Slider HPbar; //hp슬라이더 추가 
 
 
     void Awake()
     {
-       // instance = this; // State 스크립트의 인스턴스를 저장        
+        HPbar = GetComponent<Slider>(); //슬라이드 컴포터는 할당
     }
+
 
     void Start()
-    {   
+    {
 
-        HPbar = GetComponent<Slider>();
-
+        currentHP = MaxHP;
+        HPbar.value = currentHP;
+        UpdateHP();
     }
 
 
-void Update()
-    {
-        
 
-        if (HPbar.value <= 0)
-            transform.Find("Fill Area").gameObject.SetActive(false);
-        else
-            transform.Find("Fill Area").gameObject.SetActive(true);
+    public void Pdamage(int damage)
+    {
+        currentHP -= damage;
+        UpdateHP();
+    }
+
+
+    private void UpdateHP()
+    {
+        if (HPbar != null)
+        {
+            HPbar.value = (float)currentHP / MaxHP;
+        }
     }
 }

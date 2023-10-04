@@ -1,13 +1,11 @@
 using System.Collections;
 using UnityEngine;
-
-
-
+using UnityEngine.UI;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMove : MonoBehaviour
 {
 
-
+    private State state;
     private bool dashpress = false;
 
 
@@ -29,11 +27,13 @@ public class PlayerMove : MonoBehaviour
 
     [SerializeField] private TrailRenderer tr;
 
-
+  
     private void Awake()
     {
         playerRb = GetComponent<Rigidbody2D>(); //리자드바디 컴포넌트
         myAnim = GetComponent<Animator>(); //애니메이터 컴포넌트
+        state = GetComponent<State>(); // 스탯 스크립트 연결
+
     }
 
     private void Update()
@@ -141,9 +141,17 @@ public class PlayerMove : MonoBehaviour
         playerRb.gravityScale = originalGravity; 
         isDashing = false;
 
-        yield return new WaitForSeconds(dashingCooldown);  //해당 변수만큼 기다림
+        yield return new WaitForSeconds(dashingCooldown);  //해당 변수만큼 기다림        
         canDash = true;
         Debug.Log("시간이 지나서 canDash가 true");
 
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Monster"))
+        {
+            state.Pdamage(20);
+        }
     }
 }
