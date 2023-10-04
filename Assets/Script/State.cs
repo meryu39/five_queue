@@ -13,11 +13,6 @@ public class State : MonoBehaviour
     public Slider HPbar; //hp슬라이더 추가 
 
 
-    void Awake()
-    {
-        HPbar = GetComponent<Slider>(); //슬라이드 컴포터는 할당
-    }
-
 
     void Start()
     {
@@ -41,6 +36,10 @@ public class State : MonoBehaviour
         if (HPbar != null)
         {
             HPbar.value = (float)currentHP / MaxHP;
+        }
+        if(currentHP <0)
+        {
+            Debug.Log("...꿈이었구나. 조심해야겠다."); //다시하기 이미지출력
         }
     }
 }
