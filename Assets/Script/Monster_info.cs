@@ -1,7 +1,6 @@
 using UnityEngine;
 
-
-public class Monster : MonoBehaviour
+public class Monster_info : MonoBehaviour
 {
     float MonsterAttack = 5f;
 
@@ -9,17 +8,25 @@ public class Monster : MonoBehaviour
     Transform playerTransform;
     bool isfollow = false;
 
+    public int Monster_HP = 100;
+
+    public GameObject Monster_hpbar;
 
     void Start()
     {
-        //State State = State.instance;
+        Monster_hpbar.SetActive(false);
     }
+
     private void Update()
     {
         if (isfollow && playerTransform != null)
         {
             Vector2 direction = (playerTransform.position - transform.position).normalized;
             transform.Translate(direction * moveSpeed * Time.deltaTime);
+        }
+        if (Monster_hpbar != null)
+        {
+            Monster_hpbar.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, 0, 0));
         }
     }
 
@@ -29,6 +36,7 @@ public class Monster : MonoBehaviour
         {
             playerTransform = other.transform;
             isfollow = true;
+            Monster_hpbar.SetActive(true);
         }
     }
 
@@ -36,9 +44,7 @@ public class Monster : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-           // State State = State.instance;
-    
-            //stateScipt.HPbar.value -= MonsterAttack;
+
         }
     }
 }

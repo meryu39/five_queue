@@ -6,6 +6,7 @@ public class PlayerMove : MonoBehaviour
 {
 
     private State state;
+    private Monster_info monster;
     private bool dashpress = false;
 
 
@@ -30,9 +31,21 @@ public class PlayerMove : MonoBehaviour
   
     private void Awake()
     {
+
         playerRb = GetComponent<Rigidbody2D>(); //리자드바디 컴포넌트
         myAnim = GetComponent<Animator>(); //애니메이터 컴포넌트
         state = GetComponent<State>(); // 스탯 스크립트 연결
+        GameObject monsterObject = GameObject.FindWithTag("Monster"); // 몬스터의 태그를 사용하여 찾음
+        if(monsterObject != null)
+        {
+            Debug.Log("몬스터태그찾음");
+        }
+        Monster_info monster = monsterObject.GetComponent<Monster_info>();
+        if(monster != null)
+        {
+            Debug.Log("몬스터컴포넌트 됨");
+        }
+
 
     }
 
@@ -152,6 +165,14 @@ public class PlayerMove : MonoBehaviour
         if (collision.gameObject.CompareTag("Monster"))
         {
             state.Pdamage(20);
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if(collision.gameObject.CompareTag("Monster") && myAnim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+        {
+            monster.Monster_HP -= state.PlayerAttackDamage;
         }
     }
 }

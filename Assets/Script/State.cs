@@ -12,7 +12,7 @@ public class State : MonoBehaviour
 
     public Slider HPbar; //hp슬라이더 추가 
 
-
+    public int PlayerAttackDamage = 25;
 
     void Start()
     {
