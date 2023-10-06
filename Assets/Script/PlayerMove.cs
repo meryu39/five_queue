@@ -14,8 +14,8 @@ public class PlayerMove : MonoBehaviour
 
 
 
-    private Rigidbody2D playerRb;
-    private Animator myAnim;
+    private Rigidbody2D playerRb; //리자드바디2d를 playerRb로 선언
+    private Animator myAnim; 
     public float playerMoveSpeed;
 
     private bool isRun; //달리기 여부 
@@ -26,8 +26,8 @@ public class PlayerMove : MonoBehaviour
     private float dashingTime = 0.2f; //대쉬이동시간
     private float dashingCooldown = 2f; //대쉬 쿨타임
 
-    private bool isAttack = false;
-    private bool Attacking = false;
+    private bool isAttack = false; //공격확인 플래그(중복 공격 방지)
+    private bool Attacking = false;  //공격키 입력 확인 변수
     [SerializeField] private TrailRenderer tr;
 
   
@@ -115,8 +115,8 @@ public class PlayerMove : MonoBehaviour
         if (Attacking)
         {
             myAnim.SetTrigger("isAttack"); //공격애니메이션 실행
-            isAttack = false;
-            Attacking = false;
+            isAttack = false; //공격플래그 비활성화
+            Attacking = false; //공격모션 비활성화
         }
 
         if (Input.GetKey(KeyCode.LeftShift) && !isDashing) // 왼쪽 Shift 키를 누르고 대쉬 중이 아닌 경우
@@ -181,14 +181,17 @@ public class PlayerMove : MonoBehaviour
     }
 
     private void OnTriggerStay2D(Collider2D other)
-    {
+    {//충돌된 태그가 몬스터 , 공격모션이 실행되지 않았을 때, 공격플래그가 활성화되지 않았을 때
         if (other.CompareTag("Monster") && myAnim.GetCurrentAnimatorStateInfo(0).IsName("Attack") && !isAttack)
-        {
+        {//태그된 객체의 몬스터 인포 컴포넌트를 가져옴
             Monster_info monster = other.GetComponent<Monster_info>();
+
             if (monster != null)
             {
                 Debug.Log("공격성공");
+                //몬스터스크립트에 몬스터 체력에 state스크립트의 공격값을 뺌
                 monster.Monster_HP -= state.PlayerAttackDamage;
+                //공격 플래그 활성화
                 isAttack = true;
             }
         }
