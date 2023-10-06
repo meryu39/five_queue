@@ -10,7 +10,7 @@ public class PlayerMove : MonoBehaviour
     private bool dashpress = false;
 
 
-    public UI_CoolTime coolTimeUI; // UI_CoolTime Å¬·¡½ºÀÇ ÀÎ½ºÅÏ½º¿¡ Á¢±ÙÇÏ±â À§ÇÑ º¯¼ö
+    public UI_CoolTime coolTimeUI; // UI_CoolTime í´ë˜ìŠ¤ì˜ ì¸ìŠ¤í„´ìŠ¤ì— ì ‘ê·¼í•˜ê¸° ìœ„í•œ ë³€ìˆ˜
 
 
 
@@ -18,32 +18,34 @@ public class PlayerMove : MonoBehaviour
     private Animator myAnim;
     public float playerMoveSpeed;
 
-    private bool isRun; //´Ş¸®±â ¿©ºÎ 
+    private bool isRun; //ë‹¬ë¦¬ê¸° ì—¬ë¶€ 
 
-    private bool canDash = true; //´ë½¬°¡´É¿©ºÎ
-    private bool isDashing; //´ë½¬¿©ºÎ
-    private float dashingPower = 50; //´ë½¬ÀÌµ¿°Å¸®
-    private float dashingTime = 0.2f; //´ë½¬ÀÌµ¿½Ã°£
-    private float dashingCooldown = 2f; //´ë½¬ ÄğÅ¸ÀÓ
+    private bool canDash = true; //ëŒ€ì‰¬ê°€ëŠ¥ì—¬ë¶€
+    private bool isDashing; //ëŒ€ì‰¬ì—¬ë¶€
+    private float dashingPower = 50; //ëŒ€ì‰¬ì´ë™ê±°ë¦¬
+    private float dashingTime = 0.2f; //ëŒ€ì‰¬ì´ë™ì‹œê°„
+    private float dashingCooldown = 2f; //ëŒ€ì‰¬ ì¿¨íƒ€ì„
 
+    private bool isAttack = false;
+    private bool Attacking = false;
     [SerializeField] private TrailRenderer tr;
 
   
     private void Awake()
     {
 
-        playerRb = GetComponent<Rigidbody2D>(); //¸®ÀÚµå¹Ùµğ ÄÄÆ÷³ÍÆ®
-        myAnim = GetComponent<Animator>(); //¾Ö´Ï¸ŞÀÌÅÍ ÄÄÆ÷³ÍÆ®
-        state = GetComponent<State>(); // ½ºÅÈ ½ºÅ©¸³Æ® ¿¬°á
-        GameObject monsterObject = GameObject.FindWithTag("Monster"); // ¸ó½ºÅÍÀÇ ÅÂ±×¸¦ »ç¿ëÇÏ¿© Ã£À½
+        playerRb = GetComponent<Rigidbody2D>(); //ë¦¬ìë“œë°”ë”” ì»´í¬ë„ŒíŠ¸
+        myAnim = GetComponent<Animator>(); //ì• ë‹ˆë©”ì´í„° ì»´í¬ë„ŒíŠ¸
+        state = GetComponent<State>(); // ìŠ¤íƒ¯ ìŠ¤í¬ë¦½íŠ¸ ì—°ê²°
+        GameObject monsterObject = GameObject.FindWithTag("Monster"); // ëª¬ìŠ¤í„°ì˜ íƒœê·¸ë¥¼ ì‚¬ìš©í•˜ì—¬ ì°¾ìŒ
         if(monsterObject != null)
         {
-            Debug.Log("¸ó½ºÅÍÅÂ±×Ã£À½");
+            Debug.Log("ëª¬ìŠ¤í„°íƒœê·¸ì°¾ìŒ");
         }
         Monster_info monster = monsterObject.GetComponent<Monster_info>();
         if(monster != null)
         {
-            Debug.Log("¸ó½ºÅÍÄÄÆ÷³ÍÆ® µÊ");
+            Debug.Log("ëª¬ìŠ¤í„°ì»´í¬ë„ŒíŠ¸ ë¨");
         }
 
 
@@ -55,7 +57,11 @@ public class PlayerMove : MonoBehaviour
         {
             return;
         }
-
+        //ë§ˆìš°ìŠ¤ ì¢Œí´ë¦­ + Attack ì• ë‹ˆë©”ì´ì…˜ì´ ì§„í–‰ì¤‘ì´ì§€ ì•Šì„ ë•Œ,
+        if ((Input.GetMouseButtonDown(0)) && !myAnim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+        {
+            Attacking = true;
+        }
 
         if (Input.GetKeyDown(KeyCode.F))
         {
@@ -63,13 +69,15 @@ public class PlayerMove : MonoBehaviour
         }
 
 
-            
-        //Debug.Log("´ë½¬°¡´É¿©ºÎ´Â" + canDash);
-        //Debug.Log("ÇöÀç ´ë½¬»óÅÂ´Â" + isDashing);
+        //ê°ì²´ë¼ë¦¬ ì¶©ëŒì‹œ ë°€ë¦¬ì§€ ì•Šê¸° ,, ê°€ì†ë„ = 0
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+
+        //Debug.Log("ëŒ€ì‰¬ê°€ëŠ¥ì—¬ë¶€ëŠ”" + canDash);
+        //Debug.Log("í˜„ì¬ ëŒ€ì‰¬ìƒíƒœëŠ”" + isDashing);
         /*
         if (Input.GetKeyDown(KeyCode.F) && (canDash) && !isDashing)
         {
-            StartCoroutine(Dash());  // ´ë½¬ ÄÚ·çÆ¾ ½ÇÇà
+            StartCoroutine(Dash());  // ëŒ€ì‰¬ ì½”ë£¨í‹´ ì‹¤í–‰
 
 
         }
@@ -78,16 +86,16 @@ public class PlayerMove : MonoBehaviour
     private void FixedUpdate()
     {
 
-        playerRb.velocity = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.fixedDeltaTime; //»ç¿ëÀÚ ¹æÇâÅ° ÀÔ·Â¹Ş¾Æ ÀÌµ¿¼Óµµ °è»ê
+        playerRb.velocity = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.fixedDeltaTime; //ì‚¬ìš©ì ë°©í–¥í‚¤ ì…ë ¥ë°›ì•„ ì´ë™ì†ë„ ê³„ì‚°
         //Debug.Log(new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.fixedDeltaTime);
 
-        myAnim.SetFloat("MoveX", playerRb.velocity.x);             //ÆÄ¶ó¹ÌÅÍ ¼±¾ğ
+        myAnim.SetFloat("MoveX", playerRb.velocity.x);             //íŒŒë¼ë¯¸í„° ì„ ì–¸
         myAnim.SetFloat("MoveY", playerRb.velocity.y);               
 
 
         if (Input.GetAxisRaw("Horizontal") == 1 || Input.GetAxisRaw("Horizontal") == -1 || Input.GetAxisRaw("Vertical") == 1 || Input.GetAxisRaw("Vertical") == -1)
         {
-            myAnim.SetFloat("LastMoveX", Input.GetAxisRaw("Horizontal"));                    //¸¶Áö¸·À¸·Î ÀÌµ¿ÇÑ ¹æÇâ È®ÀÎÇÏ±â À§ÇÑ ÆÄ¶ó¹ÌÅÍ ¼±¾ğ
+            myAnim.SetFloat("LastMoveX", Input.GetAxisRaw("Horizontal"));                    //ë§ˆì§€ë§‰ìœ¼ë¡œ ì´ë™í•œ ë°©í–¥ í™•ì¸í•˜ê¸° ìœ„í•œ íŒŒë¼ë¯¸í„° ì„ ì–¸
             myAnim.SetFloat("LastMoveY", Input.GetAxisRaw("Vertical"));
         }
 
@@ -99,64 +107,68 @@ public class PlayerMove : MonoBehaviour
         if (dashpress && canDash && !isDashing)
         {
             StartCoroutine(Dash());
-            dashpress = false; // ´ë½¬ ÀÔ·ÂÀ» Ã³¸®ÇÑ ÈÄ¿¡´Â ¸®¼Â
+            dashpress = false; // ëŒ€ì‰¬ ì…ë ¥ì„ ì²˜ë¦¬í•œ í›„ì—ëŠ” ë¦¬ì…‹
         }   
 
     
-        //AÅ°¸¦ ´­·¶À» ¶§ + Attack ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ÁøÇàÁßÀÌÁö ¾ÊÀ» ¶§,
-        if ((Input.GetMouseButtonDown(0)) && !myAnim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+        
+        if (Attacking)
         {
-            myAnim.SetTrigger("isAttack"); //°ø°İ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+            myAnim.SetTrigger("isAttack"); //ê³µê²©ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
+            isAttack = false;
+            Attacking = false;
         }
 
-        if (Input.GetKey(KeyCode.LeftShift) && !isDashing) // ¿ŞÂÊ Shift Å°¸¦ ´©¸£°í ´ë½¬ ÁßÀÌ ¾Æ´Ñ °æ¿ì
+        if (Input.GetKey(KeyCode.LeftShift) && !isDashing) // ì™¼ìª½ Shift í‚¤ë¥¼ ëˆ„ë¥´ê³  ëŒ€ì‰¬ ì¤‘ì´ ì•„ë‹Œ ê²½ìš°
         {
-            isRun = true; // ´Ş¸®±â »óÅÂ·Î ¼³Á¤
-            playerMoveSpeed = 50f; //´Ş¸®±â 20 Áõ°¡ 
+            isRun = true; // ë‹¬ë¦¬ê¸° ìƒíƒœë¡œ ì„¤ì •
+            playerMoveSpeed = 50f; //ë‹¬ë¦¬ê¸° 20 ì¦ê°€ 
             myAnim.SetBool("isRun", true);
         }
         else
         {
-            isRun = false; // ´Ş¸®±â x
-            playerMoveSpeed = 30f; // ´Ş¸®Áö¾ÊÀ» ¶§, ¿ø·¡ ¼Óµµ·Î
+            isRun = false; // ë‹¬ë¦¬ê¸° x
+            playerMoveSpeed = 30f; // ë‹¬ë¦¬ì§€ì•Šì„ ë•Œ, ì›ë˜ ì†ë„ë¡œ
             myAnim.SetBool("isRun", false);
 
         }
+      
+        
 
     }
 
     private IEnumerator Dash()
     {
-        Debug.Log("´ë½¬¹öÆ°´­¸²");
+        Debug.Log("ëŒ€ì‰¬ë²„íŠ¼ëˆŒë¦¼");
 
         if (coolTimeUI != null)
         {
             coolTimeUI.Trigger_Skill();
         }
         canDash = false;
-        Debug.Log("¹öÆ°ÀÌ ´­·Á¼­ canDash°¡ falseµÊ");
+        Debug.Log("ë²„íŠ¼ì´ ëˆŒë ¤ì„œ canDashê°€ falseë¨");
         isDashing = true;
-        float originalGravity = playerRb.gravityScale; //Áß·Â ¼öÄ¡ 
-        playerRb.gravityScale = 0f; //Áß·Â 0À¸·Î ¸¸µë 
+        float originalGravity = playerRb.gravityScale; //ì¤‘ë ¥ ìˆ˜ì¹˜ 
+        playerRb.gravityScale = 0f; //ì¤‘ë ¥ 0ìœ¼ë¡œ ë§Œë“¬ 
 
 
         float dashDirectionX = Input.GetAxisRaw("Horizontal");
         float dashDirectionY = Input.GetAxisRaw("Vertical");
 
-        Debug.Log("°¡·Î" + dashDirectionX);
-        Debug.Log("¼¼·Î" + dashDirectionY);
+        Debug.Log("ê°€ë¡œ" + dashDirectionX);
+        Debug.Log("ì„¸ë¡œ" + dashDirectionY);
         Vector2 dashDirection = new Vector2(dashDirectionX, dashDirectionY).normalized;
         playerRb.velocity = dashDirection * dashingPower;
-        Debug.Log("´ë½¬ÆÄ¿ö·®" + playerRb.velocity);
+        Debug.Log("ëŒ€ì‰¬íŒŒì›ŒëŸ‰" + playerRb.velocity);
         tr.emitting = true;
-        yield return new WaitForSeconds(dashingTime); //ÇØ´ç º¯¼ö¸¸Å­ ±â´Ù¸²
-        tr.emitting = false; //ÀÌÆåÆ® Á¾·á 
+        yield return new WaitForSeconds(dashingTime); //í•´ë‹¹ ë³€ìˆ˜ë§Œí¼ ê¸°ë‹¤ë¦¼
+        tr.emitting = false; //ì´í™íŠ¸ ì¢…ë£Œ 
         playerRb.gravityScale = originalGravity; 
         isDashing = false;
 
-        yield return new WaitForSeconds(dashingCooldown);  //ÇØ´ç º¯¼ö¸¸Å­ ±â´Ù¸²        
+        yield return new WaitForSeconds(dashingCooldown);  //í•´ë‹¹ ë³€ìˆ˜ë§Œí¼ ê¸°ë‹¤ë¦¼        
         canDash = true;
-        Debug.Log("½Ã°£ÀÌ Áö³ª¼­ canDash°¡ true");
+        Debug.Log("ì‹œê°„ì´ ì§€ë‚˜ì„œ canDashê°€ true");
 
     }
 
@@ -168,11 +180,17 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    private void OnCollisionStay2D(Collision2D collision)
+    private void OnTriggerStay2D(Collider2D other)
     {
-        if(collision.gameObject.CompareTag("Monster") && myAnim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+        if (other.CompareTag("Monster") && myAnim.GetCurrentAnimatorStateInfo(0).IsName("Attack") && !isAttack)
         {
-            monster.Monster_HP -= state.PlayerAttackDamage;
+            Monster_info monster = other.GetComponent<Monster_info>();
+            if (monster != null)
+            {
+                Debug.Log("ê³µê²©ì„±ê³µ");
+                monster.Monster_HP -= state.PlayerAttackDamage;
+                isAttack = true;
+            }
         }
     }
 }
