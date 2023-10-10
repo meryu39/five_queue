@@ -82,12 +82,16 @@ public class PlayerMove : MonoBehaviour
 
         }
         */
+
     }
     private void FixedUpdate()
     {
 
         playerRb.velocity = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.fixedDeltaTime; //사용자 방향키 입력받아 이동속도 계산
-        //Debug.Log(new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.fixedDeltaTime);
+                                                                                                                                                          //Debug.Log(new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.fixedDeltaTime);
+
+  
+
 
         myAnim.SetFloat("MoveX", playerRb.velocity.x);             //파라미터 선언
         myAnim.SetFloat("MoveY", playerRb.velocity.y);               
@@ -132,8 +136,9 @@ public class PlayerMove : MonoBehaviour
             myAnim.SetBool("isRun", false);
 
         }
-      
+
         
+
 
     }
 
@@ -180,20 +185,25 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay2D(Collider2D other)
-    {//충돌된 태그가 몬스터 , 공격모션이 실행되지 않았을 때, 공격플래그가 활성화되지 않았을 때
-        if (other.CompareTag("Monster") && myAnim.GetCurrentAnimatorStateInfo(0).IsName("Attack") && !isAttack)
-        {//태그된 객체의 몬스터 인포 컴포넌트를 가져옴
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        // 충돌된 태그가 몬스터이고, 공격 모션이 실행되지 않았을 때, 공격 플래그가 활성화되지 않았을 때
+        if (other.CompareTag("Monster"))
+        {
+            Debug.Log("몬스터가 닿았습니다");
+            // 태그된 객체의 몬스터 인포 컴포넌트를 가져옴
             Monster_info monster = other.GetComponent<Monster_info>();
 
             if (monster != null)
             {
-                Debug.Log("공격성공");
-                //몬스터스크립트에 몬스터 체력에 state스크립트의 공격값을 뺌
+                Debug.Log("공격 성공");
+                // 몬스터 스크립트에 몬스터 체력에 state 스크립트의 공격값을 뺌
                 monster.Monster_HP -= state.PlayerAttackDamage;
-                //공격 플래그 활성화
+                // 공격 플래그 활성화
                 isAttack = true;
             }
         }
     }
+
+
 }
