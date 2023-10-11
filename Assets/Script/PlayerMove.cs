@@ -28,6 +28,10 @@ public class PlayerMove : MonoBehaviour
 
     private bool isAttack = false; //공격확인 플래그(중복 공격 방지)
     private bool Attacking = false;  //공격키 입력 확인 변수
+
+    private GameObject interactionObject;
+    private int interactionObjectCount;
+    public GameObject Image_PressF;
     [SerializeField] private TrailRenderer tr;
 
   
@@ -37,6 +41,7 @@ public class PlayerMove : MonoBehaviour
         playerRb = GetComponent<Rigidbody2D>(); //리자드바디 컴포넌트
         myAnim = GetComponent<Animator>(); //애니메이터 컴포넌트
         state = GetComponent<State>(); // 스탯 스크립트 연결
+        Image_PressF.SetActive(false);
         GameObject monsterObject = GameObject.FindWithTag("Monster"); // 몬스터의 태그를 사용하여 찾음
         if(monsterObject != null)
         {
@@ -65,7 +70,11 @@ public class PlayerMove : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            dashpress = true;
+            if(interactionObjectCount > 0)
+            {
+                InteractionManager.instance.Interact(interactionObject);
+            }
+            //dashpress = true;
         }
 
 
@@ -201,6 +210,30 @@ public class PlayerMove : MonoBehaviour
                 monster.Monster_HP -= state.PlayerAttackDamage;
                 // 공격 플래그 활성화
                 isAttack = true;
+            }
+        }
+
+        if(other.CompareTag("InteractionObject"))
+        {
+            if(interactionObjectCount == 0)
+            {
+                Debug.Log("F키를 눌러주세요 패널 열림");
+                Image_PressF.SetActive(true);
+            }
+            interactionObjectCount++;
+            interactionObject = other.gameObject;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if(other.CompareTag("InteractionObject"))
+        {
+            interactionObjectCount--;
+            if(interactionObjectCount == 0)
+            {
+                Debug.Log("패널 닫음");
+                Image_PressF.SetActive(false);
             }
         }
     }
