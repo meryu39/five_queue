@@ -11,6 +11,7 @@ public class Monster_info : MonoBehaviour
     bool isfollow = false;
 
     public int Monster_HP = 100; //몬스터 체력 100으로 고정
+    public GameObject M_area;
 
     public Slider Monster_hpbar; // 몬스터 체력바 
     public GameObject Del_hpbar; // 체력0이하시 제거될 몬스터 체력바
@@ -63,7 +64,7 @@ public class Monster_info : MonoBehaviour
             //플레이어의 위치에 충돌된 오브젝트 위치값으로 설정
             playerTransform = other.transform;
             isfollow = true; //쫓아가기 활성화
-
+            M_area.SetActive(false);
             // GameObject로 활성화
             if (Monster_hpbar != null)
             {

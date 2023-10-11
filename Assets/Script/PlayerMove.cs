@@ -188,7 +188,7 @@ public class PlayerMove : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         // 충돌된 태그가 몬스터이고, 공격 모션이 실행되지 않았을 때, 공격 플래그가 활성화되지 않았을 때
-        if (other.CompareTag("Monster"))
+        if (other.CompareTag("Monster") && !isAttack)
         {
             Debug.Log("몬스터가 닿았습니다");
             // 태그된 객체의 몬스터 인포 컴포넌트를 가져옴
