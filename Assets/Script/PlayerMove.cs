@@ -135,7 +135,7 @@ public class PlayerMove : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift) && !isDashing) // 왼쪽 Shift 키를 누르고 대쉬 중이 아닌 경우
         {
             isRun = true; // 달리기 상태로 설정
-            playerMoveSpeed = 50f; //달리기 20 증가 
+            playerMoveSpeed = 200f; //달리기 20 증가 
             myAnim.SetBool("isRun", true);
         }
         else
