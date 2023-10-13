@@ -22,7 +22,7 @@ public class PlayerMove : MonoBehaviour
 
     private bool canDash = true; //대쉬가능여부
     private bool isDashing; //대쉬여부
-    private float dashingPower = 50; //대쉬이동거리
+    private float dashingPower = 10f; //대쉬이동거리
     private float dashingTime = 0.2f; //대쉬이동시간
     private float dashingCooldown = 2f; //대쉬 쿨타임
 
@@ -83,23 +83,26 @@ public class PlayerMove : MonoBehaviour
 
         //Debug.Log("대쉬가능여부는" + canDash);
         //Debug.Log("현재 대쉬상태는" + isDashing);
-        /*
-        if (Input.GetKeyDown(KeyCode.F) && (canDash) && !isDashing)
+        
+        if (Input.GetKeyDown(KeyCode.Space) && (canDash) && !isDashing)
         {
             StartCoroutine(Dash());  // 대쉬 코루틴 실행
 
 
         }
-        */
+        
 
     }
     private void FixedUpdate()
     {
+        if (isDashing)
+        {
+            return;
+        }
 
         playerRb.velocity = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.fixedDeltaTime; //사용자 방향키 입력받아 이동속도 계산
                                                                                                                                                           //Debug.Log(new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.fixedDeltaTime);
 
-  
 
 
         myAnim.SetFloat("MoveX", playerRb.velocity.x);             //파라미터 선언
@@ -112,16 +115,13 @@ public class PlayerMove : MonoBehaviour
             myAnim.SetFloat("LastMoveY", Input.GetAxisRaw("Vertical"));
         }
 
-        if (isDashing)
-        {
-            return;
-        }
-
         if (dashpress && canDash && !isDashing)
         {
             StartCoroutine(Dash());
             dashpress = false; // 대쉬 입력을 처리한 후에는 리셋
-        }   
+        }
+  
+
 
     
         
