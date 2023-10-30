@@ -4,23 +4,27 @@ using UnityEngine.UI;
 public class Monster_info : MonoBehaviour
 {
     float MonsterAttack = 5f;
-
     float moveSpeed = 2f;
     Transform playerTransform;
-
     bool isfollow = false;
-
-    public int Monster_HP = 100; //몬스터 체력 100으로 고정
+    public int Monster_HP = 100;
     public GameObject M_area;
+    public GameObject hpBarPrefab; // HP 바 프리팹
+    private Slider Monster_hpbar; // 몬스터 체력바 
+    private GameObject Monster_area;
 
-    public Slider Monster_hpbar; // 몬스터 체력바 
-    public GameObject Del_hpbar; // 체력0이하시 제거될 몬스터 체력바
     void Start()
     {
-        //몬스터 인식범위에 들어가지 않았을 경우 체력바 비활성화
-        if (Monster_hpbar != null)
+        if (hpBarPrefab != null)
         {
+            // HP 바 프리팹을 인스턴스화하여 몬스터 하위로 배치
+            Monster_hpbar = Instantiate(hpBarPrefab, transform.position, Quaternion.identity).GetComponent<Slider>();
+            Monster_hpbar.transform.parent = transform; // 해당 오브젝트의 자식으로 설정
             Monster_hpbar.gameObject.SetActive(false);
+
+            Monster_area = Instantiate(M_area, transform.position, Quaternion.identity);
+            Monster_area.transform.parent = transform; // 해당 오브젝트의 자식으로 설정
+            Monster_area.gameObject.SetActive(true);
         }
     }
 
@@ -28,49 +32,40 @@ public class Monster_info : MonoBehaviour
     {
         if (isfollow && playerTransform != null)
         {
-            Vector2 direction = (playerTransform.position - transform.position).normalized; //플레이어위치, 몬스터 위치 계산
-            transform.Translate(direction * moveSpeed * Time.deltaTime); //플레이어 방향으로 이동 
+            Vector2 direction = (playerTransform.position - transform.position).normalized;
+            transform.Translate(direction * moveSpeed * Time.deltaTime);
         }
+
         if (Monster_hpbar != null)
         {
-            Monster_hpbar.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0.05f, 0.3f, 0)); //몬스터 위의 월드좌표로 체력바 띄움
+            Monster_hpbar.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0.05f, 0.3f, 0));
         }
 
-        UpdateHP(); //몬스터 체력바 최신화
-       
-
+        UpdateHP();
     }
 
     private void UpdateHP()
     {
         if (Monster_hpbar != null)
-        { //몬스터 체력슬라이더 밸류값을 현재 몬스터 hp로 대입
+        {
             Monster_hpbar.value = (float)Monster_HP / 100;
-        } 
-        if (Monster_HP <= 0)  //몬스터 체력이 0이하일 경우
-        { //몬스터 ui, 몬스터 삭제
-            Destroy(Del_hpbar);   
-            Destroy(gameObject);
-            
+        }
 
+        if (Monster_HP <= 0)
+        {
+            Destroy(Monster_hpbar.gameObject);
+            Destroy(gameObject);
         }
     }
 
-    //몬스터 인식범위(콜라이더안에 플레이어의 콜라이더가 닿을 경우)
     private void OnTriggerEnter2D(Collider2D other)
-    { //충돌시킨 태그가 플레이어 태그 일경우
+    {
         if (other.CompareTag("Player"))
         {
-            //플레이어의 위치에 충돌된 오브젝트 위치값으로 설정
             playerTransform = other.transform;
-            isfollow = true; //쫓아가기 활성화
-            M_area.SetActive(false);
-            // GameObject로 활성화
-            if (Monster_hpbar != null)
-            {
-                //인식범위에 식별된 경우 체력바 활성화
-                Monster_hpbar.gameObject.SetActive(true);
-            }
+            isfollow = true;
+            Monster_area.SetActive(false);
+            Monster_hpbar.gameObject.SetActive(true);
         }
     }
 
@@ -78,7 +73,7 @@ public class Monster_info : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-
+            // 이 부분은 필요한 경우에만 사용합니다.
         }
     }
 }

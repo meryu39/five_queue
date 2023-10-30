@@ -34,11 +34,11 @@ public class InteractionManager : MonoBehaviour
                 Debug.Log("카테고리 무기 함수 수행");
                 break;
         }
-        //상호작용한 물체 삭제, 추후에 각 카테고리별 아이템이 생기면 삭제
+        //상호작용한 물체 삭제, 추후에 각 카테고리별 아이템이 생기면 삭제```
         interactionObject.SetActive(false);
         return true;
     }
-
+    
 
     void Awake()
     {
