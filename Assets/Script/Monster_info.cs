@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Monster_info : MonoBehaviour
-{
+{ 
     float MonsterAttack = 5f;
     float moveSpeed = 2f;
     Transform playerTransform;
@@ -12,18 +12,18 @@ public class Monster_info : MonoBehaviour
     public GameObject hpBarPrefab; // HP 바 프리팹
     private Slider Monster_hpbar; // 몬스터 체력바 
     private GameObject Monster_area;
+    public GameObject UIparent;
 
     void Start()
     {
         if (hpBarPrefab != null)
         {
-            // HP 바 프리팹을 인스턴스화하여 몬스터 하위로 배치
             Monster_hpbar = Instantiate(hpBarPrefab, transform.position, Quaternion.identity).GetComponent<Slider>();
-            Monster_hpbar.transform.parent = transform; // 해당 오브젝트의 자식으로 설정
+            Monster_hpbar.transform.parent = UIparent.transform;
             Monster_hpbar.gameObject.SetActive(false);
 
             Monster_area = Instantiate(M_area, transform.position, Quaternion.identity);
-            Monster_area.transform.parent = transform; // 해당 오브젝트의 자식으로 설정
+            Monster_area.transform.parent = transform;
             Monster_area.gameObject.SetActive(true);
         }
     }
