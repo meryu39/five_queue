@@ -37,8 +37,9 @@ public class PlayerMove : MonoBehaviour
   
     private void Awake()
     {
-
+        
         playerRb = GetComponent<Rigidbody2D>(); //리자드바디 컴포넌트
+        playerRb.velocity = Vector3.zero;
         myAnim = GetComponent<Animator>(); //애니메이터 컴포넌트
         state = GetComponent<State>(); // 스탯 스크립트 연결
         Image_PressF.SetActive(false);

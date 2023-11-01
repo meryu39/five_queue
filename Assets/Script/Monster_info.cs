@@ -2,9 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Monster_info : MonoBehaviour
-{ 
+{
     float MonsterAttack = 5f;
-    float moveSpeed = 2f;
+    public float moveSpeed = 1f;
     Transform playerTransform;
     bool isfollow = false;
     public int Monster_HP = 100;
@@ -14,11 +14,28 @@ public class Monster_info : MonoBehaviour
     private GameObject Monster_area;
     public GameObject UIparent;
 
+    private Animator my_anim;
+    private Rigidbody2D Rb; //리지드바디2d를 Rb 선언
+
+    private bool isFacingRight = true;
+
+    SpriteRenderer spriteRenderer;
+
+    private void Awake()
+    {
+        State state = GameObject.Find("Player").GetComponent<State>();
+        
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        my_anim = GetComponent<Animator>(); // 애니메이터 컴포넌트
+        Rb = GetComponent<Rigidbody2D>(); // 리지드바디 컴포넌트
+        Rb.velocity = Vector3.zero;
+    }
+    
     void Start()
     {
         if (hpBarPrefab != null)
         {
-            Monster_hpbar = Instantiate(hpBarPrefab, transform.position, Quaternion.identity).GetComponent<Slider>();
+            Monster_hpbar = Instantiate(hpBarPrefab, Camera.main.WorldToScreenPoint(transform.position + new Vector3(0.05f, 0.3f, 0)), Quaternion.identity).GetComponent<Slider>();
             Monster_hpbar.transform.parent = UIparent.transform;
             Monster_hpbar.gameObject.SetActive(false);
 
@@ -32,8 +49,16 @@ public class Monster_info : MonoBehaviour
     {
         if (isfollow && playerTransform != null)
         {
+            my_anim.SetBool("isRun", true);
             Vector2 direction = (playerTransform.position - transform.position).normalized;
-            transform.Translate(direction * moveSpeed * Time.deltaTime);
+
+            // Flip 설정
+            if ((isFacingRight && direction.x < 0) || (!isFacingRight && direction.x > 0))
+            {
+                Flip();
+            }
+
+            transform.Translate(direction * (moveSpeed + 1f) * Time.deltaTime);
         }
 
         if (Monster_hpbar != null)
@@ -42,6 +67,16 @@ public class Monster_info : MonoBehaviour
         }
 
         UpdateHP();
+    }
+
+    private void Flip()
+    {
+        // 현재 상태를 반전
+        isFacingRight = !isFacingRight;
+
+        // SpriteRenderer를 이용하여 스프라이트를 뒤집음
+        
+        spriteRenderer.flipX = !isFacingRight;
     }
 
     private void UpdateHP()
@@ -73,7 +108,7 @@ public class Monster_info : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            // 이 부분은 필요한 경우에만 사용합니다.
+            my_anim.SetTrigger("isAttack");
         }
     }
 }
