@@ -5,7 +5,8 @@ using UnityEngine;
 public class Interaction : MonoBehaviour
 {
     //해당 상호작용 오브젝트의 카테고리
-    public InteractionManager.Category category;
+    public ItemCategory itemCategory;
+    public ItemName itemName;
     private Transform transform;
     
     private void Awake()

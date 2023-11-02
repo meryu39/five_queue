@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI; 
 
@@ -14,9 +15,11 @@ public class State : MonoBehaviour
 
     public int PlayerAttackDamage = 25;
 
+    public Item[] item;
+
     void Start()
     {
-
+        item = new Item[3];
         currentHP = MaxHP;
         HPbar.value = currentHP;
         UpdateHP();
@@ -40,6 +43,19 @@ public class State : MonoBehaviour
         if(currentHP <0)
         {
             Debug.Log("...꿈이었구나. 조심해야겠다."); //다시하기 이미지출력
+        }
+    }
+
+    public void GetItem(Item obtainedItem)
+    {
+        for(int i=0; i<3; i++)
+        {
+            if (item[i].count == 0)
+            {
+                Debug.Log("null 확인");
+                item[i] = obtainedItem;
+                break;
+            }
         }
     }
 }

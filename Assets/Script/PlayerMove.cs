@@ -46,12 +46,12 @@ public class PlayerMove : MonoBehaviour
         GameObject monsterObject = GameObject.FindWithTag("Monster"); // 몬스터의 태그를 사용하여 찾음
         if(monsterObject != null)
         {
-            Debug.Log("몬스터태그찾음");
+            //Debug.Log("몬스터태그찾음");
         }
         Monster_info monster = monsterObject.GetComponent<Monster_info>();
         if(monster != null)
         {
-            Debug.Log("몬스터컴포넌트 됨");
+            //Debug.Log("몬스터컴포넌트 됨");
         }
 
 
@@ -218,7 +218,7 @@ public class PlayerMove : MonoBehaviour
         {
             if(interactionObjectCount == 0)
             {
-                Debug.Log("F키를 눌러주세요 패널 열림");
+                //Debug.Log("F키를 눌러주세요 패널 열림");
                 Image_PressF.SetActive(true);
             }
             interactionObjectCount++;
@@ -233,7 +233,7 @@ public class PlayerMove : MonoBehaviour
             interactionObjectCount--;
             if(interactionObjectCount == 0)
             {
-                Debug.Log("패널 닫음");
+                //Debug.Log("패널 닫음");
                 Image_PressF.SetActive(false);
             }
         }

@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 30708994}
   - component: {fileID: 30708993}
   - component: {fileID: 30708995}
+  - component: {fileID: 30708996}
   m_Layer: 0
   m_Name: item2
   m_TagString: InteractionObject
@@ -243,6 +244,20 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &30708996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 30708992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccac92b3be44c9e489402b0c56c3fb9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemCategory: 1
+  itemName: 1
 --- !u!1 &111618175
 GameObject:
   m_ObjectHideFlags: 0
@@ -822,6 +837,16 @@ MonoBehaviour:
   currentHP: 100
   HPbar: {fileID: 1058507407}
   PlayerAttackDamage: 25
+  item:
+  - category: 0
+    name: 0
+    count: 0
+  - category: 0
+    name: 0
+    count: 0
+  - category: 0
+    name: 0
+    count: 0
 --- !u!114 &415581009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10590,10 +10615,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a99ba4f500b1f81489aa4dccec569120, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 1
   Monster_HP: 100
   M_area: {fileID: 824338731}
-  Monster_hpbar: {fileID: 411683710}
-  Del_hpbar: {fileID: 309990831}
+  hpBarPrefab: {fileID: 0}
+  UIparent: {fileID: 0}
 --- !u!70 &845340170
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -22415,7 +22441,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccac92b3be44c9e489402b0c56c3fb9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  category: 0
+  itemCategory: 0
+  itemName: 0
 --- !u!212 &1621545498
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -22903,6 +22930,16 @@ MonoBehaviour:
   currentHP: 0
   HPbar: {fileID: 2001978971}
   PlayerAttackDamage: 25
+  item:
+  - category: 0
+    name: 0
+    count: 0
+  - category: 0
+    name: 0
+    count: 0
+  - category: 0
+    name: 0
+    count: 0
 --- !u!114 &2001978971
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23208,7 +23245,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccac92b3be44c9e489402b0c56c3fb9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  category: 1
+  itemCategory: 1
+  itemName: 0
 --- !u!212 &2071658520
 SpriteRenderer:
   m_ObjectHideFlags: 0
