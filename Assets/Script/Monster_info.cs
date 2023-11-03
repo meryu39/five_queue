@@ -7,7 +7,7 @@ public class Monster_info : MonoBehaviour
     public float moveSpeed = 1f;
     Transform playerTransform;
     bool isfollow = false;
-    public int Monster_HP = 100;
+    public float Monster_HP = 100;
     public GameObject M_area;
     public GameObject hpBarPrefab; // HP 바 프리팹
     private Slider Monster_hpbar; // 몬스터 체력바 

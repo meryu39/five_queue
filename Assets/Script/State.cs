@@ -8,19 +8,25 @@ using UnityEngine.UI;
 
 public class State : MonoBehaviour
 {
-    public int MaxHP = 100; //최대체력 100
-    public int currentHP; //현재 hp
+    public float maxHP = 100f; //최대체력 100
+    public float maxEnergy = 100f;
+    public int maxHunger = 2;
+    public float currentHP; //현재 hp
+    public float currentEnergy;
+    public int currentHunger;
 
     public Slider HPbar; //hp슬라이더 추가 
 
-    public int PlayerAttackDamage = 25;
+    public float PlayerAttackDamage = 25;
 
     public Item[] item;
 
     void Start()
     {
         item = new Item[3];
-        currentHP = MaxHP;
+        currentHP = maxHP;
+        currentEnergy = maxEnergy;
+        currentHunger = maxHunger;
         HPbar.value = currentHP;
         UpdateHP();
     }
@@ -38,7 +44,7 @@ public class State : MonoBehaviour
     {
         if (HPbar != null)
         {
-            HPbar.value = (float)currentHP / MaxHP;
+            HPbar.value = (float)currentHP / maxHP;
         }
         if(currentHP <0)
         {
@@ -56,6 +62,47 @@ public class State : MonoBehaviour
                 item[i] = obtainedItem;
                 break;
             }
+        }
+    }
+
+    public void SetHP(float value)
+    {
+        currentHP = value;
+        if(currentHP > maxHP)
+        {
+            currentHP = maxHP;
+        }
+        if(currentHP <= 0)
+        {
+            currentHP = 0;
+            Debug.Log("플레이어 사망");
+        }
+        UpdateHP();
+    }
+
+    public void SetEnergy(float value)
+    {
+        currentEnergy = value;
+        if (currentEnergy > maxEnergy)
+        {
+            currentEnergy = maxEnergy;
+        }
+        if (currentEnergy <= 0)
+        {
+            currentEnergy = 0;
+        }
+    }
+
+    public void SetHunger(int value)
+    {
+        currentHunger = value;
+        if (currentHunger > maxHunger)
+        {
+            currentHunger = maxHunger;
+        }
+        if (currentHunger <= 0)
+        {
+            currentHunger = 0;
         }
     }
 }

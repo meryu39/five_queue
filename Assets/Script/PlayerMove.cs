@@ -63,36 +63,41 @@ public class PlayerMove : MonoBehaviour
         {
             return;
         }
+        checkInput();
+        //객체끼리 충돌시 밀리지 않기 ,, 가속도 = 0
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+    }
+    private void checkInput()
+    {
         //마우스 좌클릭 + Attack 애니메이션이 진행중이지 않을 때,
         if ((Input.GetMouseButtonDown(0)) && !myAnim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
         {
             Attacking = true;
         }
-
         if (Input.GetKeyDown(KeyCode.F))
         {
-            if(interactionObjectCount > 0)
+            if (interactionObjectCount > 0)
             {
                 InteractionManager.instance.Interact(interactionObject);
             }
             //dashpress = true;
         }
-
-
-        //객체끼리 충돌시 밀리지 않기 ,, 가속도 = 0
-        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-
-        //Debug.Log("대쉬가능여부는" + canDash);
-        //Debug.Log("현재 대쉬상태는" + isDashing);
-        
         if (Input.GetKeyDown(KeyCode.Space) && (canDash) && !isDashing)
         {
             StartCoroutine(Dash());  // 대쉬 코루틴 실행
-
-
         }
-        
-
+        if (Input.GetKeyUp(KeyCode.Alpha1))
+        {
+            UseItem(1);
+        }
+        if (Input.GetKeyUp(KeyCode.Alpha2))
+        {
+            UseItem(2);
+        }
+        if (Input.GetKeyUp(KeyCode.Alpha3))
+        {
+            UseItem(3);
+        }
     }
     private void FixedUpdate()
     {
@@ -239,5 +244,34 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-
+    private void UseItem(int itemNumber)
+    {
+        ref Item usingItem = ref state.item[itemNumber - 1];
+        if(usingItem.count <= 0)
+        {
+            Debug.Log(itemNumber + "번째 아이템 남은 개수가 없음");
+            return;
+        }
+        usingItem.count--;
+        if(usingItem.name == ItemName.BANDAGE)
+        {
+            state.SetHP(state.currentHP + state.maxHP * 0.1f);
+        }
+        else if (usingItem.name == ItemName.PAINKILLER)
+        {
+            state.SetEnergy(state.currentEnergy + state.maxEnergy * 0.5f);
+        }
+        else if (usingItem.name == ItemName.EPINEPHRINE)
+        {
+            state.SetEnergy(state.currentEnergy + state.maxEnergy * 1.0f);
+        }
+        else if (usingItem.name == ItemName.CAN)
+        {
+            state.SetHunger(state.currentHunger + 1);
+        }
+        else if (usingItem.name == ItemName.CUPRAMEN)
+        {
+            state.SetHunger(state.currentHunger + 2);
+        }
+    }
 }
