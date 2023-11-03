@@ -13,13 +13,23 @@ public class enemy_AI : MonoBehaviour
 
     void Start()
     {
+        SetMove();
+ 
+    }
+
+    void Update()
+    {
+        SelfMove();
+    }
+
+    void SetMove()
+    {
         startPosition = transform.position;
         currentDirection = RandomDirection();
         targetPosition = startPosition + currentDirection * moveDistance;
         StartCoroutine(ChangeDirection());
     }
-
-    void Update()
+    void SelfMove()
     {
         if (isMoving)
         {
@@ -44,11 +54,9 @@ public class enemy_AI : MonoBehaviour
             }
         }
     }
-
-
     IEnumerator ChangeDirection()
     {
-        while (true)
+        while (isMoving)
         {
             currentDirection = RandomDirection();
             yield return new WaitForSeconds(changeDirectionInterval);

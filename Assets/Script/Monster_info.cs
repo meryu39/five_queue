@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class Monster_info : MonoBehaviour
 {
@@ -21,6 +22,14 @@ public class Monster_info : MonoBehaviour
 
     SpriteRenderer spriteRenderer;
 
+    public float moveDistance = 3f; // 이동 거리
+    public float changeDirectionInterval = 1.0f; // 방향 변경 간격
+    private Vector3 startPosition;
+    private Vector3 targetPosition;
+    private Vector3 currentDirection;
+    private bool isMoving = true;
+
+    private float idleTime = 4f;
     private void Awake()
     {
         State state = GameObject.Find("Player").GetComponent<State>();
@@ -43,6 +52,9 @@ public class Monster_info : MonoBehaviour
             Monster_area.transform.parent = transform;
             Monster_area.gameObject.SetActive(true);
         }
+
+        SetMove();
+
     }
 
     private void Update()
@@ -67,6 +79,9 @@ public class Monster_info : MonoBehaviour
         }
 
         UpdateHP();
+
+        SelfMove();
+
     }
 
     private void Flip()
@@ -101,6 +116,7 @@ public class Monster_info : MonoBehaviour
             isfollow = true;
             Monster_area.SetActive(false);
             Monster_hpbar.gameObject.SetActive(true);
+            isMoving = false;
         }
     }
 
@@ -111,4 +127,83 @@ public class Monster_info : MonoBehaviour
             my_anim.SetTrigger("isAttack");
         }
     }
+
+    void SetMove()
+    {
+        startPosition = transform.position;
+        currentDirection = RandomDirection();
+        targetPosition = startPosition + currentDirection * moveDistance;
+        StartCoroutine(ChangeDirection());
+    }
+    void SelfMove()
+    {
+        if (isMoving)
+        {
+            my_anim.SetBool("isWalk", true);
+            transform.position += currentDirection * moveSpeed * Time.deltaTime;
+
+            // 현재 위치와 목표 위치 사이의 거리를 계산
+            float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
+
+            Debug.Log(distanceToTarget);
+            if (distanceToTarget < 0.1f)
+            {
+
+                Debug.Log(distanceToTarget);
+                // 목표 위치에 도달하면 방향을 반대로 변경하고 목표 위치를 시작 위치로 설정
+                currentDirection = -currentDirection;
+
+
+                if (currentDirection == Vector3.left)
+                {
+                    targetPosition = new Vector3(startPosition.x - moveDistance, startPosition.y, startPosition.z);
+                    Flip();
+                    Debug.Log("Flip()실행");
+
+                }
+                else if (currentDirection == Vector3.right)
+                {
+                    targetPosition = new Vector3(startPosition.x + moveDistance, startPosition.y, startPosition.z);
+                    Flip();
+                    Debug.Log("Flip()실행");
+                }
+                else if (currentDirection == Vector3.up)
+                {
+                    targetPosition = new Vector3(startPosition.x, startPosition.y + moveDistance, startPosition.z);
+                    Debug.Log("위로");
+                }
+                else if (currentDirection == Vector3.down)
+                {
+                    targetPosition = new Vector3(startPosition.x, startPosition.y - moveDistance, startPosition.z);
+                }
+            }
+            //idleMove();
+
+        }
+    }
+
+    IEnumerator idleMove()
+    {
+        my_anim.SetBool("isWalk", false);
+        yield return new WaitForSeconds(idleTime);
+        StartCoroutine(ChangeDirection());
+
+    }
+    IEnumerator ChangeDirection()
+    {
+        while (isMoving)
+        {
+            currentDirection = RandomDirection();
+            yield return new WaitForSeconds(changeDirectionInterval);
+        }
+    }
+
+    Vector3 RandomDirection()
+    {
+        float horizontal = Random.Range(-1f, 1f);
+        float vertical = Random.Range(-1f, 1f);
+        return new Vector3(horizontal, vertical, 0).normalized;
+    }
+
+
 }
