@@ -4,6 +4,8 @@ using System.Collections;
 
 public class Monster_info : MonoBehaviour
 {
+
+    
     float MonsterAttack = 5f;
     public float moveSpeed = 1f;
     Transform playerTransform;
@@ -22,24 +24,27 @@ public class Monster_info : MonoBehaviour
 
     SpriteRenderer spriteRenderer;
 
-    public float moveDistance = 3f; // 이동 거리
-    public float changeDirectionInterval = 1.0f; // 방향 변경 간격
-    private Vector3 startPosition;
-    private Vector3 targetPosition;
-    private Vector3 currentDirection;
-    private bool isMoving = true;
 
-    private float idleTime = 4f;
+    private bool search = true;
+    public float moveRange = 5f; // 몬스터의 이동 범위
+
+
+    float nextTime = 0f; // 다음이동까지 시간
+
+    float moveDuration = 2f; // 이동하는 시간
+    bool isMoving = false; // 현재 이동 중인지 여부
+
+    
     private void Awake()
     {
         State state = GameObject.Find("Player").GetComponent<State>();
-        
+
         spriteRenderer = GetComponent<SpriteRenderer>();
         my_anim = GetComponent<Animator>(); // 애니메이터 컴포넌트
         Rb = GetComponent<Rigidbody2D>(); // 리지드바디 컴포넌트
         Rb.velocity = Vector3.zero;
     }
-    
+
     void Start()
     {
         if (hpBarPrefab != null)
@@ -53,7 +58,7 @@ public class Monster_info : MonoBehaviour
             Monster_area.gameObject.SetActive(true);
         }
 
-        SetMove();
+
 
     }
 
@@ -61,6 +66,7 @@ public class Monster_info : MonoBehaviour
     {
         if (isfollow && playerTransform != null)
         {
+
             my_anim.SetBool("isRun", true);
             Vector2 direction = (playerTransform.position - transform.position).normalized;
 
@@ -80,17 +86,21 @@ public class Monster_info : MonoBehaviour
 
         UpdateHP();
 
-        SelfMove();
+
 
     }
 
+    private void FixedUpdate()
+    {
+        FSM();
+    }
     private void Flip()
     {
         // 현재 상태를 반전
         isFacingRight = !isFacingRight;
 
         // SpriteRenderer를 이용하여 스프라이트를 뒤집음
-        
+
         spriteRenderer.flipX = !isFacingRight;
     }
 
@@ -116,7 +126,8 @@ public class Monster_info : MonoBehaviour
             isfollow = true;
             Monster_area.SetActive(false);
             Monster_hpbar.gameObject.SetActive(true);
-            isMoving = false;
+            search = false;
+
         }
     }
 
@@ -128,82 +139,75 @@ public class Monster_info : MonoBehaviour
         }
     }
 
-    void SetMove()
+    void FSM()
     {
-        startPosition = transform.position;
-        currentDirection = RandomDirection();
-        targetPosition = startPosition + currentDirection * moveDistance;
-        StartCoroutine(ChangeDirection());
-    }
-    void SelfMove()
-    {
-        if (isMoving)
+        if (search)
         {
-            my_anim.SetBool("isWalk", true);
-            transform.position += currentDirection * moveSpeed * Time.deltaTime;
-
-            // 현재 위치와 목표 위치 사이의 거리를 계산
-            float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
-
-            //Debug.Log(distanceToTarget);
-            if (distanceToTarget < 0.1f)
+            if (!isMoving)
             {
+                nextTime -= Time.deltaTime;
 
-                Debug.Log(distanceToTarget);
-                // 목표 위치에 도달하면 방향을 반대로 변경하고 목표 위치를 시작 위치로 설정
-                currentDirection = -currentDirection;
+                if (nextTime <= 0f)
+                {
+                    // 몬스터의 현재 위치
+                    Vector2 currentPosition = transform.position;
+
+                    // 몬스터의 무작위 이동 벡터 생성
+                    Vector2 randomDirection = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+                    randomDirection.Normalize();
+
+                    // 몬스터가 이동할 새로운 위치 계산
+                    Vector2 newPosition = currentPosition + randomDirection * moveRange;
+
+                    // 이동범위제한
+                    newPosition.x = Mathf.Clamp(newPosition.x, currentPosition.x - moveRange, currentPosition.x + moveRange);
+                    newPosition.y = Mathf.Clamp(newPosition.y, currentPosition.y - moveRange, currentPosition.y + moveRange);
+
+   
+                    if (randomDirection != Vector2.zero)
+                    {
+                        //랜덤방향이 0이 아니면 수색진행
+
+                        my_anim.SetBool("isWalk", true);
+                        isMoving = true;
+                        Rb.velocity = randomDirection * moveSpeed;
+
+                        //방향 달라질때마다 플립써서 방향전환
+                        if (randomDirection.x > 0 && !isFacingRight)
+                        {
+                            Flip();
+                        }
+                        else if (randomDirection.x < 0 && isFacingRight)
+                        {
+                            Flip();
+                        }
+                    }
+                    else
+                    {
+
+                        my_anim.SetBool("isWalk", false);
+                        isMoving = false;
+                    }
 
 
-                if (currentDirection == Vector3.left)
-                {
-                    targetPosition = new Vector3(startPosition.x - moveDistance, startPosition.y, startPosition.z);
-                    Flip();
-                    Debug.Log("Flip()실행");
-
-                }
-                else if (currentDirection == Vector3.right)
-                {
-                    targetPosition = new Vector3(startPosition.x + moveDistance, startPosition.y, startPosition.z);
-                    Flip();
-                    Debug.Log("Flip()실행");
-                }
-                else if (currentDirection == Vector3.up)
-                {
-                    targetPosition = new Vector3(startPosition.x, startPosition.y + moveDistance, startPosition.z);
-                    Debug.Log("위로");
-                }
-                else if (currentDirection == Vector3.down)
-                {
-                    targetPosition = new Vector3(startPosition.x, startPosition.y - moveDistance, startPosition.z);
+                    nextTime = moveDuration;
                 }
             }
-            //idleMove();
+            else
+            {
+                nextTime -= Time.deltaTime;
 
+                if (nextTime <= 0f)
+                {
+                    my_anim.SetBool("isWalk", false);
+                    Rb.velocity = Vector2.zero;
+                    isMoving = false;
+
+
+                    nextTime = moveDuration;
+                }
+            }
         }
     }
-
-    IEnumerator idleMove()
-    {
-        my_anim.SetBool("isWalk", false);
-        yield return new WaitForSeconds(idleTime);
-        StartCoroutine(ChangeDirection());
-
-    }
-    IEnumerator ChangeDirection()
-    {
-        while (isMoving)
-        {
-            currentDirection = RandomDirection();
-            yield return new WaitForSeconds(changeDirectionInterval);
-        }
-    }
-
-    Vector3 RandomDirection()
-    {
-        float horizontal = Random.Range(-1f, 1f);
-        float vertical = Random.Range(-1f, 1f);
-        return new Vector3(horizontal, vertical, 0).normalized;
-    }
-
 
 }
