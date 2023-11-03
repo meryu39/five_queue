@@ -19,11 +19,10 @@ public class State : MonoBehaviour
 
     public float PlayerAttackDamage = 25;
 
-    public Item[] item;
+    public Item[] item = new Item[3];
 
-    void Start()
+    void Awake()
     {
-        item = new Item[3];
         currentHP = maxHP;
         currentEnergy = maxEnergy;
         currentHunger = maxHunger;

@@ -7,12 +7,13 @@ using UnityEngine;
 
 public enum ItemCategory //상호작용 물체의 카테고리
 {
+    NULL = -1,
     WEAPON = 0,
     ITEM
 }
 public enum ItemName
 {
-    BANDAGE, PAINKILLER, EPINEPHRINE, CAN, CUPRAMEN
+    NULL = -1, BANDAGE, PAINKILLER, EPINEPHRINE, CAN, CUPRAMEN
 }
 
 public class InteractionManager : MonoBehaviour
@@ -84,7 +85,14 @@ public class Item
     public ItemCategory category;
     public ItemName name;
     public int count;
-    public Item(ItemCategory category, ItemName name, int count = 1)
+
+    public Item()
+    {
+        category = ItemCategory.NULL;
+        name = ItemName.NULL;
+        count = 0;
+    }
+    public Item(ItemCategory category, ItemName name, int count)
     {
         this.category = category;
         this.name = name;

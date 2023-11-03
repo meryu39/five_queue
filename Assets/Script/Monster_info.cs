@@ -145,7 +145,7 @@ public class Monster_info : MonoBehaviour
             // 현재 위치와 목표 위치 사이의 거리를 계산
             float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
 
-            Debug.Log(distanceToTarget);
+            //Debug.Log(distanceToTarget);
             if (distanceToTarget < 0.1f)
             {
 
