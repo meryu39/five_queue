@@ -56,11 +56,15 @@ public class InteractionManager : MonoBehaviour
                 {
                     obtainedItem = new Item(ItemCategory.ITEM, ItemName.CAN, ItemAcquiredAmount.can);
                 }
-                else if (interactionInformation.itemName == ItemName.BANDAGE)
+                else if (interactionInformation.itemName == ItemName.CUPRAMEN)
                 {
-                    obtainedItem = new Item(ItemCategory.ITEM, ItemName.BANDAGE, ItemAcquiredAmount.cupramen);
+                    obtainedItem = new Item(ItemCategory.ITEM, ItemName.CUPRAMEN, ItemAcquiredAmount.cupramen);
                 }
-                player.GetComponentInChildren<State>().GetItem(obtainedItem);
+                if(!player.GetComponentInChildren<State>().GetItem(obtainedItem))
+                {
+                    Debug.Log("인벤토리 꽉참!");
+                    return false;
+                }
                 break;
             case ItemCategory.WEAPON:
                 Debug.Log("카테고리 무기 함수 수행");

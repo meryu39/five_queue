@@ -34,7 +34,10 @@ public class PlayerMove : MonoBehaviour
     public GameObject Image_PressF;
     [SerializeField] private TrailRenderer tr;
 
-  
+    private bool[] isDump = { false, false, false };
+    public float dumpTime = 1.25f;
+
+
     private void Awake()
     {
         
@@ -86,17 +89,35 @@ public class PlayerMove : MonoBehaviour
         {
             StartCoroutine(Dash());  // 대쉬 코루틴 실행
         }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            isDump[0] = true;
+            StartCoroutine(DumpItem(0));
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            isDump[1] = true;
+            StartCoroutine(DumpItem(1));
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            isDump[2] = true;
+            StartCoroutine(DumpItem(2));
+        }
         if (Input.GetKeyUp(KeyCode.Alpha1))
         {
-            UseItem(1);
+            isDump[0] = false;
+            UseItem(0);
         }
         if (Input.GetKeyUp(KeyCode.Alpha2))
         {
-            UseItem(2);
+            isDump[1] = false;
+            UseItem(1);
         }
         if (Input.GetKeyUp(KeyCode.Alpha3))
         {
-            UseItem(3);
+            isDump[2] = false;
+            UseItem(2);
         }
     }
     private void FixedUpdate()
@@ -238,12 +259,12 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    private void UseItem(int itemNumber)
+    private void UseItem(int itemIndex)
     {
-        ref Item usingItem = ref state.item[itemNumber - 1];
+        ref Item usingItem = ref state.item[itemIndex];
         if(usingItem.count <= 0)
         {
-            Debug.Log(itemNumber + "번째 아이템 남은 개수가 없음");
+            Debug.Log(itemIndex + 1 + "번째 아이템 남은 개수가 없음");
             return;
         }
         usingItem.count--;
@@ -266,6 +287,15 @@ public class PlayerMove : MonoBehaviour
         else if (usingItem.name == ItemName.CUPRAMEN)
         {
             state.SetHunger(state.currentHunger + 2);
+        }
+    }
+
+    private IEnumerator DumpItem(int itemIndex)
+    {
+        yield return new WaitForSeconds(dumpTime);
+        if (isDump[itemIndex] == true)
+        {
+            state.item[itemIndex].count = 0;
         }
     }
 }

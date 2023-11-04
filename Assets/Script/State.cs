@@ -51,7 +51,7 @@ public class State : MonoBehaviour
         }
     }
 
-    public void GetItem(Item obtainedItem)
+    public bool GetItem(Item obtainedItem)
     {
         for(int i=0; i<3; i++)
         {
@@ -59,9 +59,10 @@ public class State : MonoBehaviour
             {
                 Debug.Log("null È®ÀÎ");
                 item[i] = obtainedItem;
-                break;
+                return true;
             }
         }
+        return false;
     }
 
     public void SetHP(float value)
