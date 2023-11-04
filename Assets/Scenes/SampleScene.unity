@@ -174,10 +174,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 750788f6f4480b240af5519f3ee93998, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHP: 100
+  maxHP: 100
+  maxEnergy: 100
+  maxHunger: 2
   currentHP: 0
+  currentEnergy: 0
+  currentHunger: 0
   HPbar: {fileID: 24434895}
   PlayerAttackDamage: 25
+  item:
+  - category: -1
+    name: -1
+    count: 0
+  - category: -1
+    name: -1
+    count: 0
+  - category: -1
+    name: -1
+    count: 0
 --- !u!114 &24434895
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -331,7 +345,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1089499935428572939, guid: d54486196720b3c42b6d4bbc385bc6f5, type: 3}
   m_PrefabInstance: {fileID: 3124452700696014420}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1508309205}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
@@ -706,7 +720,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.191, y: 1.957, z: -11.43}
+  m_LocalPosition: {x: 0.198, y: 1.952, z: -11.43}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -899,6 +913,14 @@ PrefabInstance:
       propertyPath: m_FlipX
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 484434619025874309, guid: 4fafe4882143b794d89de7a74ee788cb, type: 3}
+      propertyPath: m_Size.x
+      value: 1.3374032
+      objectReference: {fileID: 0}
+    - target: {fileID: 484434619025874309, guid: 4fafe4882143b794d89de7a74ee788cb, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.04541745
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 4738924652107587343, guid: 4fafe4882143b794d89de7a74ee788cb, type: 3}
@@ -928,11 +950,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a99ba4f500b1f81489aa4dccec569120, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AttackWait: 1
+  MonsterAttack: 10
   moveSpeed: 0.5
   Monster_HP: 100
   M_area: {fileID: 4734277119871747640, guid: 985779b6b8b04b2448291ee8e9858408, type: 3}
   hpBarPrefab: {fileID: 5692306809095712317, guid: 0b0f828e902060d4d9bdb1031a5b7a29, type: 3}
   UIparent: {fileID: 921498572}
+  moveRange: 5
 --- !u!4 &539209369 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 424682, guid: 4fafe4882143b794d89de7a74ee788cb, type: 3}
@@ -1103,8 +1128,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.010308325, y: 0.19}
-  m_Size: {x: 0.22264326, y: 0.39999998}
+  m_Offset: {x: -0.005427152, y: 0.16925508}
+  m_Size: {x: 0.29097944, y: 0.5342318}
   m_Direction: 0
 --- !u!96 &811065494
 TrailRenderer:
@@ -1248,10 +1273,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 750788f6f4480b240af5519f3ee93998, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHP: 100
+  maxHP: 100
+  maxEnergy: 100
+  maxHunger: 2
   currentHP: 100
+  currentEnergy: 0
+  currentHunger: 0
   HPbar: {fileID: 124530656}
   PlayerAttackDamage: 25
+  item:
+  - category: -1
+    name: -1
+    count: 0
+  - category: -1
+    name: -1
+    count: 0
+  - category: -1
+    name: -1
+    count: 0
 --- !u!111 &811065508
 Animation:
   m_ObjectHideFlags: 0
@@ -1481,7 +1520,7 @@ Transform:
   m_GameObject: {fileID: 1001835701}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.191, y: 1.957, z: -11.43}
+  m_LocalPosition: {x: 0.198, y: 1.952, z: -11.43}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2570,11 +2609,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3820741013839462605, guid: 0737acb13a4e6144bac8f83d78376d52, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.191
+      value: 0.198
       objectReference: {fileID: 0}
     - target: {fileID: 3820741013839462605, guid: 0737acb13a4e6144bac8f83d78376d52, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.957
+      value: 1.952
       objectReference: {fileID: 0}
     - target: {fileID: 3820741013839462605, guid: 0737acb13a4e6144bac8f83d78376d52, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3081,7 +3120,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccac92b3be44c9e489402b0c56c3fb9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  category: 0
+  itemCategory: 0
+  itemName: 0
 --- !u!212 &1297646627
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3396,11 +3436,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a99ba4f500b1f81489aa4dccec569120, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AttackWait: 1
+  MonsterAttack: 20
   moveSpeed: 1
   Monster_HP: 100
   M_area: {fileID: 4734277119871747640, guid: 985779b6b8b04b2448291ee8e9858408, type: 3}
   hpBarPrefab: {fileID: 5692306809095712317, guid: 0b0f828e902060d4d9bdb1031a5b7a29, type: 3}
   UIparent: {fileID: 921498572}
+  moveRange: 5
 --- !u!1 &1481293362
 GameObject:
   m_ObjectHideFlags: 0
@@ -3473,6 +3516,41 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1481293362}
   m_CullTransparentMesh: 1
+--- !u!1 &1508309205 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8777441952431590647, guid: d54486196720b3c42b6d4bbc385bc6f5, type: 3}
+  m_PrefabInstance: {fileID: 3124452700696014420}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1508309206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1508309205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 750788f6f4480b240af5519f3ee93998, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHP: 100
+  maxEnergy: 100
+  maxHunger: 2
+  currentHP: 0
+  currentEnergy: 0
+  currentHunger: 0
+  HPbar: {fileID: 124530656}
+  PlayerAttackDamage: 25
+  item:
+  - category: -1
+    name: -1
+    count: 0
+  - category: -1
+    name: -1
+    count: 0
+  - category: -1
+    name: -1
+    count: 0
 --- !u!1 &1552788116
 GameObject:
   m_ObjectHideFlags: 0
@@ -3539,7 +3617,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccac92b3be44c9e489402b0c56c3fb9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  category: 1
+  itemCategory: 0
+  itemName: 0
 --- !u!212 &1552788119
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4412,6 +4491,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1711392592}
     m_Modifications:
+    - target: {fileID: 1089499935428572939, guid: d54486196720b3c42b6d4bbc385bc6f5, type: 3}
+      propertyPath: m_Value
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2456702131511669706, guid: d54486196720b3c42b6d4bbc385bc6f5, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -4507,7 +4590,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8777441952431590647, guid: d54486196720b3c42b6d4bbc385bc6f5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1508309206}
   m_SourcePrefab: {fileID: 100100000, guid: d54486196720b3c42b6d4bbc385bc6f5, type: 3}
 --- !u!1001 &5249373893328943608
 PrefabInstance:

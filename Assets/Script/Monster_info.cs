@@ -1,12 +1,16 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.Playables;
 
 public class Monster_info : MonoBehaviour
 {
 
-    
-    float MonsterAttack = 5f;
+    private State state;
+    private bool isAttacking = false; // 공격 여부
+    public float AttackWait = 1.0f; // 공격 간격
+
+    public float MonsterAttack = 20f;
     public float moveSpeed = 1f;
     Transform playerTransform;
     bool isfollow = false;
@@ -37,7 +41,7 @@ public class Monster_info : MonoBehaviour
     
     private void Awake()
     {
-        State state = GameObject.Find("Player").GetComponent<State>();
+        state = FindObjectOfType<State>();
 
         spriteRenderer = GetComponent<SpriteRenderer>();
         my_anim = GetComponent<Animator>(); // 애니메이터 컴포넌트
@@ -131,13 +135,46 @@ public class Monster_info : MonoBehaviour
         }
     }
 
+
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player") && !isAttacking)
         {
+            isAttacking = true; // 공격 시작
             my_anim.SetTrigger("isAttack");
         }
     }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            // 공격 중인 경우에만 피를 감소시킴
+            if (my_anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+            {
+                state.Pdamage(MonsterAttack);
+                Debug.Log(state.currentHP);
+
+            }
+            else
+            {
+                // 공격 중이 아니라면 다시 공격 모션을 시작
+                isAttacking = false;
+                my_anim.SetTrigger("isAttack");
+            }
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (isAttacking&&my_anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+        {
+            // 충돌에서 벗어났을 때 공격을 종료하고 isAttacking 재설정
+            isAttacking = false;
+        }
+    }
+
 
     void FSM()
     {
@@ -210,4 +247,9 @@ public class Monster_info : MonoBehaviour
         }
     }
 
+
+
+
 }
+
+

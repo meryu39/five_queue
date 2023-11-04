@@ -64,7 +64,7 @@ public class PlayerMove : MonoBehaviour
             return;
         }
         checkInput();
-        //객체끼리 충돌시 밀리지 않기 ,, 가속도 = 0
+        //객체끼리 충돌시 밀리지 않기 가속도 = 0
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
     }
     private void checkInput()
@@ -192,13 +192,7 @@ public class PlayerMove : MonoBehaviour
 
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Monster"))
-        {
-            state.Pdamage(20);
-        }
-    }
+
 
     private void OnTriggerEnter2D(Collider2D other)
     {

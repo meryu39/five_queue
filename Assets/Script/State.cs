@@ -32,7 +32,7 @@ public class State : MonoBehaviour
 
 
 
-    public void Pdamage(int damage)
+    public void Pdamage(float damage)
     {
         currentHP -= damage;
         UpdateHP();
