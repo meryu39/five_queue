@@ -905,6 +905,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5073664, guid: 4fafe4882143b794d89de7a74ee788cb, type: 3}
+      propertyPath: m_Mass
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 9573062, guid: 4fafe4882143b794d89de7a74ee788cb, type: 3}
       propertyPath: m_Controller
       value: 
@@ -950,7 +954,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a99ba4f500b1f81489aa4dccec569120, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AttackWait: 1
   MonsterAttack: 10
   moveSpeed: 0.5
   Monster_HP: 100
@@ -1069,6 +1072,7 @@ MonoBehaviour:
   playerMoveSpeed: 30
   Image_PressF: {fileID: 402524276}
   tr: {fileID: 811065494}
+  nodeal: 0
 --- !u!50 &811065488
 Rigidbody2D:
   serializedVersion: 4
@@ -3436,7 +3440,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a99ba4f500b1f81489aa4dccec569120, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AttackWait: 1
   MonsterAttack: 20
   moveSpeed: 1
   Monster_HP: 100

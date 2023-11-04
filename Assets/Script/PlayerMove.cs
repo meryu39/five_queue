@@ -5,9 +5,11 @@ using UnityEngine.UI;
 public class PlayerMove : MonoBehaviour
 {
 
-    private State state;
-    private Monster_info monster;
-    private bool dashpress = false;
+```c#
+private State state;
+private Monster_info monster;
+private bool dashpress = false;
+```
 
 
     public UI_CoolTime coolTimeUI; // UI_CoolTime 클래스의 인스턴스에 접근하기 위한 변수
@@ -17,26 +19,25 @@ public class PlayerMove : MonoBehaviour
     private Rigidbody2D playerRb; //리자드바디2d를 playerRb로 선언
     private Animator myAnim; 
     public float playerMoveSpeed;
-
+    
     private bool isRun; //달리기 여부 
-
+    
     private bool canDash = true; //대쉬가능여부
     private bool isDashing; //대쉬여부
     private float dashingPower = 10f; //대쉬이동거리
     private float dashingTime = 0.2f; //대쉬이동시간
     private float dashingCooldown = 2f; //대쉬 쿨타임
-
+    
     private bool isAttack = false; //공격확인 플래그(중복 공격 방지)
     private bool Attacking = false;  //공격키 입력 확인 변수
-
+    
     private GameObject interactionObject;
     private int interactionObjectCount;
     public GameObject Image_PressF;
     [SerializeField] private TrailRenderer tr;
-
-    private bool[] isDump = { false, false, false };
-    public float dumpTime = 1.25f;
-
+        private bool[] isDump = { false, false, false };
+        public float dumpTime = 1.25f;
+        public  bool nodeal = false; //무!!!적!!!!!!!!판!!!정!~!!!기
 
     private void Awake()
     {
@@ -59,7 +60,7 @@ public class PlayerMove : MonoBehaviour
 
 
     }
-
+    
     private void Update()
     {
         if (isDashing)
@@ -68,7 +69,7 @@ public class PlayerMove : MonoBehaviour
         }
         checkInput();
         //객체끼리 충돌시 밀리지 않기 가속도 = 0
-        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+       // GetComponent<Rigidbody2D>().velocity = Vector2.zero;
     }
     private void checkInput()
     {
@@ -126,7 +127,7 @@ public class PlayerMove : MonoBehaviour
         {
             return;
         }
-
+    
         playerRb.velocity = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.fixedDeltaTime; //사용자 방향키 입력받아 이동속도 계산
                                                                                                                                                           //Debug.Log(new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.fixedDeltaTime);
 
@@ -141,24 +142,24 @@ public class PlayerMove : MonoBehaviour
             myAnim.SetFloat("LastMoveX", Input.GetAxisRaw("Horizontal"));                    //마지막으로 이동한 방향 확인하기 위한 파라미터 선언
             myAnim.SetFloat("LastMoveY", Input.GetAxisRaw("Vertical"));
         }
-
+    
         if (dashpress && canDash && !isDashing)
         {
             StartCoroutine(Dash());
             dashpress = false; // 대쉬 입력을 처리한 후에는 리셋
         }
-  
 
 
-    
-        
+
+
+​        
         if (Attacking)
         {
             myAnim.SetTrigger("isAttack"); //공격애니메이션 실행
             isAttack = false; //공격플래그 비활성화
             Attacking = false; //공격모션 비활성화
         }
-
+    
         if (Input.GetKey(KeyCode.LeftShift) && !isDashing) // 왼쪽 Shift 키를 누르고 대쉬 중이 아닌 경우
         {
             isRun = true; // 달리기 상태로 설정
@@ -170,46 +171,50 @@ public class PlayerMove : MonoBehaviour
             isRun = false; // 달리기 x
             playerMoveSpeed = 30f; // 달리지않을 때, 원래 속도로
             myAnim.SetBool("isRun", false);
-
+    
         }
 
-        
+
+​        
 
 
     }
-
+    
     private IEnumerator Dash()
     {
-        Debug.Log("대쉬버튼눌림");
+
 
         if (coolTimeUI != null)
         {
             coolTimeUI.Trigger_Skill();
         }
         canDash = false;
-        Debug.Log("버튼이 눌려서 canDash가 false됨");
+      
         isDashing = true;
+        nodeal = true;
+    
         float originalGravity = playerRb.gravityScale; //중력 수치 
         playerRb.gravityScale = 0f; //중력 0으로 만듬 
 
 
         float dashDirectionX = Input.GetAxisRaw("Horizontal");
         float dashDirectionY = Input.GetAxisRaw("Vertical");
-
-        Debug.Log("가로" + dashDirectionX);
-        Debug.Log("세로" + dashDirectionY);
+    
         Vector2 dashDirection = new Vector2(dashDirectionX, dashDirectionY).normalized;
         playerRb.velocity = dashDirection * dashingPower;
-        Debug.Log("대쉬파워량" + playerRb.velocity);
+        
         tr.emitting = true;
+
+
         yield return new WaitForSeconds(dashingTime); //해당 변수만큼 기다림
         tr.emitting = false; //이펙트 종료 
         playerRb.gravityScale = originalGravity; 
         isDashing = false;
-
+        nodeal = false;
+    
         yield return new WaitForSeconds(dashingCooldown);  //해당 변수만큼 기다림        
         canDash = true;
-        Debug.Log("시간이 지나서 canDash가 true");
+
 
     }
 
@@ -223,7 +228,7 @@ public class PlayerMove : MonoBehaviour
             Debug.Log("몬스터가 닿았습니다");
             // 태그된 객체의 몬스터 인포 컴포넌트를 가져옴
             Monster_info monster = other.GetComponent<Monster_info>();
-
+    
             if (monster != null)
             {
                 Debug.Log("공격 성공");
@@ -233,7 +238,7 @@ public class PlayerMove : MonoBehaviour
                 isAttack = true;
             }
         }
-
+    
         if(other.CompareTag("InteractionObject"))
         {
             if(interactionObjectCount == 0)
@@ -245,7 +250,7 @@ public class PlayerMove : MonoBehaviour
             interactionObject = other.gameObject;
         }
     }
-
+    
     private void OnTriggerExit2D(Collider2D other)
     {
         if(other.CompareTag("InteractionObject"))
@@ -258,7 +263,7 @@ public class PlayerMove : MonoBehaviour
             }
         }
     }
-
+    
     private void UseItem(int itemIndex)
     {
         ref Item usingItem = ref state.item[itemIndex];
@@ -289,7 +294,7 @@ public class PlayerMove : MonoBehaviour
             state.SetHunger(state.currentHunger + 2);
         }
     }
-
+    
     private IEnumerator DumpItem(int itemIndex)
     {
         yield return new WaitForSeconds(dumpTime);

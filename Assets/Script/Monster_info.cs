@@ -2,13 +2,16 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.Playables;
+using Cinemachine;
 
 public class Monster_info : MonoBehaviour
 {
 
     private State state;
-    private bool isAttacking = false; // 공격 여부
-    public float AttackWait = 1.0f; // 공격 간격
+    private PlayerMove dashing;
+    private bool Monster_Attacking = false; // 공격 여부
+    private float attackCoolTime = 3f; // 공격 쿨타임
+    private float last_AttackTime = 0.0f; //마지막 공격시간
 
     public float MonsterAttack = 20f;
     public float moveSpeed = 1f;
@@ -38,11 +41,11 @@ public class Monster_info : MonoBehaviour
     float moveDuration = 2f; // 이동하는 시간
     bool isMoving = false; // 현재 이동 중인지 여부
 
-    
+    private bool EnterPlayer = false; 
     private void Awake()
     {
         state = FindObjectOfType<State>();
-
+        dashing = FindObjectOfType<PlayerMove>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         my_anim = GetComponent<Animator>(); // 애니메이터 컴포넌트
         Rb = GetComponent<Rigidbody2D>(); // 리지드바디 컴포넌트
@@ -71,7 +74,10 @@ public class Monster_info : MonoBehaviour
         if (isfollow && playerTransform != null)
         {
 
-            my_anim.SetBool("isRun", true);
+            if (!EnterPlayer)
+            {
+                my_anim.SetBool("isRun", true);
+            }
             Vector2 direction = (playerTransform.position - transform.position).normalized;
 
             // Flip 설정
@@ -137,12 +143,20 @@ public class Monster_info : MonoBehaviour
 
 
 
+    private bool isAttacking = false;
+    private float lastAttackTime = 0f;
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player") && !isAttacking)
+        if (collision.gameObject.CompareTag("Player") && !isAttacking&& Time.time - lastAttackTime >= attackCoolTime)
         {
-            isAttacking = true; // 공격 시작
+            isAttacking = true; 
             my_anim.SetTrigger("isAttack");
+            if (!dashing.nodeal)
+            {
+                state.Pdamage(MonsterAttack);
+            }
+            lastAttackTime = Time.time; 
         }
     }
 
@@ -150,23 +164,38 @@ public class Monster_info : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            // 공격 중인 경우에만 피를 감소시킴
-            if (my_anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
-            {
-                state.Pdamage(MonsterAttack);
-                Debug.Log(state.currentHP);
+            EnterPlayer = true; //플레이어와의 충돌여부 
 
-            }
-            else
+            if (isAttacking) //공격가능상태
             {
-                // 공격 중이 아니라면 다시 공격 모션을 시작
-                isAttacking = false;
-                my_anim.SetTrigger("isAttack");
+               
+                if (Time.time - lastAttackTime >= attackCoolTime)
+                {
+                    my_anim.SetTrigger("isAttack");
+                    lastAttackTime = Time.time; //마지막공격시간 최신화
+
+                    if (!dashing.nodeal) //대쉬상태 아닐 때 
+                    {
+                        state.Pdamage(MonsterAttack);
+                        Debug.Log("플레이어공격");
+                    }
+
+                    isAttacking = false; 
+                }
             }
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            isAttacking = false;
+        }
+    }
+
+
+    /*private void OnCollisionExit2D(Collision2D collision)
     {
         if (isAttacking&&my_anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
         {
@@ -174,7 +203,7 @@ public class Monster_info : MonoBehaviour
             isAttacking = false;
         }
     }
-
+    */
 
     void FSM()
     {
