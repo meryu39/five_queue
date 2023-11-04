@@ -5,9 +5,10 @@ using UnityEngine.UI;
 public class PlayerMove : MonoBehaviour
 {
 
-private State state;
-private Monster_info monster;
-private bool dashpress = false;
+    private State state;
+    private Monster_info monster;
+    //private Skill skill;
+    private bool dashpress = false;
 
 
     public UI_CoolTime coolTimeUI; // UI_CoolTime 클래스의 인스턴스에 접근하기 위한 변수
@@ -37,6 +38,9 @@ private bool dashpress = false;
     public float dumpTime = 1.25f;
     public  bool nodeal = false; //무!!!적!!!!!!!!판!!!정!~!!!기
 
+    [SerializeField]
+    public GameObject 혈취처방;
+
     private void Awake()
     {
         
@@ -44,6 +48,7 @@ private bool dashpress = false;
         playerRb.velocity = Vector3.zero;
         myAnim = GetComponent<Animator>(); //애니메이터 컴포넌트
         state = GetComponent<State>(); // 스탯 스크립트 연결
+        //skill = GetComponent<Skill>();
         Image_PressF.SetActive(false);
         GameObject monsterObject = GameObject.FindWithTag("Monster"); // 몬스터의 태그를 사용하여 찾음
         if(monsterObject != null)
@@ -165,7 +170,7 @@ private bool dashpress = false;
             playerMoveSpeed = 30f; // 달리지않을 때, 원래 속도로
             myAnim.SetBool("isRun", false);
         }
-
+        SkillEvenet();
     }
     
     private IEnumerator Dash()
@@ -207,6 +212,29 @@ private bool dashpress = false;
     }
 
 
+    //스킬1
+    private void SkillEvenet()
+    {
+        float SkillSpeed = 3f;
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Vector2 skillDirection = GetPlayerDirection();
+            GameObject skill1 = Instantiate(혈취처방, transform.position, Quaternion.identity);
+            Rigidbody2D skill1_rb = skill1.GetComponent<Rigidbody2D>();
+            skill1_rb.velocity = skillDirection * SkillSpeed;
+
+            //Atan2는 y,x좌표로 두 점 사이의 각도 계산 (플레이어 방향에 따른 프리팹의 방향전환 -> 스킬프리팹 방향)
+            float angle = Mathf.Atan2(myAnim.GetFloat("LastMoveY"), myAnim.GetFloat("LastMoveX")) * Mathf.Rad2Deg;
+            //스킬 프리팹 방향 전환
+            skill1.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+        }
+    }
+
+    private Vector2 GetPlayerDirection()
+    {
+        //플레이어 방향 리턴
+        return new Vector2(myAnim.GetFloat("LastMoveX"), myAnim.GetFloat("LastMoveY")).normalized;
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {

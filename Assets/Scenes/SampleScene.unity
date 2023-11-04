@@ -907,7 +907,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5073664, guid: 4fafe4882143b794d89de7a74ee788cb, type: 3}
       propertyPath: m_Mass
-      value: 1000
+      value: 0.0001
       objectReference: {fileID: 0}
     - target: {fileID: 9573062, guid: 4fafe4882143b794d89de7a74ee788cb, type: 3}
       propertyPath: m_Controller
@@ -919,11 +919,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 484434619025874309, guid: 4fafe4882143b794d89de7a74ee788cb, type: 3}
       propertyPath: m_Size.x
-      value: 1.3374032
+      value: 0.99356693
       objectReference: {fileID: 0}
     - target: {fileID: 484434619025874309, guid: 4fafe4882143b794d89de7a74ee788cb, type: 3}
       propertyPath: m_Offset.x
-      value: -0.04541745
+      value: 0.12650073
+      objectReference: {fileID: 0}
+    - target: {fileID: 484434619025874309, guid: 4fafe4882143b794d89de7a74ee788cb, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -1072,7 +1076,9 @@ MonoBehaviour:
   playerMoveSpeed: 30
   Image_PressF: {fileID: 402524276}
   tr: {fileID: 811065494}
+  dumpTime: 1.25
   nodeal: 0
+  "\uD608\uCDE8\uCC98\uBC29": {fileID: 2675254035515863519, guid: 10596f3f15bd1844591b34fb733a20d2, type: 3}
 --- !u!50 &811065488
 Rigidbody2D:
   serializedVersion: 4
@@ -1132,8 +1138,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.005427152, y: 0.16925508}
-  m_Size: {x: 0.29097944, y: 0.5342318}
+  m_Offset: {x: -0.006857626, y: 0.16925508}
+  m_Size: {x: 0.20801128, y: 0.5342318}
   m_Direction: 0
 --- !u!96 &811065494
 TrailRenderer:

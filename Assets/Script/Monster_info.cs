@@ -9,9 +9,14 @@ public class Monster_info : MonoBehaviour
 
     private State state;
     private PlayerMove dashing;
-    private bool Monster_Attacking = false; // 공격 여부
+
+
+
     private float attackCoolTime = 3f; // 공격 쿨타임
-    private float last_AttackTime = 0.0f; //마지막 공격시간
+    private bool isAttacking = false; //공격여부
+    private float lastAttackTime = 0f; //마지막 공격 
+
+
 
     public float MonsterAttack = 20f;
     public float moveSpeed = 1f;
@@ -143,20 +148,16 @@ public class Monster_info : MonoBehaviour
 
 
 
-    private bool isAttacking = false;
-    private float lastAttackTime = 0f;
+
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player") && !isAttacking&& Time.time - lastAttackTime >= attackCoolTime)
+        if (collision.gameObject.CompareTag("Player") && !isAttacking)
         {
-            isAttacking = true; 
+            isAttacking = true;
             my_anim.SetTrigger("isAttack");
-            if (!dashing.nodeal)
-            {
-                state.Pdamage(MonsterAttack);
-            }
-            lastAttackTime = Time.time; 
+            state.Pdamage(MonsterAttack);
+            lastAttackTime = Time.time;
         }
     }
 
@@ -164,35 +165,31 @@ public class Monster_info : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            EnterPlayer = true; //플레이어와의 충돌여부 
+            my_anim.SetBool("isRun", false);
+            EnterPlayer = true;
 
-            if (isAttacking) //공격가능상태
-            {
-               
                 if (Time.time - lastAttackTime >= attackCoolTime)
                 {
                     my_anim.SetTrigger("isAttack");
-                    lastAttackTime = Time.time; //마지막공격시간 최신화
+                    lastAttackTime = Time.time;
 
-                    if (!dashing.nodeal) //대쉬상태 아닐 때 
+                    if (!dashing.nodeal)
                     {
                         state.Pdamage(MonsterAttack);
-                        Debug.Log("플레이어공격");
                     }
 
-                    isAttacking = false; 
+                    
                 }
-            }
+            
         }
+        
     }
-
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            isAttacking = false;
-        }
+        my_anim.SetBool("isRun", true);
     }
+
+
 
 
     /*private void OnCollisionExit2D(Collision2D collision)
