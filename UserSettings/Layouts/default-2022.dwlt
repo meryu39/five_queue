@@ -350,9 +350,9 @@ MonoBehaviour:
       e32: 0
       e33: 1
   m_PreviewAnimator: {fileID: 0}
-  m_AnimatorController: {fileID: 9100000, guid: 1f459d7a55eab80499661c069cd7319e, type: 2}
+  m_AnimatorController: {fileID: 9100000, guid: 5c2341c72c0e92146a0a83e3fb5b497a, type: 2}
   m_BreadCrumbs:
-  - m_Target: {fileID: -3911930219970669283, guid: 1f459d7a55eab80499661c069cd7319e, type: 2}
+  - m_Target: {fileID: 4255180237518297560, guid: 5c2341c72c0e92146a0a83e3fb5b497a, type: 2}
     m_ScrollPosition: {x: 0, y: 0}
   stateMachineGraph: {fileID: 0}
   stateMachineGraphGUI: {fileID: 0}
@@ -404,18 +404,18 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: eefafffff0faffff0cfbffffda660000ec6600000a6700008a670000
+      m_ExpandedIDs: 0afbffff0cfbffff0a670000746700008e670000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
-        m_Name: HP
-        m_OriginalName: HP
+        m_Name: Monster_HP
+        m_OriginalName: Monster_HP
         m_EditFieldRect:
           serializedVersion: 2
           x: 0
           y: 0
           width: 0
           height: 0
-        m_UserData: -1296
+        m_UserData: -1308
         m_IsWaitingForDelay: 0
         m_IsRenaming: 0
         m_OriginalEventType: 0
@@ -520,7 +520,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/2D ToonBear
+    - Assets/Script
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -528,16 +528,16 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/2D ToonBear
+  - Assets/Script
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\seo\Desktop\five_queue
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 5a6b0000
-    m_LastClickedID: 27482
-    m_ExpandedIDs: 000000004a6b000000ca9a3b
+    m_SelectedIDs: 6c6b0000
+    m_LastClickedID: 27500
+    m_ExpandedIDs: 000000004e6b000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -565,7 +565,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000004a6b0000
+    m_ExpandedIDs: 000000004e6b0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -617,7 +617,7 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
-    m_ScrollPosition: {x: 0, y: 1944}
+    m_ScrollPosition: {x: 0, y: 0}
     m_GridSize: 64
   m_SkipHiddenPackages: 0
   m_DirectoriesAreaWidth: 115
@@ -1101,9 +1101,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -1.7361349, y: 0.5846903, z: -0.021201354}
+    m_Target: {x: -0.6323599, y: -2.4741797, z: -1.4850769}
     speed: 2
-    m_Value: {x: -1.7361349, y: 0.5846903, z: -0.021201354}
+    m_Value: {x: -0.6323599, y: -2.4741797, z: -1.4850769}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1153,9 +1153,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 3.0864227
+    m_Target: 6.478061
     speed: 2
-    m_Value: 3.0864227
+    m_Value: 6.478061
   m_Ortho:
     m_Target: 1
     speed: 2

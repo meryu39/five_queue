@@ -34,7 +34,8 @@ public class PlayerMove : MonoBehaviour
     public GameObject Image_PressF;
     [SerializeField] private TrailRenderer tr;
 
-  
+    public  bool nodeal = false; //무!!!적!!!!!!!!판!!!정!~!!!기
+
     private void Awake()
     {
         
@@ -65,7 +66,7 @@ public class PlayerMove : MonoBehaviour
         }
         checkInput();
         //객체끼리 충돌시 밀리지 않기 가속도 = 0
-        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+       // GetComponent<Rigidbody2D>().velocity = Vector2.zero;
     }
     private void checkInput()
     {
@@ -159,15 +160,17 @@ public class PlayerMove : MonoBehaviour
 
     private IEnumerator Dash()
     {
-        Debug.Log("대쉬버튼눌림");
+
 
         if (coolTimeUI != null)
         {
             coolTimeUI.Trigger_Skill();
         }
         canDash = false;
-        Debug.Log("버튼이 눌려서 canDash가 false됨");
+  
         isDashing = true;
+        nodeal = true;
+
         float originalGravity = playerRb.gravityScale; //중력 수치 
         playerRb.gravityScale = 0f; //중력 0으로 만듬 
 
@@ -175,20 +178,21 @@ public class PlayerMove : MonoBehaviour
         float dashDirectionX = Input.GetAxisRaw("Horizontal");
         float dashDirectionY = Input.GetAxisRaw("Vertical");
 
-        Debug.Log("가로" + dashDirectionX);
-        Debug.Log("세로" + dashDirectionY);
         Vector2 dashDirection = new Vector2(dashDirectionX, dashDirectionY).normalized;
         playerRb.velocity = dashDirection * dashingPower;
-        Debug.Log("대쉬파워량" + playerRb.velocity);
+        
         tr.emitting = true;
+
+
         yield return new WaitForSeconds(dashingTime); //해당 변수만큼 기다림
         tr.emitting = false; //이펙트 종료 
         playerRb.gravityScale = originalGravity; 
         isDashing = false;
+        nodeal = false;
 
         yield return new WaitForSeconds(dashingCooldown);  //해당 변수만큼 기다림        
         canDash = true;
-        Debug.Log("시간이 지나서 canDash가 true");
+ 
 
     }
 
