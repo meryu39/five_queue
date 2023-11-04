@@ -5,11 +5,9 @@ using UnityEngine.UI;
 public class PlayerMove : MonoBehaviour
 {
 
-```c#
 private State state;
 private Monster_info monster;
 private bool dashpress = false;
-```
 
 
     public UI_CoolTime coolTimeUI; // UI_CoolTime 클래스의 인스턴스에 접근하기 위한 변수
@@ -35,9 +33,9 @@ private bool dashpress = false;
     private int interactionObjectCount;
     public GameObject Image_PressF;
     [SerializeField] private TrailRenderer tr;
-        private bool[] isDump = { false, false, false };
-        public float dumpTime = 1.25f;
-        public  bool nodeal = false; //무!!!적!!!!!!!!판!!!정!~!!!기
+    private bool[] isDump = { false, false, false };
+    public float dumpTime = 1.25f;
+    public  bool nodeal = false; //무!!!적!!!!!!!!판!!!정!~!!!기
 
     private void Awake()
     {
@@ -148,11 +146,6 @@ private bool dashpress = false;
             StartCoroutine(Dash());
             dashpress = false; // 대쉬 입력을 처리한 후에는 리셋
         }
-
-
-
-
-​        
         if (Attacking)
         {
             myAnim.SetTrigger("isAttack"); //공격애니메이션 실행
@@ -171,12 +164,7 @@ private bool dashpress = false;
             isRun = false; // 달리기 x
             playerMoveSpeed = 30f; // 달리지않을 때, 원래 속도로
             myAnim.SetBool("isRun", false);
-    
         }
-
-
-​        
-
 
     }
     
