@@ -14,6 +14,12 @@ public class State : MonoBehaviour
     public float currentHP; //현재 hp
     public float currentEnergy;
     public int currentHunger;
+    //재생과 관련된 변수들
+    public float HPRegenerationAmount = 2f;
+    public float EnergyRegenerationAmount = 5f;
+    public float HPRegenerationCondition_EnergyPercent = 0.98f;
+    private float lastDecreaseHungerTime;
+    public float decreaseHungerCoolTime = 5.0f;
 
     public Slider HPbar; //hp슬라이더 추가 
 
@@ -27,10 +33,22 @@ public class State : MonoBehaviour
         currentEnergy = maxEnergy;
         currentHunger = maxHunger;
         HPbar.value = currentHP;
+        lastDecreaseHungerTime = Time.time;
         UpdateHP();
     }
 
+    private void Update()
+    {
+        if (currentEnergy >= maxEnergy * HPRegenerationCondition_EnergyPercent)
+        {
+            SetHP(currentHP + (Time.deltaTime * HPRegenerationAmount));
+        }
 
+        if (currentHunger >= maxHunger)
+        {
+            SetEnergy(currentEnergy + (Time.deltaTime * EnergyRegenerationAmount));
+        }
+    }
 
     public void Pdamage(float damage)
     {
@@ -48,6 +66,11 @@ public class State : MonoBehaviour
         if(currentHP <0)
         {
             Debug.Log("...꿈이었구나. 조심해야겠다."); //다시하기 이미지출력
+        }
+        if(Time.time - lastDecreaseHungerTime >= decreaseHungerCoolTime)
+        {
+            SetHunger(currentHunger - 1);
+            lastDecreaseHungerTime = Time.time;
         }
     }
 
