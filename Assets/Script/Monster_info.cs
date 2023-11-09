@@ -62,7 +62,7 @@ public class Monster_info : MonoBehaviour
         if (hpBarPrefab != null)
         {
             Monster_hpbar = Instantiate(hpBarPrefab, Camera.main.WorldToScreenPoint(transform.position + new Vector3(0.05f, 0.3f, 0)), Quaternion.identity).GetComponent<Slider>();
-            Monster_hpbar.transform.parent = UIparent.transform;
+            Monster_hpbar.transform.SetParent(UIparent.transform);
             Monster_hpbar.gameObject.SetActive(false);
 
             Monster_area = Instantiate(M_area, transform.position, Quaternion.identity);
