@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public class Map_Unit : MonoBehaviour
 {
-    public int floor;
+    public int floor = 0;
     //СіСЄРЏДж 
     public GameObject Unit5F;
     public GameObject Unit4F;
