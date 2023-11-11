@@ -797,9 +797,8 @@ MonoBehaviour:
   HPRegenerationAmount: 2
   EnergyRegenerationAmount: 5
   HPRegenerationCondition_EnergyPercent: 1
-  lastDecreaseHungerTime: 0
   decreaseHungerCoolTime: 180
-  HPbar: {fileID: 1058507407}
+  HPbar: {fileID: 0}
   PlayerAttackDamage: 25
   item:
   - category: -1
@@ -21597,7 +21596,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '0
+  m_text: '
 
 '
   m_isRightToLeft: 0
@@ -23101,9 +23100,8 @@ MonoBehaviour:
   HPRegenerationAmount: 2
   EnergyRegenerationAmount: 5
   HPRegenerationCondition_EnergyPercent: 0.98
-  lastDecreaseHungerTime: 0
   decreaseHungerCoolTime: 5
-  HPbar: {fileID: 2001978971}
+  HPbar: {fileID: 0}
   PlayerAttackDamage: 25
   item:
   - category: -1
@@ -23261,8 +23259,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 7293598183456022363, guid: 1ddc9afd21fec77489b1248d18f31b68, type: 3}
-  m_Type: 0
+  m_Sprite: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -24150,9 +24148,9 @@ SceneRoots:
   m_Roots:
   - {fileID: 736117562}
   - {fileID: 1002794832}
-  - {fileID: 1493621887}
   - {fileID: 734450272}
   - {fileID: 14414120}
+  - {fileID: 1493621887}
   - {fileID: 972655204}
   - {fileID: 845340173}
   - {fileID: 194929766}

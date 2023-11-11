@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    //코드 전반적으로 필요한 데이터들
     private GameObject player;
     private State playerState;
     //itemUI를 수정하기 위한 데이터들
@@ -32,7 +33,7 @@ public class UIManager : MonoBehaviour
         itemUIImage = new Image[itemUI.Length];
         for(int i=0; i< itemUI.Length; i++)
         {
-            Debug.Log(itemUI[i]);
+            //Debug.Log(itemUI[i]);
             itemUIImage[i] = itemUI[i].GetComponent<Image>();
             itemUIText.Add(itemUI[i].GetComponentInChildren<TextMeshProUGUI>());
         }

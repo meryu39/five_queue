@@ -34,16 +34,27 @@ public class PlayerMove : MonoBehaviour
     private bool isAttack = false; //공격확인 플래그(중복 공격 방지)
     private bool Attacking = false;  //공격키 입력 확인 변수
     
-    private GameObject interactionObject;
-    private int interactionObjectCount;
-    public GameObject Image_PressF;
     [SerializeField] private TrailRenderer tr;
-    private bool[] isDump = { false, false, false };
-    public float dumpTime = 1.25f;
-    public  bool nodeal = false; //무!!!적!!!!!!!!판!!!정!~!!!기
-
+    
+    public  bool nodeal = false; //무!!!적!!!!!!!!판!!!정!~!!!기  <- 미쳐버린 서경식
     [SerializeField]
     public GameObject 혈취처방;
+    //상호작용과 관련된 변수들
+    private GameObject interactionObject;   //상호작용하는 오브젝트
+    private int interactionObjectCount;     //상호작용 범위에 들어온 오브젝트 개수, 상호작용 범위 안에 여러 개의 상호작용 오브젝트가 있는 경우를 처리하기 위함
+    public GameObject Image_PressF;         //F키를 눌러달라는 UI 오브젝트
+    //아이템 버리기와 관련된 변수들
+    private bool[] isDump = { false, false, false };    //현재 버리기 버튼을 누르고 있는지 확인하는 변수
+    public const float dumpTime = 1.25f;                      //버리기까지 버튼을 눌러야 하는 시간
+    //아이템 회복량과 관련된 변수들
+    private const float bandage_HPRecoveryPercent = 0.1f;
+    private const float painkiller_energyRecoveryPercent = 0.5f;
+    private const float epinephrine_energyRecoveryPercent = 1.0f;
+    private const int can_hungerRecoveryAmount = 1;
+    private const int cupramen_hungerRecoveryAmount = 2;
+
+
+
 
     private void Awake()
     {
@@ -53,7 +64,6 @@ public class PlayerMove : MonoBehaviour
         myAnim = GetComponent<Animator>(); //애니메이터 컴포넌트
         state = GetComponent<State>(); // 스탯 스크립트 연결
         //skill = GetComponent<Skill>();
-        Image_PressF.SetActive(false);
         GameObject monsterObject = GameObject.FindWithTag("Monster"); // 몬스터의 태그를 사용하여 찾음
         if(monsterObject != null)
         {
@@ -64,7 +74,7 @@ public class PlayerMove : MonoBehaviour
         {
             //Debug.Log("몬스터컴포넌트 됨");
         }
-
+        Image_PressF.SetActive(false);      //'F키를 누르시오' UI 비활성화 시켜놓기
 
     }
     
@@ -74,29 +84,30 @@ public class PlayerMove : MonoBehaviour
         {
             return;
         }
-        checkInput();
+        checkInput();       //입력한 버튼이 있는지 확인
         //객체끼리 충돌시 밀리지 않기 가속도 = 0
        // GetComponent<Rigidbody2D>().velocity = Vector2.zero;
     }
-    private void checkInput()
+    private void checkInput()       //입력한 버튼이 있는지 확인하는 함수
     {
         //마우스 좌클릭 + Attack 애니메이션이 진행중이지 않을 때,
         if ((Input.GetMouseButtonDown(0)) && !myAnim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
         {
             Attacking = true;
         }
+        //F키를 누르면 상호작용
         if (Input.GetKeyDown(KeyCode.F))
         {
             if (interactionObjectCount > 0)
             {
                 InteractionManager.instance.Interact(interactionObject);
             }
-            //dashpress = true;
         }
         if (Input.GetKeyDown(KeyCode.Space) && (canDash) && !isDashing)
         {
             StartCoroutine(Dash());  // 대쉬 코루틴 실행
         }
+        //숫자 1, 2, 3번을 누르면 각각 아이템의 버리기 카운팅을 시작한다. dumpTime동안 떼지 않으면 아이템을 버린다.
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             isDump[0] = true;
@@ -112,6 +123,7 @@ public class PlayerMove : MonoBehaviour
             isDump[2] = true;
             StartCoroutine(DumpItem(2));
         }
+        //숫자 1, 2, 3번을 떼면 버리기 카운팅을 중단하고 해당 아이템을 사용한다.
         if (Input.GetKeyUp(KeyCode.Alpha1))
         {
             isDump[0] = false;
@@ -260,15 +272,16 @@ public class PlayerMove : MonoBehaviour
         }
        
     
+        //InteractionObject 범위 안에 들어간 경우
         if(other.CompareTag("InteractionObject"))
         {
+            //아직 상호작용 범위 안에 들어간 오브젝트가 없었던 경우에만 pressF UI 출력
             if(interactionObjectCount == 0)
             {
-                //Debug.Log("F키를 눌러주세요 패널 열림");
                 Image_PressF.SetActive(true);
             }
             interactionObjectCount++;
-            interactionObject = other.gameObject;
+            interactionObject = other.gameObject;   //InteractionObject를 현재 접촉한 오브젝트로 변경
         }
         if (other.gameObject == elev1)
         {
@@ -287,6 +300,7 @@ public class PlayerMove : MonoBehaviour
     
     private void OnTriggerExit2D(Collider2D other)
     {
+        //상호작용 오브젝트의 상호작용 범위 밖으로 나갈 경우 pressF UI를 닫는다.
         if(other.CompareTag("InteractionObject"))
         {
             interactionObjectCount--;
@@ -298,38 +312,39 @@ public class PlayerMove : MonoBehaviour
         }
     }
     
-    private void UseItem(int itemIndex)
+    private void UseItem(int itemIndex)     //아이템을 사용하는 함수이다. 아이템 종류에 따른 기능을 수행한다.
     {
         ref Item usingItem = ref state.item[itemIndex];
+        //사용하려는 아이템의 개수가 없는 경우
         if(usingItem.count <= 0)
         {
             Debug.Log(itemIndex + 1 + "번째 아이템 남은 개수가 없음");
             return;
         }
         usingItem.count--;
-        if(usingItem.name == ItemName.BANDAGE)
+        if(usingItem.name == ItemName.BANDAGE)  //붕대
         {
-            state.SetHP(state.currentHP + state.maxHP * 0.1f);
+            state.SetHP(state.currentHP + state.maxHP * bandage_HPRecoveryPercent);
         }
-        else if (usingItem.name == ItemName.PAINKILLER)
+        else if (usingItem.name == ItemName.PAINKILLER) //진통제
         {
-            state.SetEnergy(state.currentEnergy + state.maxEnergy * 0.5f);
+            state.SetEnergy(state.currentEnergy + state.maxEnergy * painkiller_energyRecoveryPercent);
         }
-        else if (usingItem.name == ItemName.EPINEPHRINE)
+        else if (usingItem.name == ItemName.EPINEPHRINE)    //에피네프린
         {
-            state.SetEnergy(state.currentEnergy + state.maxEnergy * 1.0f);
+            state.SetEnergy(state.currentEnergy + state.maxEnergy * epinephrine_energyRecoveryPercent);
         }
-        else if (usingItem.name == ItemName.CAN)
+        else if (usingItem.name == ItemName.CAN)    //통조림
         {
-            state.SetHunger(state.currentHunger + 1);
+            state.SetHunger(state.currentHunger + can_hungerRecoveryAmount);
         }
-        else if (usingItem.name == ItemName.CUPRAMEN)
+        else if (usingItem.name == ItemName.CUPRAMEN)   //컵라면
         {
-            state.SetHunger(state.currentHunger + 2);
+            state.SetHunger(state.currentHunger + cupramen_hungerRecoveryAmount);
         }
     }
     
-    private IEnumerator DumpItem(int itemIndex)
+    private IEnumerator DumpItem(int itemIndex)     //아이템 버리는 시간을 카운팅하는 코루틴 함수이다.
     {
         yield return new WaitForSeconds(dumpTime);
         if (isDump[itemIndex] == true)
