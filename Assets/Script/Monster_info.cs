@@ -7,19 +7,28 @@ using Cinemachine;
 public class Monster_info : MonoBehaviour
 {
 
+    public enum MonsterType
+    {
+        human,
+        runner,
+        heavy,
+        trap,
+        boss
+    }
+
     private State state;
     private PlayerMove dashing;
 
 
 
-    private float attackCoolTime = 3f; // 공격 쿨타임
+    private float attackCoolTime = 2f; // 공격 쿨타임
     private bool isAttacking = false; //공격여부
     private float lastAttackTime = 0f; //마지막 공격 
 
 
 
     public float MonsterAttack = 20f;
-    public float moveSpeed = 1f;
+    public float moveSpeed = 200f;
     Transform playerTransform;
     bool isfollow = false;
     public float Monster_HP = 100;
@@ -96,7 +105,7 @@ public class Monster_info : MonoBehaviour
 
         if (Monster_hpbar != null)
         {
-            Monster_hpbar.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0.05f, 0.3f, 0));
+            Monster_hpbar.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0.05f, 0.8f, 0));
         }
 
         UpdateHP();
@@ -253,7 +262,7 @@ public class Monster_info : MonoBehaviour
                     }
 
 
-                    nextTime = moveDuration;
+                    nextTime = Random.Range(1f, 3f); // 1초에서 3초 사이의 무작위 시간 설정
                 }
             }
             else
@@ -267,7 +276,7 @@ public class Monster_info : MonoBehaviour
                     isMoving = false;
 
 
-                    nextTime = moveDuration;
+                    nextTime = Random.Range(1f, 3f); // 1초에서 3초 사이의 무작위 시간 설정
                 }
             }
         }
