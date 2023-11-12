@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Interaction : MonoBehaviour
 {
-    //해당 상호작용 오브젝트의 카테고리
-    public ItemCategory itemCategory;
-    public ItemName itemName;
+    
+    public InteractionObjectCategory Category;  //해당 상호작용 오브젝트의 카테고리
+    public InteractionObjectName itemName;                   //아이템일 경우 아이템 이름
     private Transform transform;
     
     private void Awake()

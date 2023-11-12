@@ -322,23 +322,23 @@ public class PlayerMove : MonoBehaviour
             return;
         }
         usingItem.count--;
-        if(usingItem.name == ItemName.BANDAGE)  //붕대
+        if(usingItem.name == InteractionObjectName.BANDAGE)  //붕대
         {
             state.SetHP(state.currentHP + state.maxHP * bandage_HPRecoveryPercent);
         }
-        else if (usingItem.name == ItemName.PAINKILLER) //진통제
+        else if (usingItem.name == InteractionObjectName.PAINKILLER) //진통제
         {
             state.SetEnergy(state.currentEnergy + state.maxEnergy * painkiller_energyRecoveryPercent);
         }
-        else if (usingItem.name == ItemName.EPINEPHRINE)    //에피네프린
+        else if (usingItem.name == InteractionObjectName.EPINEPHRINE)    //에피네프린
         {
             state.SetEnergy(state.currentEnergy + state.maxEnergy * epinephrine_energyRecoveryPercent);
         }
-        else if (usingItem.name == ItemName.CAN)    //통조림
+        else if (usingItem.name == InteractionObjectName.CAN)    //통조림
         {
             state.SetHunger(state.currentHunger + can_hungerRecoveryAmount);
         }
-        else if (usingItem.name == ItemName.CUPRAMEN)   //컵라면
+        else if (usingItem.name == InteractionObjectName.CUPRAMEN)   //컵라면
         {
             state.SetHunger(state.currentHunger + cupramen_hungerRecoveryAmount);
         }

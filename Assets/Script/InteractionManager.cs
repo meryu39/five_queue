@@ -5,17 +5,19 @@ using System.ComponentModel;
 using System.ComponentModel.Design;
 using UnityEngine;
 
-public enum ItemCategory //상호작용하는 오브젝트의 카테고리 정보
+public enum InteractionObjectCategory //상호작용하는 오브젝트의 카테고리 정보
 {
     NULL = -1,
     WEAPON = 0,
-    ITEM
+    ITEM,
+    NPC
 }
-public enum ItemName    //상호작용하는 오브젝트의 이름
+public enum InteractionObjectName    //상호작용하는 오브젝트의 이름
 {
     NULL = -1, 
-    /*Item*/ BANDAGE, PAINKILLER, EPINEPHRINE, CAN, CUPRAMEN,
-    /*Weapon*/ SCALPEL, PIPE, BLOODPACK, FIREEXTINGUISHER
+    /*Item*/     BANDAGE, PAINKILLER, EPINEPHRINE, CAN, CUPRAMEN,
+    /*Weapon*/   SCALPEL, PIPE, BLOODPACK, FIREEXTINGUISHER,
+    /*NPC*/      ELEVATOR
 }
 
 public class InteractionManager : MonoBehaviour
@@ -49,32 +51,32 @@ public class InteractionManager : MonoBehaviour
             return false;
         }
         //카테고리에 따른 함수 수행
-        switch(interactionInformation.itemCategory)
+        switch(interactionInformation.Category)
         {
             //아이템 종류가 아닌 경우 리턴
-            case ItemCategory.NULL:
+            case InteractionObjectCategory.NULL:
                 break;
             //ITEM 카테고리의 아이템을 획득한 경우 상호작용한 아이템의 정보를 GetItem으로 보낸다.
-            case ItemCategory.ITEM:
-                if(interactionInformation.itemName == ItemName.BANDAGE)
+            case InteractionObjectCategory.ITEM:
+                if(interactionInformation.itemName == InteractionObjectName.BANDAGE)
                 {
-                    obtainedItem = new Item(ItemCategory.ITEM, ItemName.BANDAGE, bandageAcquiredAmount);
+                    obtainedItem = new Item(InteractionObjectCategory.ITEM, InteractionObjectName.BANDAGE, bandageAcquiredAmount);
                 }
-                else if (interactionInformation.itemName == ItemName.PAINKILLER)
+                else if (interactionInformation.itemName == InteractionObjectName.PAINKILLER)
                 {
-                    obtainedItem = new Item(ItemCategory.ITEM, ItemName.PAINKILLER, painkillerAcquiredAmount);
+                    obtainedItem = new Item(InteractionObjectCategory.ITEM, InteractionObjectName.PAINKILLER, painkillerAcquiredAmount);
                 }
-                else if (interactionInformation.itemName == ItemName.EPINEPHRINE)
+                else if (interactionInformation.itemName == InteractionObjectName.EPINEPHRINE)
                 {
-                    obtainedItem = new Item(ItemCategory.ITEM, ItemName.EPINEPHRINE, epinephrineAcquiredAmount);
+                    obtainedItem = new Item(InteractionObjectCategory.ITEM, InteractionObjectName.EPINEPHRINE, epinephrineAcquiredAmount);
                 }
-                else if (interactionInformation.itemName == ItemName.CAN)
+                else if (interactionInformation.itemName == InteractionObjectName.CAN)
                 {
-                    obtainedItem = new Item(ItemCategory.ITEM, ItemName.CAN, canAcquiredAmount);
+                    obtainedItem = new Item(InteractionObjectCategory.ITEM, InteractionObjectName.CAN, canAcquiredAmount);
                 }
-                else if (interactionInformation.itemName == ItemName.CUPRAMEN)
+                else if (interactionInformation.itemName == InteractionObjectName.CUPRAMEN)
                 {
-                    obtainedItem = new Item(ItemCategory.ITEM, ItemName.CUPRAMEN, cupramenAcquiredAmount);
+                    obtainedItem = new Item(InteractionObjectCategory.ITEM, InteractionObjectName.CUPRAMEN, cupramenAcquiredAmount);
                 }
                 if(!player.GetComponentInChildren<State>().GetItem(obtainedItem))   //State.cs의 GetItem이 false인 경우 아이템 획득에 실패한다.
                 {
@@ -83,7 +85,7 @@ public class InteractionManager : MonoBehaviour
                 }
                 break;
             //WEAPON 카테고리의 아이템을 획득한 경우
-            case ItemCategory.WEAPON:
+            case InteractionObjectCategory.WEAPON:
                 Debug.Log("카테고리 무기 함수 수행");
                 break;
         }
@@ -99,17 +101,18 @@ public class InteractionManager : MonoBehaviour
 [System.Serializable]
 public class Item   //아이템 클래스
 {
-    public ItemCategory category;
-    public ItemName name;
+
+    public InteractionObjectCategory category;
+    public InteractionObjectName name;
     public int count;
 
     public Item()
     {
-        category = ItemCategory.NULL;
-        name = ItemName.NULL;
+        category = InteractionObjectCategory.NULL;
+        name = InteractionObjectName.NULL;
         count = 0;
     }
-    public Item(ItemCategory category, ItemName name, int count)
+    public Item(InteractionObjectCategory category, InteractionObjectName name, int count)
     {
         this.category = category;
         this.name = name;

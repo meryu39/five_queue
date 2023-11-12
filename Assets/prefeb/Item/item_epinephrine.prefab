@@ -133,5 +133,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccac92b3be44c9e489402b0c56c3fb9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemCategory: 1
+  Category: 1
   itemName: 2
