@@ -12,14 +12,11 @@ public class Monster_info : MonoBehaviour
         human,
         runner,
         heavy,
-        trap,
-        boss
+        trap
     }
 
     private State state;
     private PlayerMove dashing;
-
-
 
     private float attackCoolTime = 2f; // 공격 쿨타임
     private bool isAttacking = false; //공격여부
@@ -38,7 +35,7 @@ public class Monster_info : MonoBehaviour
     private GameObject Monster_area;
     public GameObject UIparent;
 
-    private Animator my_anim;
+    public Animator my_anim;
     private Rigidbody2D Rb; //리지드바디2d를 Rb 선언
 
     private bool isFacingRight = true;
@@ -78,6 +75,8 @@ public class Monster_info : MonoBehaviour
             Monster_area.transform.parent = transform;
             Monster_area.gameObject.SetActive(true);
         }
+        
+        my_anim.speed = 0.5f;
 
 
 
@@ -137,11 +136,17 @@ public class Monster_info : MonoBehaviour
 
         if (Monster_HP <= 0)
         {
-            Destroy(Monster_hpbar.gameObject);
-            Destroy(gameObject);
+            my_anim.SetTrigger("isDead");
+            Invoke("delete_monster", 1f);
+
         }
     }
 
+    private void delete_monster()
+    {
+        Destroy(Monster_hpbar.gameObject);
+        Destroy(gameObject);
+    }
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -174,6 +179,7 @@ public class Monster_info : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            Rb.constraints = RigidbodyConstraints2D.FreezeAll;
             my_anim.SetBool("isRun", false);
             EnterPlayer = true;
 
@@ -196,6 +202,10 @@ public class Monster_info : MonoBehaviour
     private void OnCollisionExit2D(Collision2D collision)
     {
         my_anim.SetBool("isRun", true);
+        Rb.constraints = RigidbodyConstraints2D.None;
+        Rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+
+
     }
 
 

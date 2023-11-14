@@ -77,7 +77,11 @@ public class PlayerMove : MonoBehaviour
         Image_PressF.SetActive(false);      //'F키를 누르시오' UI 비활성화 시켜놓기
 
     }
-    
+    private void Start()
+    {
+        playerRb.velocity = Vector2.zero;
+    }
+
     private void Update()
     {
         if (isDashing)
@@ -264,6 +268,7 @@ public class PlayerMove : MonoBehaviour
             if (monster != null)
             {
                 Debug.Log("공격 성공");
+                monster.my_anim.SetTrigger("isHurt");
                 // 몬스터 스크립트에 몬스터 체력에 state 스크립트의 공격값을 뺌
                 monster.Monster_HP -= state.PlayerAttackDamage;
                 // 공격 플래그 활성화
