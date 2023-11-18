@@ -22,7 +22,8 @@ public class State : MonoBehaviour
     public float decreaseHungerCoolTime = 150.0f;               //허기가 감소되는 주기
 
     public float PlayerAttackDamage = 25;
-    public Item[] item = new Item[3];                           //현재 소지 중인 아이템
+    public Item[] item = new Item[3];                           //현재 소지 중인 아이템\
+
 
     void Awake()
     {
@@ -53,11 +54,7 @@ public class State : MonoBehaviour
         }
     }
 
-    //Pdamage쓰는 부분을 SetHP로 바꾸변 이 함수 삭제해주세요
-    public void Pdamage(float damage)
-    {
-        currentHP -= damage;
-    }
+
     
     public bool GetItem(Item obtainedItem)  //아이템을 획득하는 함수이다. 현재 비어있는 인벤토리를 확인하여 빈 인벤토리에 아이템을 넣는다.
     {
@@ -77,6 +74,7 @@ public class State : MonoBehaviour
     public void SetHP(float value)      //HP를 조절하는 함수이다. 현재 체력이 value로 조정된다. 체력 증가/감소를 하고 싶으면 value에 'state.currentHP +- 변화량'을 넣으면 된다.
     {
         currentHP = value;
+
         if(currentHP > maxHP)
         {
             currentHP = maxHP;

@@ -15,6 +15,14 @@ public class Monster_info : MonoBehaviour
         trap
     }
 
+
+    public MonsterType monsterType;
+    [SerializeField]
+    public float MonsterAttack { get { return GetMonsterAttack(); } }
+    [SerializeField]
+    public float moveSpeed { get { return GetMoveSpeed(); } }
+    private bool runner_start = false;
+
     private State state;
     private PlayerMove dashing;
 
@@ -23,9 +31,6 @@ public class Monster_info : MonoBehaviour
     private float lastAttackTime = 0f; //마지막 공격 
 
 
-
-    public float MonsterAttack = 20f;
-    public float moveSpeed = 200f;
     Transform playerTransform;
     bool isfollow = false;
     public float Monster_HP = 100;
@@ -35,6 +40,8 @@ public class Monster_info : MonoBehaviour
     private GameObject Monster_area;
     public GameObject UIparent;
 
+
+    [HideInInspector]
     public Animator my_anim;
     private Rigidbody2D Rb; //리지드바디2d를 Rb 선언
 
@@ -78,6 +85,9 @@ public class Monster_info : MonoBehaviour
         
         my_anim.speed = 0.5f;
 
+        GetMonsterAttack();
+        GetMoveSpeed();
+
 
 
     }
@@ -99,7 +109,7 @@ public class Monster_info : MonoBehaviour
                 Flip();
             }
 
-            transform.Translate(direction * (moveSpeed + 1f) * Time.deltaTime);
+            transform.Translate(direction * (moveSpeed + 2f) * Time.deltaTime);
         }
 
         if (Monster_hpbar != null)
@@ -115,8 +125,12 @@ public class Monster_info : MonoBehaviour
 
     private void FixedUpdate()
     {
-        FSM();
+        FSM_huamn();
+
+
     }
+
+
     private void Flip()
     {
         // 현재 상태를 반전
@@ -147,11 +161,55 @@ public class Monster_info : MonoBehaviour
         Destroy(Monster_hpbar.gameObject);
         Destroy(gameObject);
     }
+
+
+    private float GetMonsterAttack()
+    {
+        switch (monsterType)
+        {
+            case MonsterType.human:
+                return 20f;
+            case MonsterType.runner:
+                return 30f;
+            case MonsterType.heavy:
+                return 15f;
+            case MonsterType.trap:
+                return 0f;
+            default:
+                return 20f; 
+        }
+    }
+    private float GetMoveSpeed()
+    {
+        switch (monsterType)
+        {
+            case MonsterType.human:
+                return 1f;
+            case MonsterType.runner:
+                return 1.5f;
+            case MonsterType.heavy:
+                return 0.5f;
+            case MonsterType.trap:
+                return 15;
+            default:
+                return 20; 
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
+        
         if (other.CompareTag("Player"))
         {
             playerTransform = other.transform;
+            if (monsterType == MonsterType.runner && !runner_start)
+            {
+                my_anim.SetTrigger("isRush");
+                Vector2 directionToPlayer = (playerTransform.position - transform.position).normalized;
+                Rb.velocity = directionToPlayer * moveSpeed * 2f;
+                runner_start = false;
+            }
+
             isfollow = true;
             Monster_area.SetActive(false);
             Monster_hpbar.gameObject.SetActive(true);
@@ -166,11 +224,12 @@ public class Monster_info : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+
         if (collision.gameObject.CompareTag("Player") && !isAttacking)
         {
             isAttacking = true;
             my_anim.SetTrigger("isAttack");
-            state.Pdamage(MonsterAttack);
+            state.SetHP(state.currentHP-MonsterAttack);
             lastAttackTime = Time.time;
         }
     }
@@ -190,11 +249,11 @@ public class Monster_info : MonoBehaviour
 
                     if (!dashing.nodeal)
                     {
-                        state.Pdamage(MonsterAttack);
-                    }
-
-                    
+                    state.SetHP(state.currentHP - MonsterAttack);
                 }
+
+
+            }
             
         }
         
@@ -202,7 +261,7 @@ public class Monster_info : MonoBehaviour
     private void OnCollisionExit2D(Collision2D collision)
     {
         my_anim.SetBool("isRun", true);
-        Rb.constraints = RigidbodyConstraints2D.None;
+        //Rb.constraints = RigidbodyConstraints2D.None;
         Rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
 
@@ -211,17 +270,9 @@ public class Monster_info : MonoBehaviour
 
 
 
-    /*private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (isAttacking&&my_anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
-        {
-            // 충돌에서 벗어났을 때 공격을 종료하고 isAttacking 재설정
-            isAttacking = false;
-        }
-    }
-    */
+    
 
-    void FSM()
+    void FSM_huamn()
     {
         if (search)
         {

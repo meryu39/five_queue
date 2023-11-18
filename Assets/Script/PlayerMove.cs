@@ -79,7 +79,6 @@ public class PlayerMove : MonoBehaviour
     }
     private void Start()
     {
-        playerRb.velocity = Vector2.zero;
     }
 
     private void Update()
