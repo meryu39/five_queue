@@ -142,6 +142,10 @@ public class PlayerMove : MonoBehaviour
             isDump[2] = false;
             UseItem(2);
         }
+        if(Input.GetMouseButtonDown(1))/*우클릭*/
+        {
+            UseWeapon();
+        }
     }
     private void FixedUpdate()
     {
@@ -346,6 +350,16 @@ public class PlayerMove : MonoBehaviour
         {
             state.SetHunger(state.currentHunger + cupramen_hungerRecoveryAmount);
         }
+    }
+
+    private void UseWeapon()
+    {
+        ref Item usingWeapon = ref state.auxiliaryWeapon;
+        if(usingWeapon.count <= 0)
+        {
+            return;
+        }
+        usingWeapon.count--;
     }
     
     private IEnumerator DumpItem(int itemIndex)     //아이템 버리는 시간을 카운팅하는 코루틴 함수이다.

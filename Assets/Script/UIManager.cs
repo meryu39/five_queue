@@ -16,38 +16,58 @@ public class UIManager : MonoBehaviour
     public InteractionObjectName[] itemSprite_ItemName;
     public Sprite[] itemSprite_Sprite;
     private Image[] itemUIImage;
-    [SerializeField]private List<TextMeshProUGUI> itemUIText;
+    public TextMeshProUGUI[] itemUIText;
     //stateUI를 수정하기 위한 데이터들
     public Slider HPBar;        //체력바
     public Slider EnergyBar;    //기력바
     public GameObject[] HungerBar = new GameObject[2];  //허기바
+    //weaponUI를 수정하기 위한 데이터들
+    public GameObject weaponUI;
+    private Image weaponUIImage;
+    public Slider weaponUIDurabilityBar;
+    public Dictionary<InteractionObjectName, Sprite> weaponSprite = new Dictionary<InteractionObjectName, Sprite>();
+    public Sprite[] weaponSprite_sprite;
+    public InteractionObjectName[] weaponSprite_weaponName;
 
 
 
     private void Awake()
     {
-        //ItemSprite 딕셔너리 자료구조 초기화
-        for(int i=0; i<itemSprite_ItemName.Length; i++)
+        //아이템UI 관련 초기화
+        for (int i = 0; i < itemSprite_ItemName.Length; i++)
         {
+            //ItemSprite 딕셔너리 자료구조 초기화
             itemSprite.Add(itemSprite_ItemName[i], itemSprite_Sprite[i]);
         }
-        //아이템 인벤토리에 아이템 사진과 텍스트를 표시하기 위한 메모리 확보
         itemUIImage = new Image[itemUI.Length];
-        for(int i=0; i< itemUI.Length; i++)
+        itemUIText = new TextMeshProUGUI[itemUI.Length];
+        for (int i = 0; i < itemUI.Length; i++)
         {
             //Debug.Log(itemUI[i]);
             itemUIImage[i] = itemUI[i].GetComponent<Image>();
-            itemUIText.Add(itemUI[i].GetComponentInChildren<TextMeshProUGUI>());
+            itemUIText[i] = itemUI[i].GetComponentInChildren<TextMeshProUGUI>();
+        }
+        //weaponUI 관련 초기화
+        weaponUIImage = weaponUI.GetComponent<Image>();
+        for(int i=0; i<weaponSprite_weaponName.Length; i++)
+        {
+            weaponSprite.Add(weaponSprite_weaponName[i], weaponSprite_sprite[i]);
         }
         //플레이어와 플레이어 스탯 저장
         player = GameObject.Find("Player");
         playerState = player.GetComponent<State>();
     }
 
+    private void Start()
+    {
+        
+    }
+
     // Update is called once per frame
     void LateUpdate()
     {
         CheckItem();        //현재 아이템 상태 확인
+        CheckWeapon();
         CheckState();       //현재 플레이어 스탯 확인
     }
 
@@ -69,6 +89,21 @@ public class UIManager : MonoBehaviour
             itemUIImage[i].sprite = itemSprite[playerState.item[i].name];
             itemUIText[i].text = playerState.item[i].count.ToString();
         }
+    }
+    void CheckWeapon()
+    {
+        if (playerState.auxiliaryWeapon.count == 0)
+        {
+            weaponUIImage.color = new Color(weaponUIImage.color.r, weaponUIImage.color.g, weaponUIImage.color.b, 0);
+            weaponUIImage.sprite = null;
+            weaponUIDurabilityBar.value = 0;
+            weaponUIDurabilityBar.gameObject.SetActive(false);
+            return;
+        }
+        weaponUIImage.color = new Color(weaponUIImage.color.r, weaponUIImage.color.g, weaponUIImage.color.b, 255);
+        weaponUIImage.sprite = weaponSprite[playerState.auxiliaryWeapon.name];
+        weaponUIDurabilityBar.gameObject.SetActive(true);
+        weaponUIDurabilityBar.value = (float)playerState.auxiliaryWeapon.count / (float)InteractionManager.instance.weaponAcquiredDurability[playerState.auxiliaryWeapon.name];
     }
 
     void CheckState()   //현재 플레이어 상태를 확인하여 플레이어 스탯 UI 업데이트

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI; 
@@ -20,10 +21,12 @@ public class State : MonoBehaviour
     public float HPRegenerationCondition_EnergyPercent = 1.0f;  //체력 재생 발동 조건이 되는 기력의 퍼센트, 0~1사이 값이다.
     private float lastDecreaseHungerTime;                       //마지막으로 허기가 감소된 시간
     public float decreaseHungerCoolTime = 150.0f;               //허기가 감소되는 주기
+    //아이템, 무기와 관련된 변수들
+    public Item[] item = new Item[3];                           //현재 소지 중인 아이템
+    public Item auxiliaryWeapon = new Item();
 
     public float PlayerAttackDamage = 25;
-    public Item[] item = new Item[3];                           //현재 소지 중인 아이템\
-
+    
 
     void Awake()
     {
@@ -58,16 +61,25 @@ public class State : MonoBehaviour
     
     public bool GetItem(Item obtainedItem)  //아이템을 획득하는 함수이다. 현재 비어있는 인벤토리를 확인하여 빈 인벤토리에 아이템을 넣는다.
     {
-        for(int i=0; i<3; i++)
+        if (obtainedItem.category == InteractionObjectCategory.ITEM)
         {
-            //아이템이 없는 인벤토리를 발견한 경우 획득
-            if (item[i].count == 0)
+            for (int i = 0; i < 3; i++)
             {
-                item[i] = obtainedItem;
-                return true;
+                //아이템이 없는 인벤토리를 발견한 경우 획득
+                if (item[i].count == 0)
+                {
+                    item[i] = obtainedItem;
+                    return true;
+                }
             }
+            //인벤토리가 가득찬 경우 false 리턴
+            return false;
         }
-        //인벤토리가 가득찬 경우 false 리턴
+        else if(obtainedItem.category == InteractionObjectCategory.WEAPON)
+        {
+            auxiliaryWeapon = obtainedItem;
+            return true;
+        }
         return false;
     }
 
