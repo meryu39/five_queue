@@ -59,7 +59,10 @@ public class Monster_info : MonoBehaviour
     float moveDuration = 2f; // 이동하는 시간
     bool isMoving = false; // 현재 이동 중인지 여부
 
-    private bool EnterPlayer = false; 
+    private bool EnterPlayer = false;
+
+    public GameObject boob;
+    public GameObject trap_mouse;
     private void Awake()
     {
         state = FindObjectOfType<State>();
@@ -94,24 +97,28 @@ public class Monster_info : MonoBehaviour
 
     private void Update()
     {
-        if (isfollow && playerTransform != null)
-        {
-
-            if (!EnterPlayer)
+  
+            if (isfollow && playerTransform != null)
             {
-                my_anim.SetBool("isRun", true);
+
+                if (!EnterPlayer &&  monsterType != MonsterType.trap){                
+                    my_anim.SetBool("isRun", true);
+                }
+
+                Vector2 direction = (playerTransform.position - transform.position).normalized;
+
+                // Flip 설정
+                if ((isFacingRight && direction.x < 0) || (!isFacingRight && direction.x > 0))
+                {
+                    Flip();
+                }
+                if (monsterType != MonsterType.trap)
+                {
+                    transform.Translate(direction * (moveSpeed + 2f) * Time.deltaTime);
+                }
             }
-            Vector2 direction = (playerTransform.position - transform.position).normalized;
 
-            // Flip 설정
-            if ((isFacingRight && direction.x < 0) || (!isFacingRight && direction.x > 0))
-            {
-                Flip();
-            }
-
-            transform.Translate(direction * (moveSpeed + 2f) * Time.deltaTime);
-        }
-
+        
         if (Monster_hpbar != null)
         {
             Monster_hpbar.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0.05f, 0.8f, 0));
@@ -125,8 +132,10 @@ public class Monster_info : MonoBehaviour
 
     private void FixedUpdate()
     {
-        FSM_huamn();
-
+        if (monsterType != MonsterType.trap)
+        {
+            FSM_huamn();
+        }
 
     }
 
@@ -168,11 +177,11 @@ public class Monster_info : MonoBehaviour
         switch (monsterType)
         {
             case MonsterType.human:
-                return 20f;
+                return 10f;
             case MonsterType.runner:
-                return 30f;
+                return 20f;
             case MonsterType.heavy:
-                return 15f;
+                return 40f;
             case MonsterType.trap:
                 return 0f;
             default:
@@ -190,7 +199,7 @@ public class Monster_info : MonoBehaviour
             case MonsterType.heavy:
                 return 0.5f;
             case MonsterType.trap:
-                return 15;
+                return 0;
             default:
                 return 20; 
         }
@@ -211,7 +220,13 @@ public class Monster_info : MonoBehaviour
             }
 
             isfollow = true;
-            Monster_area.SetActive(false);
+
+
+            if (monsterType != MonsterType.trap)
+            {
+                Monster_area.SetActive(false);
+            }
+
             Monster_hpbar.gameObject.SetActive(true);
             search = false;
 
@@ -219,7 +234,19 @@ public class Monster_info : MonoBehaviour
     }
 
 
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player") && monsterType == MonsterType.trap)
+        {
+            Debug.Log("함정 좀비 가시권 안");
+            if (Time.time - lastAttackTime >= attackCoolTime)
+            {
+                boobing();
+                lastAttackTime = Time.time;
+            }
+        }
 
+    }
 
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -234,29 +261,33 @@ public class Monster_info : MonoBehaviour
         }
     }
 
+
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player") && monsterType != MonsterType.trap)
         {
+
             Rb.constraints = RigidbodyConstraints2D.FreezeAll;
             my_anim.SetBool("isRun", false);
             EnterPlayer = true;
 
-                if (Time.time - lastAttackTime >= attackCoolTime)
-                {
-                    my_anim.SetTrigger("isAttack");
-                    lastAttackTime = Time.time;
+            if (Time.time - lastAttackTime >= attackCoolTime)
+            {
+                my_anim.SetTrigger("isAttack");
+                lastAttackTime = Time.time;
 
-                    if (!dashing.nodeal)
-                    {
+                if (!dashing.nodeal)
+                {
                     state.SetHP(state.currentHP - MonsterAttack);
                 }
 
 
             }
-            
+
         }
-        
+
+
+
     }
     private void OnCollisionExit2D(Collision2D collision)
     {
@@ -268,13 +299,27 @@ public class Monster_info : MonoBehaviour
     }
 
 
+    void boobing()
+    {
+        float SkillSpeed = 3f;
+        Vector2 skillDirection = (dashing.transform.position - transform.position).normalized;
+
+        GameObject skill1 = Instantiate(boob, trap_mouse.transform.position, Quaternion.identity);
+        Rigidbody2D skill1_rb = skill1.GetComponent<Rigidbody2D>();
+        skill1_rb.velocity = skillDirection * SkillSpeed;
+
+        // 플레이어 방향에 따른 스킬 프리팹의 방향 전환
+        float angle = Mathf.Atan2(skillDirection.y, skillDirection.x) * Mathf.Rad2Deg;
+        skill1.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+        Destroy(skill1, 4f);
+
+    }
 
 
-    
 
     void FSM_huamn()
     {
-        if (search)
+        if (search && monsterType != MonsterType.trap)
         {
             if (!isMoving)
             {

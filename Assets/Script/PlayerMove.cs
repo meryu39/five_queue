@@ -241,6 +241,7 @@ public class PlayerMove : MonoBehaviour
         float SkillSpeed = 3f;
         if (Input.GetKeyDown(KeyCode.K))
         {
+
             Vector2 skillDirection = GetPlayerDirection();
             GameObject skill1 = Instantiate(혈취처방, transform.position, Quaternion.identity);
             Rigidbody2D skill1_rb = skill1.GetComponent<Rigidbody2D>();
@@ -250,6 +251,7 @@ public class PlayerMove : MonoBehaviour
             float angle = Mathf.Atan2(myAnim.GetFloat("LastMoveY"), myAnim.GetFloat("LastMoveX")) * Mathf.Rad2Deg;
             //스킬 프리팹 방향 전환
             skill1.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+            
         }
     }
 
