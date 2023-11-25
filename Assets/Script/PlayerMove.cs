@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMove : MonoBehaviour
 {
@@ -33,7 +32,12 @@ public class PlayerMove : MonoBehaviour
     
     private bool isAttack = false; //공격확인 플래그(중복 공격 방지)
     private bool Attacking = false;  //공격키 입력 확인 변수
-    
+
+
+    int skillnum;
+    float skillCoolTIme = 3f;
+    float lastskillTime = 0;
+
     [SerializeField] private TrailRenderer tr;
     
     public  bool nodeal = false; //무!!!적!!!!!!!!판!!!정!~!!!기  <- 미쳐버린 서경식
@@ -53,6 +57,7 @@ public class PlayerMove : MonoBehaviour
     private const int can_hungerRecoveryAmount = 1;
     private const int cupramen_hungerRecoveryAmount = 2;
 
+    
 
 
 
@@ -87,9 +92,11 @@ public class PlayerMove : MonoBehaviour
         {
             return;
         }
+
         checkInput();       //입력한 버튼이 있는지 확인
-        //객체끼리 충돌시 밀리지 않기 가속도 = 0
-       // GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                            //객체끼리 충돌시 밀리지 않기 가속도 = 0
+                            // GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        
     }
     private void checkInput()       //입력한 버튼이 있는지 확인하는 함수
     {
@@ -97,9 +104,15 @@ public class PlayerMove : MonoBehaviour
         if ((Input.GetMouseButtonDown(0)) && !myAnim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
         {
             Attacking = true;
+            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            SetPlayerDirection(mousePos - new Vector2(transform.position.x, transform.position.y));
+
+
         }
-        //F키를 누르면 상호작용
-        if (Input.GetKeyDown(KeyCode.F))
+
+
+            //F키를 누르면 상호작용
+            if (Input.GetKeyDown(KeyCode.F))
         {
             if (interactionObjectCount > 0)
             {
@@ -193,9 +206,36 @@ public class PlayerMove : MonoBehaviour
             playerMoveSpeed = 100f; // 달리지않을 때, 원래 속도로 100
             myAnim.SetBool("isRun", false);
         }
-        SkillEvenet();
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            if (Time.time - lastskillTime >= skillCoolTIme)
+            {
+
+                SkillEvenet(1);
+                lastskillTime = Time.time;
+            }
+        }
+
+
+     
+
     }
-    
+
+
+
+    private void SetPlayerDirection(Vector2 direction)
+    {
+        if (direction == Vector2.zero)
+            return;
+        direction.Normalize();
+        myAnim.SetFloat("AttackX", direction.x);
+        myAnim.SetFloat("AttackY", direction.y);
+        myAnim.SetFloat("LastMoveX", direction.x);
+        myAnim.SetFloat("LastMoveY", direction.y);
+
+    }
+
     private IEnumerator Dash()
     {
 
@@ -236,22 +276,28 @@ public class PlayerMove : MonoBehaviour
 
 
     //스킬1
-    private void SkillEvenet()
+    void SkillEvenet(int skillnum)
     {
         float SkillSpeed = 3f;
-        if (Input.GetKeyDown(KeyCode.K))
-        {
+        if(skillnum == 1) { 
+                Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                SetPlayerDirection(mousePosition - new Vector2(transform.position.x, transform.position.y));
+                myAnim.SetTrigger("isAttack");
 
-            Vector2 skillDirection = GetPlayerDirection();
-            GameObject skill1 = Instantiate(혈취처방, transform.position, Quaternion.identity);
-            Rigidbody2D skill1_rb = skill1.GetComponent<Rigidbody2D>();
-            skill1_rb.velocity = skillDirection * SkillSpeed;
+                Vector2 skillDirection = (mousePosition - new Vector2(transform.position.x, transform.position.y)).normalized;
+                skillDirection.y = 0;
 
-            //Atan2는 y,x좌표로 두 점 사이의 각도 계산 (플레이어 방향에 따른 프리팹의 방향전환 -> 스킬프리팹 방향)
-            float angle = Mathf.Atan2(myAnim.GetFloat("LastMoveY"), myAnim.GetFloat("LastMoveX")) * Mathf.Rad2Deg;
-            //스킬 프리팹 방향 전환
-            skill1.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
-            
+                GameObject skill1 = Instantiate(혈취처방, transform.position, Quaternion.identity);
+                Rigidbody2D skill1_rb = skill1.GetComponent<Rigidbody2D>();
+                skill1_rb.velocity = skillDirection * SkillSpeed;
+
+                //Atan2는 y,x좌표로 두 점 사이의 각도 계산 (플레이어 방향에 따른 프리팹의 방향전환 -> 스킬프리팹 방향)
+                float angle = Mathf.Atan2(skillDirection.y, skillDirection.x) * Mathf.Rad2Deg;
+                //스킬 프리팹 방향 전환
+                skill1.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+                Destroy(skill1, 4f);
+
+
         }
     }
 

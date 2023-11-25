@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5244197206208533516}
   - component: {fileID: 5832654779252864493}
   - component: {fileID: 5071519120983337540}
+  - component: {fileID: 611197055750107890}
   m_Layer: 0
   m_Name: spark-preview1 (1)
   m_TagString: Untagged
@@ -30,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -5.432, y: 0.51062655, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -189,3 +190,15 @@ PolygonCollider2D:
       - {x: 0.277244, y: 0.007999893}
       - {x: 0.25812227, y: 0.055609614}
   m_UseDelaunayMesh: 0
+--- !u!114 &611197055750107890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2675254035515863519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b1d6efd269fc25428c6e5bede01f669, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
