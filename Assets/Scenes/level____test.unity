@@ -20140,6 +20140,12 @@ MonoBehaviour:
   nodeal: 0
   "\uD608\uCDE8\uCC98\uBC29": {fileID: 2675254035515863519, guid: 10596f3f15bd1844591b34fb733a20d2, type: 3}
   Image_PressF: {fileID: 402524276}
+  projectile_object:
+  - {fileID: 6918047678745738025, guid: b729fe403648637449ef58b47363ffcb, type: 3}
+  - {fileID: 7113371322141155277, guid: 52bbf1f40bda2d84391d1bf0dd7f55b7, type: 3}
+  - {fileID: 4123911010373892421, guid: a6e8fe08f151abe4697f1e231a8fb944, type: 3}
+  - {fileID: 3451087597797169378, guid: c722c86be68ef114ebfb363b243f988e, type: 3}
+  projectile_name: 05000000060000000700000008000000
 --- !u!50 &811065488
 Rigidbody2D:
   serializedVersion: 4
@@ -122787,15 +122793,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1228652525395237083, guid: 79afe538d978fdb498c68354803afe6f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1228652525395237083, guid: 79afe538d978fdb498c68354803afe6f, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1228652525395237083, guid: 79afe538d978fdb498c68354803afe6f, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1228652525395237083, guid: 79afe538d978fdb498c68354803afe6f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

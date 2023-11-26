@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMove : MonoBehaviour
@@ -56,8 +57,12 @@ public class PlayerMove : MonoBehaviour
     private const float epinephrine_energyRecoveryPercent = 1.0f;
     private const int can_hungerRecoveryAmount = 1;
     private const int cupramen_hungerRecoveryAmount = 2;
+    //무기와 관련된 변수들
+    public Dictionary<InteractionObjectName, GameObject> projectile = new Dictionary<InteractionObjectName, GameObject>();
+    public GameObject[] projectile_object;
+    public InteractionObjectName[] projectile_name;
 
-    
+
 
 
 
@@ -80,7 +85,12 @@ public class PlayerMove : MonoBehaviour
             //Debug.Log("몬스터컴포넌트 됨");
         }
         Image_PressF.SetActive(false);      //'F키를 누르시오' UI 비활성화 시켜놓기
-
+        //투사체 오브젝트 정보 딕셔너리 구조로 저장
+        for (int i = 0; i < projectile_object.Length; i++)
+        {
+            //ItemSprite 딕셔너리 자료구조 초기화
+            projectile.Add(projectile_name[i], projectile_object[i]);
+        }
     }
     private void Start()
     {
@@ -111,8 +121,8 @@ public class PlayerMove : MonoBehaviour
         }
 
 
-            //F키를 누르면 상호작용
-            if (Input.GetKeyDown(KeyCode.F))
+        //F키를 누르면 상호작용
+        if (Input.GetKeyDown(KeyCode.F))
         {
             if (interactionObjectCount > 0)
             {
@@ -403,11 +413,18 @@ public class PlayerMove : MonoBehaviour
     private void UseWeapon()
     {
         ref Item usingWeapon = ref state.auxiliaryWeapon;
-        if(usingWeapon.count <= 0)
+        GameObject weaponProjectileClone;
+        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 projectileDirection = (mousePosition - new Vector2(transform.position.x, transform.position.y)).normalized;
+        if (usingWeapon.count <= 0)
         {
             return;
         }
         usingWeapon.count--;
+        float angle = Mathf.Atan2(projectileDirection.y, projectileDirection.x) * Mathf.Rad2Deg;
+        weaponProjectileClone = Instantiate(projectile[usingWeapon.name], transform.position, Quaternion.Euler(0, 0, angle));
+        Debug.Log(weaponProjectileClone);
+        weaponProjectileClone.GetComponent<ProjectileCtrl>().Init(usingWeapon.name, projectileDirection);
     }
     
     private IEnumerator DumpItem(int itemIndex)     //아이템 버리는 시간을 카운팅하는 코루틴 함수이다.
