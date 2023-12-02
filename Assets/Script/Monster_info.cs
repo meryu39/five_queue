@@ -63,6 +63,9 @@ public class Monster_info : MonoBehaviour
 
     public GameObject boob;
     public GameObject trap_mouse;
+
+    public GameObject blood_prefab;
+    Transform bloodPosition;
     private void Awake()
     {
         state = FindObjectOfType<State>();
@@ -71,6 +74,7 @@ public class Monster_info : MonoBehaviour
         my_anim = GetComponent<Animator>(); // 애니메이터 컴포넌트
         Rb = GetComponent<Rigidbody2D>(); // 리지드바디 컴포넌트
         Rb.velocity = Vector3.zero;
+        bloodPosition = dashing.transform.Find("blood_position");
     }
 
     void Start()
@@ -282,6 +286,11 @@ public class Monster_info : MonoBehaviour
                 if (!dashing.nodeal)
                 {
                     state.SetHP(state.currentHP - MonsterAttack);
+                    
+                    SpawnBloodEffect(bloodPosition.position,dashing.transform);
+
+
+
                 }
 
 
@@ -291,6 +300,11 @@ public class Monster_info : MonoBehaviour
 
 
 
+    }
+    private void SpawnBloodEffect(Vector3 position,Transform parent)
+    {
+        GameObject bloodEffect = Instantiate(blood_prefab, position, Quaternion.identity);
+        bloodEffect.transform.parent = parent;
     }
     private void OnCollisionExit2D(Collision2D collision)
     {

@@ -20,26 +20,42 @@ public class PlayerMove : MonoBehaviour
 
 
     private Rigidbody2D playerRb; //리자드바디2d를 playerRb로 선언
-    private Animator myAnim; 
+    private Animator myAnim;
+
+    //원래 이동속도
+    float walkspeed;
     public float playerMoveSpeed;
     
     private bool isRun; //달리기 여부 
-    
+    //대쉬 변수 
     private bool canDash = true; //대쉬가능여부
     private bool isDashing; //대쉬여부
     private float dashingPower = 10f; //대쉬이동거리
     private float dashingTime = 0.2f; //대쉬이동시간
     private float dashingCooldown = 2f; //대쉬 쿨타임
-    
+    //공격변수 
     private bool isAttack = false; //공격확인 플래그(중복 공격 방지)
     private bool Attacking = false;  //공격키 입력 확인 변수
-
-
+    public GameObject bloodprefab;
+    //스킬 관련 변수 
     int skillnum;
     float skillCoolTIme = 3f;
     float lastskillTime = 0;
+    float origin_playerdamage;
+    //혈취처방
+    bool Trigger_skill1 = false;
+    public GameObject R_sword;
+    public GameObject L_sword;
+    //집단 복부절개
+    bool Trigger_skill2 = false;
+    public GameObject side_range;
+    //엑스레이
+    public GameObject r_xray;
+    public GameObject l_xray;
+    bool Trigger_skill3 = false;
 
-  
+    //심호흡
+    public GameObject healpart;
 
     [SerializeField] private TrailRenderer tr;
     
@@ -67,15 +83,17 @@ public class PlayerMove : MonoBehaviour
 
 
 
-
     private void Awake()
     {
+
         
         playerRb = GetComponent<Rigidbody2D>(); //리자드바디 컴포넌트
         playerRb.velocity = Vector3.zero;
         myAnim = GetComponent<Animator>(); //애니메이터 컴포넌트
         state = GetComponent<State>(); // 스탯 스크립트 연결
         //skill = GetComponent<Skill>();
+
+        origin_playerdamage = state.PlayerAttackDamage;
         GameObject monsterObject = GameObject.FindWithTag("Monster"); // 몬스터의 태그를 사용하여 찾음
         if(monsterObject != null)
         {
@@ -96,6 +114,7 @@ public class PlayerMove : MonoBehaviour
     }
     private void Start()
     {
+       walkspeed = playerMoveSpeed;
     }
 
     private void Update()
@@ -104,10 +123,11 @@ public class PlayerMove : MonoBehaviour
         {
             return;
         }
-
+        SkillInput();
         checkInput();       //입력한 버튼이 있는지 확인
                             //객체끼리 충돌시 밀리지 않기 가속도 = 0
                             // GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+
         
     }
     private void checkInput()       //입력한 버튼이 있는지 확인하는 함수
@@ -173,6 +193,7 @@ public class PlayerMove : MonoBehaviour
         }
     }
     private void FixedUpdate()
+        
     {
         if (isDashing)
         {
@@ -197,6 +218,7 @@ public class PlayerMove : MonoBehaviour
         if (dashpress && canDash && !isDashing)
         {
             StartCoroutine(Dash());
+
             dashpress = false; // 대쉬 입력을 처리한 후에는 리셋
         }
         if (Attacking)
@@ -208,35 +230,57 @@ public class PlayerMove : MonoBehaviour
     
         if (Input.GetKey(KeyCode.LeftShift) && !isDashing) // 왼쪽 Shift 키를 누르고 대쉬 중이 아닌 경우
         {
+            
             isRun = true; // 달리기 상태로 설정
-            playerMoveSpeed = 200f; //달리기 200 증가  
+            playerMoveSpeed = walkspeed * 2f; //달리기 200 증가  
             myAnim.SetBool("isRun", true);
+            Debug.Log(playerMoveSpeed);
         }
         else
         {
             isRun = false; // 달리기 x
 
-            playerMoveSpeed = 100f; //달리기 200 증가  
+            playerMoveSpeed = walkspeed;
+            Debug.Log(playerMoveSpeed);
 
             myAnim.SetBool("isRun", false);
         }
 
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            if (Time.time - lastskillTime >= skillCoolTIme)
-            {
-
-                SkillEvenet(1);
-                lastskillTime = Time.time;
-            }
-        }
+        
 
 
-     
+
 
     }
 
 
+
+
+    private void SkillInput()
+    {
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            //if (Time.time - lastskillTime >= skillCoolTIme)
+            //{
+
+                SkillEvenet(1); // 혈취 처방
+                lastskillTime = Time.time;
+           // }
+        }
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            SkillEvenet(2); //집단 복부 절개
+        }
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            SkillEvenet(3); //엑스레이
+        }
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            SkillEvenet(4); //심호흡
+        }
+    }
 
     private void SetPlayerDirection(Vector2 direction)
     {
@@ -258,6 +302,8 @@ public class PlayerMove : MonoBehaviour
         {
             coolTimeUI.Trigger_Skill();
         }
+        state.SetEnergy(state.currentEnergy - 10f);
+
         canDash = false;
       
         isDashing = true;
@@ -294,41 +340,154 @@ public class PlayerMove : MonoBehaviour
     {
         if(skillnum == 1) {
             state.SetEnergy(state.currentEnergy - 10f);
-            
-                
+
+            Trigger_skill1 = true;
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             SetPlayerDirection(mousePosition - new Vector2(transform.position.x, transform.position.y));
-            myAnim.SetTrigger("isAttack");
+            Attacking = true;
 
-        /*
-                Vector2 skillDirection = (mousePosition - new Vector2(transform.position.x, transform.position.y)).normalized;
-                skillDirection.y = 0;
 
-                GameObject skill1 = Instantiate(혈취처방, transform.position, Quaternion.identity);
-                Rigidbody2D skill1_rb = skill1.GetComponent<Rigidbody2D>();
-                skill1_rb.velocity = skillDirection * SkillSpeed;
 
-                //Atan2는 y,x좌표로 두 점 사이의 각도 계산 (플레이어 방향에 따른 프리팹의 방향전환 -> 스킬프리팹 방향)
-                float angle = Mathf.Atan2(skillDirection.y, skillDirection.x) * Mathf.Rad2Deg;
-                //스킬 프리팹 방향 전환
-                skill1.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
-                Destroy(skill1, 4f);
-        */
+            /*
+                    Vector2 skillDirection = (mousePosition - new Vector2(transform.position.x, transform.position.y)).normalized;
+                    skillDirection.y = 0;
+
+                    GameObject skill1 = Instantiate(혈취처방, transform.position, Quaternion.identity);
+                    Rigidbody2D skill1_rb = skill1.GetComponent<Rigidbody2D>();
+                    skill1_rb.velocity = skillDirection * SkillSpeed;
+
+                    //Atan2는 y,x좌표로 두 점 사이의 각도 계산 (플레이어 방향에 따른 프리팹의 방향전환 -> 스킬프리팹 방향)
+                    float angle = Mathf.Atan2(skillDirection.y, skillDirection.x) * Mathf.Rad2Deg;
+                    //스킬 프리팹 방향 전환
+                    skill1.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+                    Destroy(skill1, 4f);
+            */
 
         }
+
         if(skillnum == 2)
+        {
+            state.SetEnergy(state.currentEnergy - 15f);
+            Trigger_skill2 = true;
+            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            SetPlayerDirection(mousePosition - new Vector2(transform.position.x, transform.position.y));
+            Attacking = true;
+            
+            state.PlayerAttackDamage = state.PlayerAttackDamage * 2;
+        }
+        if(skillnum == 3)
+        {
+            state.SetEnergy(state.currentEnergy - 25f);
+            Trigger_skill3 = true;
+            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            SetPlayerDirection(mousePosition - new Vector2(transform.position.x, transform.position.y));
+            Attacking = true;
+
+            state.PlayerAttackDamage = state.PlayerAttackDamage * 6;
+
+        }
+
+        if (skillnum == 4)
         {
             state.SetEnergy(state.currentEnergy - 30f);
             state.SetHP(state.currentHP + 25f);
+            Vector3 healEffectPosition = new Vector3(transform.position.x, transform.position.y - 1f, transform.position.z);
+
+            
+            GameObject healEffect = Instantiate(healpart, healEffectPosition, Quaternion.identity);
+            Destroy(healEffect, 0.3f);
         }
     }
 
+    
+    private void L_throw()
+    {
+        if (Trigger_skill1)
+        {
+
+            L_sword.SetActive(true);
+        }
+    }
+    private void del_L_throw()
+    {
+        
+        L_sword.SetActive(false);
+        Trigger_skill1 = false;
+
+    }
+    private void R_throw()
+    {
+        if (Trigger_skill1)
+        {
+
+            R_sword.SetActive(true);
+        }
+    }
+    private void del_R_throw()
+    {
+        R_sword.SetActive(false);
+        Trigger_skill1 = false;
+
+    }
+
+    private void side_attack()
+    {
+        if (Trigger_skill2)
+        {
+            side_range.SetActive(true);
+        }
+    }
+    private  void del_side_attack()
+    {
+        side_range.SetActive(false);
+        Trigger_skill2 = false;
+        state.PlayerAttackDamage = origin_playerdamage;
+    }
+
+
+    private void L_xray()
+    {
+        if (Trigger_skill3)
+        {
+
+            l_xray.SetActive(true);
+        }
+    }
+    private void del_L_xray()
+    {
+
+        l_xray.SetActive(false);
+        Trigger_skill3 = false;
+        state.PlayerAttackDamage = origin_playerdamage;
+
+    }
+    private void R_xray()
+    {
+        if (Trigger_skill3)
+        {
+
+            r_xray.SetActive(true);
+        }
+    }
+    private void del_R_xray()
+    {
+
+        r_xray.SetActive(false);
+        Trigger_skill3 = false;
+        state.PlayerAttackDamage = origin_playerdamage;
+
+    }
     private Vector2 GetPlayerDirection()
     {
         //플레이어 방향 리턴
         return new Vector2(myAnim.GetFloat("LastMoveX"), myAnim.GetFloat("LastMoveY")).normalized;
     }
 
+    private void SpawnBloodEffect(Vector3 position, Transform parent)
+    {
+        GameObject bloodEffect = Instantiate(bloodprefab, position, Quaternion.identity);
+        bloodEffect.transform.parent = parent;
+    }
     private void OnTriggerEnter2D(Collider2D other)
     {
         // 충돌된 태그가 몬스터이고, 공격 모션이 실행되지 않았을 때, 공격 플래그가 활성화되지 않았을 때
@@ -344,8 +503,11 @@ public class PlayerMove : MonoBehaviour
                 monster.my_anim.SetTrigger("isHurt");
                 // 몬스터 스크립트에 몬스터 체력에 state 스크립트의 공격값을 뺌
                 monster.Monster_HP -= state.PlayerAttackDamage;
+                Debug.Log(state.PlayerAttackDamage);
                 // 공격 플래그 활성화
                 isAttack = true;
+                SpawnBloodEffect(monster.transform.position, monster.transform);
+
             }
         }
        
@@ -389,7 +551,8 @@ public class PlayerMove : MonoBehaviour
             }
         }
     }
-    
+
+
     private void UseItem(int itemIndex)     //아이템을 사용하는 함수이다. 아이템 종류에 따른 기능을 수행한다.
     {
         ref Item usingItem = ref state.item[itemIndex];
