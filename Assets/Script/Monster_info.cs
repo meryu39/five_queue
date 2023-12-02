@@ -114,7 +114,7 @@ public class Monster_info : MonoBehaviour
                 }
                 if (monsterType != MonsterType.trap)
                 {
-                    transform.Translate(direction * (moveSpeed + 2f) * Time.deltaTime);
+                    transform.Translate(direction * moveSpeed  * Time.fixedDeltaTime);
                 }
             }
 
@@ -160,7 +160,7 @@ public class Monster_info : MonoBehaviour
         if (Monster_HP <= 0)
         {
             my_anim.SetTrigger("isDead");
-            Invoke("delete_monster", 1f);
+            Invoke("delete_monster", 0.5f);
 
         }
     }
@@ -172,6 +172,8 @@ public class Monster_info : MonoBehaviour
     }
 
 
+
+    
     private float GetMonsterAttack()
     {
         switch (monsterType)
@@ -188,21 +190,22 @@ public class Monster_info : MonoBehaviour
                 return 20f; 
         }
     }
+
+    //플레이어 속도 
     private float GetMoveSpeed()
     {
         switch (monsterType)
         {
             case MonsterType.human:
-                return 1f;
-            case MonsterType.runner:
                 return 1.5f;
+            case MonsterType.runner:
+                return 1.2f;
             case MonsterType.heavy:
                 return 0.5f;
             case MonsterType.trap:
                 return 0;
             default:
-                return 20; 
-        }
+                return 0;        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)

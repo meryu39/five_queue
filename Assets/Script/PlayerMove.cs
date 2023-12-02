@@ -39,6 +39,8 @@ public class PlayerMove : MonoBehaviour
     float skillCoolTIme = 3f;
     float lastskillTime = 0;
 
+  
+
     [SerializeField] private TrailRenderer tr;
     
     public  bool nodeal = false; //무!!!적!!!!!!!!판!!!정!~!!!기  <- 미쳐버린 서경식
@@ -207,13 +209,15 @@ public class PlayerMove : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift) && !isDashing) // 왼쪽 Shift 키를 누르고 대쉬 중이 아닌 경우
         {
             isRun = true; // 달리기 상태로 설정
-            playerMoveSpeed = 500f; //달리기 20 증가  150
+            playerMoveSpeed = 200f; //달리기 200 증가  
             myAnim.SetBool("isRun", true);
         }
         else
         {
             isRun = false; // 달리기 x
-            playerMoveSpeed = 100f; // 달리지않을 때, 원래 속도로 100
+
+            playerMoveSpeed = 100f; //달리기 200 증가  
+
             myAnim.SetBool("isRun", false);
         }
 
@@ -288,12 +292,15 @@ public class PlayerMove : MonoBehaviour
     //스킬1
     void SkillEvenet(int skillnum)
     {
-        float SkillSpeed = 3f;
-        if(skillnum == 1) { 
-                Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                SetPlayerDirection(mousePosition - new Vector2(transform.position.x, transform.position.y));
-                myAnim.SetTrigger("isAttack");
+        if(skillnum == 1) {
+            state.SetEnergy(state.currentEnergy - 10f);
+            
+                
+            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            SetPlayerDirection(mousePosition - new Vector2(transform.position.x, transform.position.y));
+            myAnim.SetTrigger("isAttack");
 
+        /*
                 Vector2 skillDirection = (mousePosition - new Vector2(transform.position.x, transform.position.y)).normalized;
                 skillDirection.y = 0;
 
@@ -306,8 +313,13 @@ public class PlayerMove : MonoBehaviour
                 //스킬 프리팹 방향 전환
                 skill1.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
                 Destroy(skill1, 4f);
+        */
 
-
+        }
+        if(skillnum == 2)
+        {
+            state.SetEnergy(state.currentEnergy - 30f);
+            state.SetHP(state.currentHP + 25f);
         }
     }
 
@@ -363,7 +375,7 @@ public class PlayerMove : MonoBehaviour
         }
     }
     
-    
+
     private void OnTriggerExit2D(Collider2D other)
     {
         //상호작용 오브젝트의 상호작용 범위 밖으로 나갈 경우 pressF UI를 닫는다.
