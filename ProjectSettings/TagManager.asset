@@ -8,6 +8,8 @@ TagManager:
   - Monster
   - InteractionObject
   - 'elevator '
+  - RecyclingObject
+  - Blood
   layers:
   - Default
   - TransparentFX
@@ -17,8 +19,8 @@ TagManager:
   - UI
   - MonsterDetection
   - Monster
-  - 
-  - 
+  - Projectile
+  - Map
   - 
   - 
   - 

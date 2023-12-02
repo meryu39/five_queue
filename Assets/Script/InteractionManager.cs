@@ -135,7 +135,7 @@ public class Item   //아이템 클래스
 
     public InteractionObjectCategory category;
     public InteractionObjectName name;
-    public int count;
+    public float count;
 
     public Item()
     {

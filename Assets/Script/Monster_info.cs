@@ -66,6 +66,10 @@ public class Monster_info : MonoBehaviour
 
     public GameObject blood_prefab;
     Transform bloodPosition;
+    //보조무기와 상호작용을 위한 변수들
+    public float bleedingTick = 0.5f;
+    public float bloodReleaseFollowTime = 3.0f;
+    
     private void Awake()
     {
         state = FindObjectOfType<State>();
@@ -160,6 +164,10 @@ public class Monster_info : MonoBehaviour
         {
             Monster_hpbar.value = (float)Monster_HP / 100;
         }
+        if(Monster_HP < 100)
+        {
+            Monster_hpbar.gameObject.SetActive(true);
+        }
 
         if (Monster_HP <= 0)
         {
@@ -238,6 +246,10 @@ public class Monster_info : MonoBehaviour
             search = false;
 
         }
+        else if(other.CompareTag("Blood"))
+        {
+            StartCoroutine(ReleaseFollow(bloodReleaseFollowTime));
+        }
     }
 
 
@@ -245,7 +257,7 @@ public class Monster_info : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player") && monsterType == MonsterType.trap)
         {
-            Debug.Log("함정 좀비 가시권 안");
+            //Debug.Log("함정 좀비 가시권 안");
             if (Time.time - lastAttackTime >= attackCoolTime)
             {
                 boobing();
@@ -405,6 +417,27 @@ public class Monster_info : MonoBehaviour
         }
     }
 
+    public IEnumerator Bleeded(float bleedingDamage, float bleedingTime)
+    {
+        Debug.Log("출혈시작 - 출혈데미지 : " + bleedingDamage + "출혈시간 : " + bleedingTime) ;
+        while (bleedingTime >= 0 || Monster_HP >= 0)
+        {
+            Debug.Log("출혈중..");
+            Monster_HP -= bleedingDamage * bleedingTick;
+            bleedingTime -= bleedingTick;
+            yield return new WaitForSeconds(bleedingTick);
+        }
+        yield break;
+    }
+
+    public IEnumerator ReleaseFollow(float duration)
+    {
+        my_anim.SetBool("isRun", false);
+        isfollow = false;
+        yield return new WaitForSeconds(duration);
+        isfollow = true;
+        my_anim.SetBool("isRun", true);
+    }
 
 
 

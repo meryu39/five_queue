@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMove : MonoBehaviour
@@ -79,6 +80,11 @@ public class PlayerMove : MonoBehaviour
     public Dictionary<InteractionObjectName, GameObject> projectile = new Dictionary<InteractionObjectName, GameObject>();
     public GameObject[] projectile_object;
     public InteractionObjectName[] projectile_name;
+    public bool canUsePipe;
+    private int pipeCount;
+    private bool canUseBloodpack = true;
+    public float bloodPackDelay = 0.1f;
+    private bool canUseFireextinguisher = true;
 
 
 
@@ -111,6 +117,7 @@ public class PlayerMove : MonoBehaviour
             //ItemSprite 딕셔너리 자료구조 초기화
             projectile.Add(projectile_name[i], projectile_object[i]);
         }
+        canUsePipe = true;
     }
     private void Start()
     {
@@ -187,7 +194,7 @@ public class PlayerMove : MonoBehaviour
             isDump[2] = false;
             UseItem(2);
         }
-        if(Input.GetMouseButtonDown(1))/*우클릭*/
+        if(Input.GetMouseButton(1))/*우클릭*/
         {
             UseWeapon();
         }
@@ -535,6 +542,17 @@ public class PlayerMove : MonoBehaviour
             transform.position = newPosition;
 
         }
+
+        if (other.CompareTag("RecyclingObject"))
+        {
+            Destroy(other.gameObject);
+            ref Item usingWeapon = ref state.auxiliaryWeapon;
+            if(usingWeapon.name == InteractionObjectName.PIPE)
+            {
+                canUsePipe= true;
+                usingWeapon.count = pipeCount;
+            }
+        }
     }
     
 
@@ -591,15 +609,46 @@ public class PlayerMove : MonoBehaviour
         GameObject weaponProjectileClone;
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 projectileDirection = (mousePosition - new Vector2(transform.position.x, transform.position.y)).normalized;
+        float angle = Mathf.Atan2(projectileDirection.y, projectileDirection.x) * Mathf.Rad2Deg;
         if (usingWeapon.count <= 0)
         {
             return;
         }
-        usingWeapon.count--;
-        float angle = Mathf.Atan2(projectileDirection.y, projectileDirection.x) * Mathf.Rad2Deg;
-        weaponProjectileClone = Instantiate(projectile[usingWeapon.name], transform.position, Quaternion.Euler(0, 0, angle));
-        Debug.Log(weaponProjectileClone);
-        weaponProjectileClone.GetComponent<ProjectileCtrl>().Init(usingWeapon.name, projectileDirection);
+        if (usingWeapon.name == InteractionObjectName.SCALPEL)
+        {
+            usingWeapon.count--;
+            weaponProjectileClone = Instantiate(projectile[usingWeapon.name], transform.position, Quaternion.Euler(0, 0, angle));
+            weaponProjectileClone.GetComponent<ProjectileCtrl>().Init(usingWeapon.name, projectileDirection);
+        }
+        else if(usingWeapon.name == InteractionObjectName.PIPE)
+        {
+            if(canUsePipe == false)
+            {
+                return;
+            }
+            usingWeapon.count--;
+            canUsePipe = false;
+            pipeCount = (int)usingWeapon.count;
+            usingWeapon.count = 0;
+        }
+        else if(usingWeapon.name == InteractionObjectName.BLOODPACK)
+        {
+            if(canUseBloodpack == false)
+            {
+                return;
+            }
+            canUseBloodpack = false;
+            StartCoroutine(BloodpackCoolTime(bloodPackDelay));
+            usingWeapon.count -= bloodPackDelay;
+            weaponProjectileClone = Instantiate(projectile[usingWeapon.name], transform.position, Quaternion.Euler(0, 0, angle));
+            weaponProjectileClone.GetComponent<ProjectileCtrl>().Init(usingWeapon.name, projectileDirection);
+        }
+        else if(usingWeapon.name == InteractionObjectName.FIREEXTINGUISHER)
+        {
+            usingWeapon.count -= Time.deltaTime;
+            weaponProjectileClone = Instantiate(projectile[usingWeapon.name], transform.position, Quaternion.Euler(0, 0, angle));
+            weaponProjectileClone.GetComponent<ProjectileCtrl>().Init(usingWeapon.name, projectileDirection);
+        }
     }
     
     private IEnumerator DumpItem(int itemIndex)     //아이템 버리는 시간을 카운팅하는 코루틴 함수이다.
@@ -611,5 +660,17 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    
+    private IEnumerator BloodpackCoolTime(float coolTime)
+    {
+        yield return new WaitForSeconds(coolTime);
+        canUseBloodpack = true;
+    }
+
+    private IEnumerator FireextinguisherCoolTime(float coolTime)
+    {
+        yield return new WaitForSeconds(coolTime);
+        canUseFireextinguisher = true;
+    }
+
+
 }

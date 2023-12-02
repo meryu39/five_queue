@@ -12,16 +12,19 @@ public class ProjectileCtrl : MonoBehaviour
 {
     const float SCALPEL_SPEED = 10;
     const float SCALPEL_RANGE = 10;
-    const bool SCALPEL_PENETRATION = true;
+    const bool SCALPEL_PENETRATION = false;
     const float SCALPEL_DAMAGE = 10;
+    const float SCALPEL_BLEEDING_DAMAGE_PER_SECOND = 10;
+    const float SCALPEL_BLEEDING_TIME = 9999f;
     const float PIPE_SPEED = 10;
     const float PIPE_RANGE = 10;
     const bool PIPE_PENETRATION = true;
-    const float PIPE_DAMAGE = 10;
+    const float PIPE_DAMAGE = 90;
     const float BLOODPACK_SPEED = 10;
-    const float BLOODPACK_RANGE = 10;
-    const bool BLOODPACK_PENETRATION = true;
-    const float BLOODPACK_DAMAGE = 10;
+    const float BLOODPACK_RANGE = 0;
+    const bool BLOODPACK_PENETRATION = false;
+    const float BLOODPACK_DAMAGE = 0;
+    const float BLOODPACK_BLOOD_DURATION = 6f;
     const float FIREEXTINGUISHER_SPEED = 10;
     const float FIREEXTINGUISHER_RANGE = 10;
     const bool FIREEXTINGUISHER_PENETRATION = true;
@@ -34,6 +37,9 @@ public class ProjectileCtrl : MonoBehaviour
     public float projectileDamage;
     public bool isPenetration;
     public float damage;
+    //투사체 파괴 후 남는 오브젝트 정보
+    public GameObject recyclingPipe;
+    public GameObject blood;
     //연산에 필요한 정보
     Transform transform;
     Vector2 throwingStartPos;
@@ -57,11 +63,18 @@ public class ProjectileCtrl : MonoBehaviour
     {
         if(other.CompareTag("Monster"))
         {
-            Debug.Log("투사체" + projectileName + "적중");
+            Monster_info monster = other.GetComponent<Monster_info>();
+            Debug.Log("투사체" + projectileName + "적중, 대상 : " + other);
             switch(projectileName)
             {
                 case ProjectileName.SCALPEL:
-                  
+                    monster.Monster_HP -= SCALPEL_DAMAGE;
+                    monster.StartCoroutine(monster.Bleeded(SCALPEL_BLEEDING_DAMAGE_PER_SECOND, SCALPEL_BLEEDING_TIME));
+                    break;
+                case ProjectileName.PIPE:
+                    monster.Monster_HP -= PIPE_DAMAGE;
+                    break;
+                case ProjectileName.BLOODPACK:
                     break;
             }
             if(!isPenetration)
@@ -69,6 +82,11 @@ public class ProjectileCtrl : MonoBehaviour
                 DestroyProjectile();
             }
         }
+        else if(other.CompareTag("Map"))
+        {
+            DestroyProjectile();
+        }
+        
     }
 
     public void Init(InteractionObjectName name, Vector2 dir)
@@ -111,6 +129,13 @@ public class ProjectileCtrl : MonoBehaviour
         switch(projectileName)
         {
             case ProjectileName.SCALPEL:
+                break;
+            case ProjectileName.PIPE:
+                Instantiate(recyclingPipe, transform.position, Quaternion.Euler(0, 0, 0));
+                break;
+            case ProjectileName.BLOODPACK:
+                GameObject temp = Instantiate(blood, transform.position, Quaternion.Euler(0, 0, 0));
+                Destroy(temp, BLOODPACK_BLOOD_DURATION);
                 break;
         }
         Destroy(gameObject);

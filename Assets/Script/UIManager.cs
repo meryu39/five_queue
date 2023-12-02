@@ -92,7 +92,7 @@ public class UIManager : MonoBehaviour
     }
     void CheckWeapon()
     {
-        if (playerState.auxiliaryWeapon.count == 0)
+        if (playerState.auxiliaryWeapon.count <= 0)
         {
             weaponUIImage.color = new Color(weaponUIImage.color.r, weaponUIImage.color.g, weaponUIImage.color.b, 0);
             weaponUIImage.sprite = null;
