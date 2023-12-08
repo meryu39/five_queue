@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2935668963753600332}
   m_Layer: 0
   m_Name: BloodTrace
-  m_TagString: blood
+  m_TagString: Blood
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

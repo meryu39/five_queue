@@ -26,9 +26,10 @@ public class ProjectileCtrl : MonoBehaviour
     const float BLOODPACK_DAMAGE = 0;
     const float BLOODPACK_BLOOD_DURATION = 6f;
     const float FIREEXTINGUISHER_SPEED = 10;
-    const float FIREEXTINGUISHER_RANGE = 10;
+    const float FIREEXTINGUISHER_RANGE = 2;
     const bool FIREEXTINGUISHER_PENETRATION = true;
-    const float FIREEXTINGUISHER_DAMAGE = 10;
+    const float FIREEXTINGUISHER_DAMAGE = 3;
+    const float FIREEXTINGUISHER_DUST_DURATION = 5f;
     //투사체 상태정보
     public ProjectileName projectileName;
     public Vector2 throwingDirection;
@@ -40,6 +41,7 @@ public class ProjectileCtrl : MonoBehaviour
     //투사체 파괴 후 남는 오브젝트 정보
     public GameObject recyclingPipe;
     public GameObject blood;
+    public GameObject dust;
     //연산에 필요한 정보
     Transform transform;
     Vector2 throwingStartPos;
@@ -75,6 +77,9 @@ public class ProjectileCtrl : MonoBehaviour
                     monster.Monster_HP -= PIPE_DAMAGE;
                     break;
                 case ProjectileName.BLOODPACK:
+                    break;
+                case ProjectileName.FIREEXTINGUISHER:
+                    monster.Monster_HP -= FIREEXTINGUISHER_DAMAGE;
                     break;
             }
             if(!isPenetration)
@@ -134,8 +139,12 @@ public class ProjectileCtrl : MonoBehaviour
                 Instantiate(recyclingPipe, transform.position, Quaternion.Euler(0, 0, 0));
                 break;
             case ProjectileName.BLOODPACK:
-                GameObject temp = Instantiate(blood, transform.position, Quaternion.Euler(0, 0, 0));
-                Destroy(temp, BLOODPACK_BLOOD_DURATION);
+                GameObject bloodObject = Instantiate(blood, transform.position, Quaternion.Euler(0, 0, 0));
+                Destroy(bloodObject, BLOODPACK_BLOOD_DURATION);
+                break;
+            case ProjectileName.FIREEXTINGUISHER:
+                GameObject dustObject = Instantiate(dust, transform.position, Quaternion.Euler(0, 0, 0));
+                Destroy(dustObject, FIREEXTINGUISHER_DUST_DURATION);
                 break;
         }
         Destroy(gameObject);

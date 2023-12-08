@@ -68,7 +68,8 @@ public class Monster_info : MonoBehaviour
     Transform bloodPosition;
     //보조무기와 상호작용을 위한 변수들
     public float bleedingTick = 0.5f;
-    public float bloodReleaseFollowTime = 3.0f;
+    public float bloodReleaseFollowTime = 3.0f; // 몬스터가 bloodpack의 blood를 밟을 때 어그로가 풀리는 시간
+    public float dustDecreasingSpeed = 1f;
     
     private void Awake()
     {
@@ -122,7 +123,7 @@ public class Monster_info : MonoBehaviour
                 }
                 if (monsterType != MonsterType.trap)
                 {
-                    transform.Translate(direction * moveSpeed  * Time.fixedDeltaTime);
+                    transform.Translate(direction * moveSpeed * dustDecreasingSpeed * Time.fixedDeltaTime);
                 }
             }
 
@@ -264,7 +265,19 @@ public class Monster_info : MonoBehaviour
                 lastAttackTime = Time.time;
             }
         }
+        else if(collision.CompareTag("Dust"))
+        {
+            dustDecreasingSpeed = 0.5f;
+        }
 
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Dust"))
+        {
+            dustDecreasingSpeed = 1f;
+        }
     }
 
 

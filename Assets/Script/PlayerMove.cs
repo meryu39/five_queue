@@ -85,6 +85,7 @@ public class PlayerMove : MonoBehaviour
     private bool canUseBloodpack = true;
     public float bloodPackDelay = 0.1f;
     private bool canUseFireextinguisher = true;
+    public float fireextinguisherDelay = 0.1f;
 
 
 
@@ -241,14 +242,14 @@ public class PlayerMove : MonoBehaviour
             isRun = true; // 달리기 상태로 설정
             playerMoveSpeed = walkspeed * 2f; //달리기 200 증가  
             myAnim.SetBool("isRun", true);
-            Debug.Log(playerMoveSpeed);
+            //Debug.Log(playerMoveSpeed);
         }
         else
         {
             isRun = false; // 달리기 x
 
             playerMoveSpeed = walkspeed;
-            Debug.Log(playerMoveSpeed);
+            //Debug.Log(playerMoveSpeed);
 
             myAnim.SetBool("isRun", false);
         }
@@ -630,6 +631,8 @@ public class PlayerMove : MonoBehaviour
             canUsePipe = false;
             pipeCount = (int)usingWeapon.count;
             usingWeapon.count = 0;
+            weaponProjectileClone = Instantiate(projectile[usingWeapon.name], transform.position, Quaternion.Euler(0, 0, angle));
+            weaponProjectileClone.GetComponent<ProjectileCtrl>().Init(usingWeapon.name, projectileDirection);
         }
         else if(usingWeapon.name == InteractionObjectName.BLOODPACK)
         {
@@ -645,7 +648,13 @@ public class PlayerMove : MonoBehaviour
         }
         else if(usingWeapon.name == InteractionObjectName.FIREEXTINGUISHER)
         {
-            usingWeapon.count -= Time.deltaTime;
+            if (canUseFireextinguisher == false)
+            {
+                return;
+            }
+            canUseFireextinguisher = false;
+            StartCoroutine(FireextinguisherCoolTime(fireextinguisherDelay));
+            usingWeapon.count -= fireextinguisherDelay;
             weaponProjectileClone = Instantiate(projectile[usingWeapon.name], transform.position, Quaternion.Euler(0, 0, angle));
             weaponProjectileClone.GetComponent<ProjectileCtrl>().Init(usingWeapon.name, projectileDirection);
         }

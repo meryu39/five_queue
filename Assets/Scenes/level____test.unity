@@ -7341,6 +7341,9 @@ MonoBehaviour:
   boob: {fileID: 0}
   trap_mouse: {fileID: 0}
   blood_prefab: {fileID: 2737479378006390179, guid: 91cfc859e405db34da0bbd3abb1d1e9d, type: 3}
+  bleedingTick: 0.5
+  bloodReleaseFollowTime: 3
+  dustDecreasingSpeed: 1
 --- !u!95 &550750229
 Animator:
   serializedVersion: 5
@@ -7654,6 +7657,9 @@ MonoBehaviour:
   boob: {fileID: 0}
   trap_mouse: {fileID: 0}
   blood_prefab: {fileID: 2737479378006390179, guid: 91cfc859e405db34da0bbd3abb1d1e9d, type: 3}
+  bleedingTick: 0.5
+  bloodReleaseFollowTime: 3
+  dustDecreasingSpeed: 1
 --- !u!50 &557268218
 Rigidbody2D:
   serializedVersion: 4
@@ -7886,6 +7892,9 @@ MonoBehaviour:
   boob: {fileID: 0}
   trap_mouse: {fileID: 0}
   blood_prefab: {fileID: 2737479378006390179, guid: 91cfc859e405db34da0bbd3abb1d1e9d, type: 3}
+  bleedingTick: 0.5
+  bloodReleaseFollowTime: 3
+  dustDecreasingSpeed: 1
 --- !u!70 &562704518
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -20460,6 +20469,67 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1001 &717439314
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -5585151965418436090, guid: 3e196c9e632c76841a71cb6e2dc6d010, type: 3}
+      propertyPath: m_Radius
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1967835574231978635, guid: 3e196c9e632c76841a71cb6e2dc6d010, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 5.99
+      objectReference: {fileID: 0}
+    - target: {fileID: 1967835574231978635, guid: 3e196c9e632c76841a71cb6e2dc6d010, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.07489194
+      objectReference: {fileID: 0}
+    - target: {fileID: 1967835574231978635, guid: 3e196c9e632c76841a71cb6e2dc6d010, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1967835574231978635, guid: 3e196c9e632c76841a71cb6e2dc6d010, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1967835574231978635, guid: 3e196c9e632c76841a71cb6e2dc6d010, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1967835574231978635, guid: 3e196c9e632c76841a71cb6e2dc6d010, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1967835574231978635, guid: 3e196c9e632c76841a71cb6e2dc6d010, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1967835574231978635, guid: 3e196c9e632c76841a71cb6e2dc6d010, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1967835574231978635, guid: 3e196c9e632c76841a71cb6e2dc6d010, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1967835574231978635, guid: 3e196c9e632c76841a71cb6e2dc6d010, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1967835574231978638, guid: 3e196c9e632c76841a71cb6e2dc6d010, type: 3}
+      propertyPath: m_Name
+      value: dust
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3e196c9e632c76841a71cb6e2dc6d010, type: 3}
 --- !u!1001 &724700345
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20687,6 +20757,9 @@ MonoBehaviour:
   - {fileID: 4123911010373892421, guid: a6e8fe08f151abe4697f1e231a8fb944, type: 3}
   - {fileID: 3451087597797169378, guid: c722c86be68ef114ebfb363b243f988e, type: 3}
   projectile_name: 05000000060000000700000008000000
+  canUsePipe: 0
+  bloodPackDelay: 0.1
+  fireextinguisherDelay: 0.1
 --- !u!50 &811065488
 Rigidbody2D:
   serializedVersion: 4
@@ -85448,6 +85521,9 @@ MonoBehaviour:
   boob: {fileID: 2675254035515863519, guid: 14f02382b2cadc94d8bff41def970250, type: 3}
   trap_mouse: {fileID: 162942086}
   blood_prefab: {fileID: 2737479378006390179, guid: 91cfc859e405db34da0bbd3abb1d1e9d, type: 3}
+  bleedingTick: 0.5
+  bloodReleaseFollowTime: 3
+  dustDecreasingSpeed: 1
 --- !u!50 &1324140208
 Rigidbody2D:
   serializedVersion: 4
@@ -126156,3 +126232,4 @@ SceneRoots:
   - {fileID: 1057993824}
   - {fileID: 1461455362}
   - {fileID: 21741825}
+  - {fileID: 717439314}

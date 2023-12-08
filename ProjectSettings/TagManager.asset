@@ -10,6 +10,7 @@ TagManager:
   - 'elevator '
   - RecyclingObject
   - Blood
+  - Dust
   layers:
   - Default
   - TransparentFX
