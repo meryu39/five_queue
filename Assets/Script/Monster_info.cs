@@ -107,25 +107,6 @@ public class Monster_info : MonoBehaviour
     private void Update()
     {
   
-            if (isfollow && playerTransform != null)
-            {
-
-                if (!EnterPlayer &&  monsterType != MonsterType.trap){                
-                    my_anim.SetBool("isRun", true);
-                }
-
-                Vector2 direction = (playerTransform.position - transform.position).normalized;
-
-                // Flip 설정
-                if ((isFacingRight && direction.x < 0) || (!isFacingRight && direction.x > 0))
-                {
-                    Flip();
-                }
-                if (monsterType != MonsterType.trap)
-                {
-                    transform.Translate(direction * moveSpeed * dustDecreasingSpeed * Time.fixedDeltaTime);
-                }
-            }
 
         
         if (Monster_hpbar != null)
@@ -141,6 +122,27 @@ public class Monster_info : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (isfollow && playerTransform != null)
+        {
+
+            if (!EnterPlayer && monsterType != MonsterType.trap)
+            {
+                my_anim.SetBool("isRun", true);
+            }
+
+            Vector2 direction = (playerTransform.position - transform.position).normalized;
+
+            // Flip 설정
+            if ((isFacingRight && direction.x < 0) || (!isFacingRight && direction.x > 0))
+            {
+                Flip();
+            }
+            if (monsterType != MonsterType.trap)
+            {
+                transform.Translate(direction * moveSpeed * dustDecreasingSpeed * Time.fixedDeltaTime);
+            }
+        }
+
         if (monsterType != MonsterType.trap)
         {
             FSM_huamn();

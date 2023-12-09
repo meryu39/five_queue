@@ -353,6 +353,7 @@ GameObject:
   m_Component:
   - component: {fileID: 715616985}
   - component: {fileID: 715616984}
+  - component: {fileID: 715616986}
   m_Layer: 0
   m_Name: intro
   m_TagString: Untagged
@@ -411,6 +412,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &715616986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 715616983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80cc620d0fc8860409e2958a4a3c568b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  videoPlayer: {fileID: 715616984}
+  canvas: {fileID: 1798349922}
 --- !u!1 &874088526
 GameObject:
   m_ObjectHideFlags: 0
@@ -447,7 +462,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -969,12 +984,12 @@ GameObject:
   - component: {fileID: 1798349924}
   - component: {fileID: 1798349923}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: MainSelecet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1798349923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1066,7 +1081,7 @@ RectTransform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 715616985}
   - {fileID: 874088529}
+  - {fileID: 715616985}
   - {fileID: 1798349926}
   - {fileID: 1383975799}
