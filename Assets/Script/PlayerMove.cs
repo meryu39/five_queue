@@ -28,6 +28,7 @@ public class PlayerMove : MonoBehaviour
     public float playerMoveSpeed;
     
     private bool isRun; //달리기 여부 
+    public bool canMove = true;
     //대쉬 변수 
     private bool canDash = true; //대쉬가능여부
     private bool isDashing; //대쉬여부
@@ -200,22 +201,31 @@ public class PlayerMove : MonoBehaviour
             UseWeapon();
         }
     }
-    private void FixedUpdate()
-        
+    private void FixedUpdate() 
     {
+        Move();
+    }
+
+    private void Move()
+    {
+        if (!canMove)
+        {
+            playerRb.velocity = Vector2.zero;
+            return;
+        }
         if (isDashing)
         {
             return;
         }
 
-    
+
         playerRb.velocity = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.fixedDeltaTime; //사용자 방향키 입력받아 이동속도 계산
                                                                                                                                                           //Debug.Log(new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.fixedDeltaTime);
 
 
 
         myAnim.SetFloat("MoveX", playerRb.velocity.x);             //파라미터 선언
-        myAnim.SetFloat("MoveY", playerRb.velocity.y);               
+        myAnim.SetFloat("MoveY", playerRb.velocity.y);
 
 
         if (Input.GetAxisRaw("Horizontal") == 1 || Input.GetAxisRaw("Horizontal") == -1 || Input.GetAxisRaw("Vertical") == 1 || Input.GetAxisRaw("Vertical") == -1)
@@ -223,7 +233,7 @@ public class PlayerMove : MonoBehaviour
             myAnim.SetFloat("LastMoveX", Input.GetAxisRaw("Horizontal"));                    //마지막으로 이동한 방향 확인하기 위한 파라미터 선언
             myAnim.SetFloat("LastMoveY", Input.GetAxisRaw("Vertical"));
         }
-    
+
         if (dashpress && canDash && !isDashing)
         {
             StartCoroutine(Dash());
@@ -236,19 +246,6 @@ public class PlayerMove : MonoBehaviour
             isAttack = false; //공격플래그 비활성화
             Attacking = false; //공격모션 비활성화
         }
-    
-
-
-        
-
-
-        
-
-        
-
-
-
-
     }
 
 

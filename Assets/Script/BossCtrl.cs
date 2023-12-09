@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
-using UnityEditor.Build.Content;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BossCtrl : MonoBehaviour
 {
@@ -12,6 +12,8 @@ public class BossCtrl : MonoBehaviour
     public GameObject gameoverBackground;
     public GameObject shockObject;
     public GameObject runnerMob;
+    public GameObject fallArea;
+    public GameObject[] fallObject;
     public float shockCognitionRange = 30f;
     public float moveSpeed = 10f;
     public float shockSizeUpPerSecond = 1.0f;
@@ -51,6 +53,19 @@ public class BossCtrl : MonoBehaviour
                 isPerformCrack[0] = true;
                 StartCoroutine(PerformCrack(1.5f, false));
             }
+            else
+            {
+                Vector2 direction = (player.transform.position - transform.position).normalized;
+                if (direction.x > 0)
+                {
+                    anim.SetInteger("direction", 1);
+                }
+                else
+                {
+                    anim.SetInteger("direction", -1);
+                }
+                transform.Translate(direction * moveSpeed * dustDecreasingSpeed * Time.deltaTime);
+            }
         }
         else if (patternTime > 154 && isPerformCrack[1] == false)
         {
@@ -59,6 +74,19 @@ public class BossCtrl : MonoBehaviour
                 isPerformCrack[1] = true;
                 StartCoroutine(PerformCrack(1.5f, false));
             }
+            else
+            {
+                Vector2 direction = (player.transform.position - transform.position).normalized;
+                if (direction.x > 0)
+                {
+                    anim.SetInteger("direction", 1);
+                }
+                else
+                {
+                    anim.SetInteger("direction", -1);
+                }
+                transform.Translate(direction * moveSpeed * dustDecreasingSpeed * Time.deltaTime);
+            }
         }
         else if (patternTime > 171 && isPerformCrack[2] == false)
         {
@@ -66,6 +94,19 @@ public class BossCtrl : MonoBehaviour
             {
                 isPerformCrack[2] = true;
                 StartCoroutine(PerformCrack(1.5f, false));
+            }
+            else
+            {
+                Vector2 direction = (player.transform.position - transform.position).normalized;
+                if (direction.x > 0)
+                {
+                    anim.SetInteger("direction", 1);
+                }
+                else
+                {
+                    anim.SetInteger("direction", -1);
+                }
+                transform.Translate(direction * moveSpeed * dustDecreasingSpeed * Time.deltaTime);
             }
         }
         else if (Mathf.Abs(Vector3.Magnitude(player.transform.position - transform.position)) < shockCognitionRange)
@@ -94,10 +135,30 @@ public class BossCtrl : MonoBehaviour
     IEnumerator PerformCrack(float duration, bool isEnd)
     {
         isPattern = true;
+        player.GetComponent<PlayerMove>().canMove = false;
         anim.SetTrigger("crack");
-        Debug.Log("PerformCrack ½ÇÇà");
+        while (duration >= 0)
+        {
+    
+        //ÀÜÀçµéÀ» ÁÖ¾îÁø ¿µ¿ª¿¡ ·£´ý 1~4°³ ¶³¾îÁü
+            for(int i=0; i<Random.Range(1, 4); i++)
+            {
+                Instantiate(fallObject[Random.Range(0, 3)], new Vector3(fallArea.transform.position.x + Random.Range(-fallArea.transform.localScale.x / 2, fallArea.transform.localScale.x / 2),
+                                        fallArea.transform.position.y + Random.Range(-fallArea.transform.localScale.y / 2, fallArea.transform.localScale.y / 2), 
+                                        fallArea.transform.position.z), Quaternion.Euler(0, 0, 0));
+            }
+        
+            if (isEnd == true)  
+            {
+                Image gameoverBackgroundImage = gameoverBackground.GetComponent<Image>();
+                gameoverBackgroundImage.color = new Color(gameoverBackgroundImage.color.r, gameoverBackgroundImage.color.g, gameoverBackgroundImage.color.b, gameoverBackgroundImage.color.a + 12);
+            }
+            duration -= 0.5f;
+            yield return new WaitForSeconds(0.5f);
+        }
+        patternTime += duration;
+        player.GetComponent<PlayerMove>().canMove = true;
         isPattern = false;
-        yield return null;
     }
 
     IEnumerator PerformShock()
@@ -112,6 +173,7 @@ public class BossCtrl : MonoBehaviour
             initObject.transform.localScale = new Vector3(initObject.transform.localScale.x + shockSizeUpPerSecond, initObject.transform.localScale.y + shockSizeUpPerSecond, initObject.transform.localScale.z);
             yield return new WaitForSeconds(0.05f);
         }
+        patternTime += 1f;
         isPattern = false;
     }
 
@@ -123,6 +185,7 @@ public class BossCtrl : MonoBehaviour
         Instantiate(runnerMob, new Vector3(transform.position.x + 1.5f, transform.position.y, transform.position.z), Quaternion.Euler(0, 0, 0));
         Instantiate(runnerMob, new Vector3(transform.position.x - 1.5f, transform.position.y, transform.position.z), Quaternion.Euler(0, 0, 0));
         yield return new WaitForSeconds(1f);
+        patternTime += 2f;
         isCall = false;
         isPattern = false;
     }
