@@ -28,8 +28,9 @@ public class UIManager : MonoBehaviour
     public Dictionary<InteractionObjectName, Sprite> weaponSprite = new Dictionary<InteractionObjectName, Sprite>();
     public Sprite[] weaponSprite_sprite;
     public InteractionObjectName[] weaponSprite_weaponName;
-
-
+    //스킬 셋팅 캔버스 
+    public GameObject SkillCanvas;
+    private bool CanvasActive = false; 
 
     private void Awake()
     {
@@ -90,6 +91,26 @@ public class UIManager : MonoBehaviour
             itemUIText[i].text = playerState.item[i].count.ToString();
         }
     }
+
+    private void Update()
+    {
+        // 캔버스가 활성화되어 있지 않고 X 키를 눌렀을 때
+        if (!CanvasActive && Input.GetKeyDown(KeyCode.X))
+        {
+            SkillCanvas.SetActive(true);
+            CanvasActive = true;
+            Debug.Log("스킬UI를 활성화합니다");
+        }
+
+        // 캔버스가 활성화되어 있고 Escape 키 또는 X 키를 눌렀을 때
+        else if (CanvasActive && (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.X)))
+        {
+            SkillCanvas.SetActive(false);
+            CanvasActive = false;
+            Debug.Log("스킬UI를 비활성화합니다");
+        }
+    }
+
     void CheckWeapon()
     {
         if (playerState.auxiliaryWeapon.count <= 0)

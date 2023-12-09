@@ -23,8 +23,6 @@ public class Skill_UI : MonoBehaviour
 
     public bool[] buttonClicked = new bool[7];
 
-    public int active_e = -1;
-    public int active_shift = -1;
 
     public Sprite e_skill;
     public Sprite shift_skill;
@@ -34,7 +32,7 @@ public class Skill_UI : MonoBehaviour
 
     private void Awake()
     {
-        GameObject player = GameObject.FindWithTag("Player"); // 몬스터의 태그를 사용하여 찾음
+        GameObject player = GameObject.FindWithTag("Player"); // 플레이어 태그를 사용하여 찾음
         state = player.GetComponent<State>();
 
 
@@ -144,30 +142,30 @@ public class Skill_UI : MonoBehaviour
             // 클릭된 버튼의 이미지 변경 및 플래그 설정
             if (Input.GetMouseButtonDown(1)) 
             {
-                if (active_e != -1)
+                if (state.active_e != -1)
                 {
                     Debug.Log("e변경완");
-                    ChangeSprite(active_e, get_skill);
+                    ChangeSprite(state.active_e, get_skill);
 
                 }
                 Debug.Log("e스킬");
                 ChangeSprite(index, e_skill);
 
-                active_e = index;
+                state.active_e = index;
             }
             // 그 외에는 오른쪽 마우스 버튼 클릭 (단축 누름)
             else if (Input.GetMouseButtonDown(0))  
             {
-                if (active_shift != -1)
+                if (state.active_shift != -1)
                 {
                     Debug.Log("쉬프트변경완");
-                    ChangeSprite(active_shift, get_skill);
+                    ChangeSprite(state.active_shift, get_skill);
 
                 }
                 Debug.Log("쉬프트스킬");
                 ChangeSprite(index, shift_skill);
 
-                active_shift = index;
+                state.active_shift = index;
             }
         }
     }

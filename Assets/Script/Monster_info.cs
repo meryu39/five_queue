@@ -288,8 +288,23 @@ public class Monster_info : MonoBehaviour
         {
             isAttacking = true;
             my_anim.SetTrigger("isAttack");
-            state.SetHP(state.currentHP-MonsterAttack);
+            if (state.active_e == 4 || state.active_shift == 4)
+            {
+                Monster_HP -= MonsterAttack;
+                state.SetEnergy(state.currentEnergy - 4f);
+
+            }
+            if (state.active_e == 0 || state.active_shift == 0)
+            {
+                state.SetHP(state.currentHP - (0.8f * MonsterAttack));
+                state.SetEnergy(state.currentEnergy - 2f);
+            }
+            else
+            {
+                state.SetHP(state.currentHP - MonsterAttack);
+            }
             lastAttackTime = Time.time;
+             
         }
     }
 
@@ -310,8 +325,21 @@ public class Monster_info : MonoBehaviour
 
                 if (!dashing.nodeal)
                 {
-                    state.SetHP(state.currentHP - MonsterAttack);
-                    
+                    if(state.active_e == 4 || state.active_shift == 4){
+                        Monster_HP -= MonsterAttack;
+                        state.SetEnergy(state.currentEnergy - 4f);
+
+                    }
+                    if (state.active_e == 0 || state.active_shift == 0)
+                    {
+                        state.SetHP(state.currentHP - (0.8f * MonsterAttack));
+                        state.SetEnergy(state.currentEnergy - 2f);
+                    }
+                    else
+                    {
+                        state.SetHP(state.currentHP - MonsterAttack);
+                    }
+
                     SpawnBloodEffect(bloodPosition.position,dashing.transform);
 
 

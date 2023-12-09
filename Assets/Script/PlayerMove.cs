@@ -33,7 +33,7 @@ public class PlayerMove : MonoBehaviour
     private bool isDashing; //대쉬여부
     private float dashingPower = 10f; //대쉬이동거리
     private float dashingTime = 0.2f; //대쉬이동시간
-    private float dashingCooldown = 2f; //대쉬 쿨타임
+    private float dashingCooldown = 0f; //대쉬 쿨타임
     //공격변수 
     private bool isAttack = false; //공격확인 플래그(중복 공격 방지)
     private bool Attacking = false;  //공격키 입력 확인 변수
@@ -237,23 +237,12 @@ public class PlayerMove : MonoBehaviour
             Attacking = false; //공격모션 비활성화
         }
     
-        if (Input.GetKey(KeyCode.LeftShift) && !isDashing) // 왼쪽 Shift 키를 누르고 대쉬 중이 아닌 경우
-        {
-            
-            isRun = true; // 달리기 상태로 설정
-            playerMoveSpeed = walkspeed * 2f; //달리기 200 증가  
-            myAnim.SetBool("isRun", true);
-            //Debug.Log(playerMoveSpeed);
-        }
-        else
-        {
-            isRun = false; // 달리기 x
 
-            playerMoveSpeed = walkspeed;
-            //Debug.Log(playerMoveSpeed);
 
-            myAnim.SetBool("isRun", false);
-        }
+        
+
+
+        
 
         
 
@@ -267,27 +256,13 @@ public class PlayerMove : MonoBehaviour
 
     private void SkillInput()
     {
-        if (Input.GetKeyDown(KeyCode.K))
+        if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            //if (Time.time - lastskillTime >= skillCoolTIme)
-            //{
+            SkillEvenet(state.active_shift);     
 
-                SkillEvenet(1); // 혈취 처방
-                lastskillTime = Time.time;
-           // }
         }
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            SkillEvenet(2); //집단 복부 절개
-        }
-
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            SkillEvenet(3); //엑스레이
-        }
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            SkillEvenet(4); //심호흡
+        if (Input.GetKeyDown(KeyCode.E)){
+            SkillEvenet(state.active_e);
         }
     }
 
@@ -374,17 +349,42 @@ public class PlayerMove : MonoBehaviour
 
         }
 
-        if(skillnum == 2 && state.currentEnergy < 15f)
+
+        //집단복부절개
+        if (skillnum == 2 && state.currentEnergy >= 15f)
+
         {
             state.SetEnergy(state.currentEnergy - 15f);
             Trigger_skill2 = true;
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             SetPlayerDirection(mousePosition - new Vector2(transform.position.x, transform.position.y));
             Attacking = true;
-            
+
             state.PlayerAttackDamage = state.PlayerAttackDamage * 2;
         }
-        if(skillnum == 3 && state.currentEnergy < 25f)
+        //심호흡
+        if (skillnum == 3 && state.currentEnergy >= 30f)
+        {
+            state.SetEnergy(state.currentEnergy - 30f);
+            state.SetHP(state.currentHP + 25f);
+            Vector3 healEffectPosition = new Vector3(transform.position.x, transform.position.y - 1f, transform.position.z);
+
+
+            GameObject healEffect = Instantiate(healpart, healEffectPosition, Quaternion.identity);
+            Destroy(healEffect, 0.3f);
+        }
+        //혈취처방
+        if (skillnum == 5 && state.currentEnergy >=  10f) {
+            state.SetEnergy(state.currentEnergy - 10f);
+            Trigger_skill1 = true;
+            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            SetPlayerDirection(mousePosition - new Vector2(transform.position.x, transform.position.y));
+            Attacking = true;
+
+        }
+
+        //엑스레이
+        if(skillnum == 6 && state.currentEnergy >= 25f)
         {
             state.SetEnergy(state.currentEnergy - 25f);
             Trigger_skill3 = true;
@@ -396,16 +396,6 @@ public class PlayerMove : MonoBehaviour
 
         }
 
-        if (skillnum == 4 && state.currentEnergy < 30f)
-        {
-            state.SetEnergy(state.currentEnergy - 30f);
-            state.SetHP(state.currentHP + 25f);
-            Vector3 healEffectPosition = new Vector3(transform.position.x, transform.position.y - 1f, transform.position.z);
-
-            
-            GameObject healEffect = Instantiate(healpart, healEffectPosition, Quaternion.identity);
-            Destroy(healEffect, 0.3f);
-        }
     }
 
 
