@@ -80,14 +80,14 @@ public class Monster_info : MonoBehaviour
         Rb = GetComponent<Rigidbody2D>(); // 리지드바디 컴포넌트
         Rb.velocity = Vector3.zero;
         bloodPosition = dashing.transform.Find("blood_position");
+        UIparent = GameObject.Find("UI_parent");
     }
 
     void Start()
     {
         if (hpBarPrefab != null)
         {
-            Monster_hpbar = Instantiate(hpBarPrefab, Camera.main.WorldToScreenPoint(transform.position + new Vector3(0.05f, 0.3f, 0)), Quaternion.identity).GetComponent<Slider>();
-            Monster_hpbar.transform.SetParent(UIparent.transform);
+            Monster_hpbar = Instantiate(hpBarPrefab, Camera.main.WorldToScreenPoint(transform.position + new Vector3(0.05f, 0.3f, 0)), Quaternion.identity, UIparent.transform).GetComponent<Slider>();
             Monster_hpbar.gameObject.SetActive(false);
 
             Monster_area = Instantiate(M_area, transform.position, Quaternion.identity);
