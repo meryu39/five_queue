@@ -207,6 +207,7 @@ public class PlayerMove : MonoBehaviour
         {
             return;
         }
+
     
         playerRb.velocity = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.fixedDeltaTime; //사용자 방향키 입력받아 이동속도 계산
                                                                                                                                                           //Debug.Log(new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * playerMoveSpeed * Time.fixedDeltaTime);
@@ -346,7 +347,7 @@ public class PlayerMove : MonoBehaviour
     //스킬1
     void SkillEvenet(int skillnum)
     {
-        if(skillnum == 1) {
+        if(skillnum == 1 && state.currentEnergy < 10f) {
             state.SetEnergy(state.currentEnergy - 10f);
 
             Trigger_skill1 = true;
@@ -373,7 +374,7 @@ public class PlayerMove : MonoBehaviour
 
         }
 
-        if(skillnum == 2)
+        if(skillnum == 2 && state.currentEnergy < 15f)
         {
             state.SetEnergy(state.currentEnergy - 15f);
             Trigger_skill2 = true;
@@ -383,7 +384,7 @@ public class PlayerMove : MonoBehaviour
             
             state.PlayerAttackDamage = state.PlayerAttackDamage * 2;
         }
-        if(skillnum == 3)
+        if(skillnum == 3 && state.currentEnergy < 25f)
         {
             state.SetEnergy(state.currentEnergy - 25f);
             Trigger_skill3 = true;
@@ -395,7 +396,7 @@ public class PlayerMove : MonoBehaviour
 
         }
 
-        if (skillnum == 4)
+        if (skillnum == 4 && state.currentEnergy < 30f)
         {
             state.SetEnergy(state.currentEnergy - 30f);
             state.SetHP(state.currentHP + 25f);
@@ -406,6 +407,7 @@ public class PlayerMove : MonoBehaviour
             Destroy(healEffect, 0.3f);
         }
     }
+
 
     
     private void L_throw()

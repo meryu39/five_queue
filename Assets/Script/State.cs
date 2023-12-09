@@ -9,6 +9,9 @@ using UnityEngine.UI;
 
 public class State : MonoBehaviour
 {
+    public float exp;
+
+    public int skill_exp = 100;
     public float maxHP = 100f;          //최대 체력
     public float maxEnergy = 100f;      //최대 기력
     public int maxHunger = 2;           //최대 허기
@@ -54,6 +57,12 @@ public class State : MonoBehaviour
         {
             SetHunger(currentHunger - 1);
             lastDecreaseHungerTime = Time.time;
+        }
+        if(exp > 100)
+        {
+            exp %= 100;
+            skill_exp++;
+            
         }
     }
 
