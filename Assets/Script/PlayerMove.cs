@@ -48,9 +48,6 @@ public class PlayerMove : MonoBehaviour
     bool Trigger_skill1 = false;
     public GameObject R_sword;
     public GameObject L_sword;
-    //집단 복부절개
-    bool Trigger_skill2 = false;
-    public GameObject side_range;
     //엑스레이
     public GameObject r_xray;
     public GameObject l_xray;
@@ -261,6 +258,17 @@ public class PlayerMove : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E)){
             SkillEvenet(state.active_e);
         }
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            if (coolTimeUI != null && coolTimeUI.remainingTime == 0)
+            {
+                coolTimeUI.Trigger_Skill();
+                Vector3 healEffectPosition = new Vector3(transform.position.x, transform.position.y - 1f, transform.position.z);
+                GameObject healEffect = Instantiate(healpart, healEffectPosition, Quaternion.identity);
+                Destroy(healEffect, 0.3f);
+                StartCoroutine(UltraIncreaseEnergyOverTime(10f));
+            }
+        }
     }
 
     private void SetPlayerDirection(Vector2 direction)
@@ -279,10 +287,7 @@ public class PlayerMove : MonoBehaviour
     {
 
 
-        if (coolTimeUI != null)
-        {
-            coolTimeUI.Trigger_Skill();
-        }
+ 
         state.SetEnergy(state.currentEnergy - 10f);
 
         canDash = false;
@@ -315,6 +320,21 @@ public class PlayerMove : MonoBehaviour
 
     }
 
+    private IEnumerator UltraIncreaseEnergyOverTime(float duration)
+    {
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            // 시간이 흐를수록 currentEnergy를 증가시킴 (예시로 10초 동안 0에서 100까지 증가)
+            state.currentEnergy = Mathf.Lerp(0f, 100f, elapsedTime / duration);
+
+            elapsedTime += Time.deltaTime;
+            yield return null; // 한 프레임 대기
+        }
+
+        state.currentEnergy = 100f;
+    }
 
     //스킬1
     void SkillEvenet(int skillnum)
@@ -352,11 +372,10 @@ public class PlayerMove : MonoBehaviour
 
         {
             state.SetEnergy(state.currentEnergy - 15f);
-            Trigger_skill2 = true;
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             SetPlayerDirection(mousePosition - new Vector2(transform.position.x, transform.position.y));
-            Attacking = true;
-
+            myAnim.SetTrigger("isdao");
+            isAttack = false;
             state.PlayerAttackDamage = state.PlayerAttackDamage * 2;
         }
         //심호흡
@@ -427,19 +446,7 @@ public class PlayerMove : MonoBehaviour
 
     }
 
-    private void side_attack()
-    {
-        if (Trigger_skill2)
-        {
-            side_range.SetActive(true);
-        }
-    }
-    private  void del_side_attack()
-    {
-        side_range.SetActive(false);
-        Trigger_skill2 = false;
-        state.PlayerAttackDamage = origin_playerdamage;
-    }
+
 
 
     private void L_xray()
@@ -487,6 +494,7 @@ public class PlayerMove : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
+   
         // 충돌된 태그가 몬스터이고, 공격 모션이 실행되지 않았을 때, 공격 플래그가 활성화되지 않았을 때
         if (other.CompareTag("Monster") && !isAttack)
         {

@@ -12,6 +12,7 @@ TagManager:
   - Blood
   - Dust
   - Shock
+  - moon
   layers:
   - Default
   - TransparentFX

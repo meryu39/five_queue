@@ -249,13 +249,6 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.16666667
-    functionName: side_attack
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.16666667
     functionName: L_xray
     data: 
     objectReferenceParameter: {fileID: 0}
@@ -264,13 +257,6 @@ AnimationClip:
     messageOptions: 0
   - time: 0.33333334
     functionName: del_L_throw
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.33333334
-    functionName: del_side_attack
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

@@ -5,11 +5,11 @@ public class UI_CoolTime : MonoBehaviour
 {
     public Text text_CoolTime;
     public Image image_fill;
-    private float time_cooltime = 2;
+    private float time_cooltime = 240;
     private float time_current;
     private float time_start;
     private bool isEnded = true;
-
+    public float remainingTime;
     void Start()
     {
         Init_UI();
@@ -37,7 +37,7 @@ public class UI_CoolTime : MonoBehaviour
         if (time_current < time_cooltime)
         {
             // 쿨타임 UI 업데이트
-            float remainingTime = time_cooltime - time_current;
+            remainingTime = time_cooltime - time_current;
             Set_FillAmount(remainingTime);
         }
         else if (!isEnded)
