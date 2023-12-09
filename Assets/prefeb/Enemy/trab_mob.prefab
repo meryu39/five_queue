@@ -192,7 +192,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monsterType: 3
-  Monster_HP: 100
+  Monster_HP: 25
   M_area: {fileID: 4734277119871747640, guid: fec8da49e4a347f4eae6067e3fbe5eaa, type: 3}
   hpBarPrefab: {fileID: 5692306809095712317, guid: 0b0f828e902060d4d9bdb1031a5b7a29, type: 3}
   UIparent: {fileID: 5086717560536969281, guid: f288ee70d0037c64c8e770ff2067828f, type: 3}

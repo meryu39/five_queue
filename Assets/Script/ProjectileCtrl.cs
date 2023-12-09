@@ -13,13 +13,13 @@ public class ProjectileCtrl : MonoBehaviour
     const float SCALPEL_SPEED = 10;
     const float SCALPEL_RANGE = 10;
     const bool SCALPEL_PENETRATION = false;
-    const float SCALPEL_DAMAGE = 10;
-    const float SCALPEL_BLEEDING_DAMAGE_PER_SECOND = 10;
+    const float SCALPEL_DAMAGE = 12;
+    const float SCALPEL_BLEEDING_DAMAGE_PER_SECOND = 2;
     const float SCALPEL_BLEEDING_TIME = 9999f;
     const float PIPE_SPEED = 10;
     const float PIPE_RANGE = 10;
     const bool PIPE_PENETRATION = true;
-    const float PIPE_DAMAGE = 90;
+    const float PIPE_DAMAGE = 50;
     const float BLOODPACK_SPEED = 10;
     const float BLOODPACK_RANGE = 0;
     const bool BLOODPACK_PENETRATION = false;

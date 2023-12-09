@@ -194,9 +194,9 @@ public class Monster_info : MonoBehaviour
             case MonsterType.human:
                 return 10f;
             case MonsterType.runner:
-                return 20f;
+                return 30f;
             case MonsterType.heavy:
-                return 40f;
+                return 35f;
             case MonsterType.trap:
                 return 0f;
             default:
@@ -451,8 +451,6 @@ public class Monster_info : MonoBehaviour
         isfollow = true;
         my_anim.SetBool("isRun", true);
     }
-
-
 
 }
 

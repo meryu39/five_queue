@@ -347,7 +347,7 @@ public class PlayerMove : MonoBehaviour
     //스킬1
     void SkillEvenet(int skillnum)
     {
-        if(skillnum == 1 && state.currentEnergy < 10f) {
+        if(skillnum == 1 && state.currentEnergy >= 10f) {
             state.SetEnergy(state.currentEnergy - 10f);
 
             Trigger_skill1 = true;

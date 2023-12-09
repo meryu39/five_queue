@@ -20,15 +20,16 @@ public class State : MonoBehaviour
     public int currentHunger;           //현재 허기
     //재생과 관련된 변수들
     public float HPRegenerationAmount = 2f;                     //재생 시 초당 체력 회복량
-    public float EnergyRegenerationAmount = 5f;                 //재생 시 초당 기력 회복량
+    public float EnergyRegenerationAmount = 3f;                 //재생 시 초당 기력 회복량
     public float HPRegenerationCondition_EnergyPercent = 1.0f;  //체력 재생 발동 조건이 되는 기력의 퍼센트, 0~1사이 값이다.
     private float lastDecreaseHungerTime;                       //마지막으로 허기가 감소된 시간
-    public float decreaseHungerCoolTime = 150.0f;               //허기가 감소되는 주기
+    public float decreaseHungerCoolTime = 120.0f;               //허기가 감소되는 주기
     //아이템, 무기와 관련된 변수들
     public Item[] item = new Item[3];                           //현재 소지 중인 아이템
     public Item auxiliaryWeapon = new Item();
 
     public float PlayerAttackDamage = 25;
+    public int testIndex = 0;
     
 
     void Awake()
@@ -62,8 +63,8 @@ public class State : MonoBehaviour
         {
             exp %= 100;
             skill_exp++;
-            
         }
+        //Debug.Log(currentHP + ", " + ++testIndex);
     }
 
 
