@@ -556,6 +556,11 @@ public class PlayerMove : MonoBehaviour
                 usingWeapon.count = pipeCount;
             }
         }
+
+        if(other.CompareTag("Shock"))
+        {
+            state.SetHP(state.currentHP - 50f);
+        }
     }
     
 

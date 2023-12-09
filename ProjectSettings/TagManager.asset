@@ -11,6 +11,7 @@ TagManager:
   - RecyclingObject
   - Blood
   - Dust
+  - Shock
   layers:
   - Default
   - TransparentFX
