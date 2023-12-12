@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Skill_UI : MonoBehaviour
 {
+
     public Button button1;
     public Button button2;
     public Button button3;
@@ -17,8 +18,13 @@ public class Skill_UI : MonoBehaviour
     public TMPro.TMP_Text level;
 
 
-    public string[] skill_text = { "[신경퇴화]", "[독성소독]", "[집단 복부 절개]", "[심호흡]",
-                                   "[과민반응]", "[혈취 처방]", "[도끼 광선]" };
+    private string[] skill_text = { "공격을 받을 때마다 발동되어, 피해를 80%만 받음",
+                                   "소화기로 뿌린 분진 위에서 기본공격 시, 적들에게 소화기 분사의 피해를 추가로 입힘", 
+                                   "한 번 크게 회전하며 도끼를 휘둘러, 사방의 적들에게 기본 공격의 두 배 피해를 입힘",
+                                   "체력을 순간적으로 25%만큼 회복함",
+                                   "공격한 대상에게 기본 공격에 해당하는 피해를 자동으로 입혀 반격함",
+                                   "전방에 검기를 날려, 기본 공격 5배 사거리 내 적들에게 원뿔 형태로 기본 공격 피해 입힘",
+                                   "전방을 강하게 도끼로 내려찍어, 좁은 범위 내 적들에게 기본 공격의 6배 피해를 입힘." };
 
 
     public bool[] buttonClicked = new bool[7];
@@ -107,6 +113,7 @@ public class Skill_UI : MonoBehaviour
                     buttonClicked[1] = true;
                     break;
                 case 2:
+                    exp_learn(3);
                     button3.image.sprite = get_skill;
                     buttonClicked[2] = true;
                     break;

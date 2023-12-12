@@ -5,10 +5,10 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMove : MonoBehaviour
 {
-
     public GameObject elev1;
     public GameObject elev2;
 
+    public CutSceneController UI;
 
     private State state;
     private Monster_info monster;
@@ -90,8 +90,6 @@ public class PlayerMove : MonoBehaviour
 
     private void Awake()
     {
-
-        
         playerRb = GetComponent<Rigidbody2D>(); //리자드바디 컴포넌트
         playerRb.velocity = Vector3.zero;
         myAnim = GetComponent<Animator>(); //애니메이터 컴포넌트
@@ -125,6 +123,11 @@ public class PlayerMove : MonoBehaviour
 
     private void Update()
     {
+        if (!CutSceneController.instance.CanMove)
+        {
+            return;
+        }
+
         if (isDashing)
         {
             return;
@@ -134,7 +137,6 @@ public class PlayerMove : MonoBehaviour
                             //객체끼리 충돌시 밀리지 않기 가속도 = 0
                             // GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 
-        
     }
     private void checkInput()       //입력한 버튼이 있는지 확인하는 함수
     {
@@ -200,6 +202,10 @@ public class PlayerMove : MonoBehaviour
     }
     private void FixedUpdate() 
     {
+        if (!CutSceneController.instance.CanMove)
+        {
+            return;
+        }
         Move();
     }
 

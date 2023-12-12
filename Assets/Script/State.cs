@@ -14,7 +14,7 @@ public class State : MonoBehaviour
     public int active_shift = -1;
 
     public float exp; //캐릭터 경험치
-    public int skill_exp = 100; //스킬포인트
+    public int skill_exp = 10; //스킬포인트
     public float maxHP = 100f;          //최대 체력
     public float maxEnergy = 100f;      //최대 기력
     public int maxHunger = 2;           //최대 허기

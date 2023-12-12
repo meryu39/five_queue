@@ -5,8 +5,16 @@ using UnityEngine;
 
 public class CutSceneController : MonoBehaviour
 {
+    public bool CanMove = false;
+
+    public static CutSceneController instance;
     public GameObject[] cutScene;
-    int idx = 0;    
+    int idx = 0;
+
+    private void Awake()
+    {
+        CutSceneController.instance = this;
+    }
 
     // Update is called once per frame
     void Update()
@@ -14,6 +22,10 @@ public class CutSceneController : MonoBehaviour
         if (idx < cutScene.Length)
         {
             PressToSkip();
+        }
+        else
+        {
+            CanMove = true;
         }
     }
 
