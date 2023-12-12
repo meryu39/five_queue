@@ -72,9 +72,16 @@ public class Monster_info : MonoBehaviour
     public float bleedingTick = 0.5f;
     public float bloodReleaseFollowTime = 3.0f; // 몬스터가 bloodpack의 blood를 밟을 때 어그로가 풀리는 시간
     public float dustDecreasingSpeed = 1f;
-    
+    //보스
+    public bool isBoss = false;
+
+
     private void Awake()
     {
+        if (isBoss)
+        {
+            return;
+        }
         state = FindObjectOfType<State>();
         dashing = FindObjectOfType<PlayerMove>();
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -87,6 +94,10 @@ public class Monster_info : MonoBehaviour
 
     void Start()
     {
+        if (isBoss == true)
+        {
+            return;
+        }
         if (hpBarPrefab != null)
         {
             Monster_hpbar = Instantiate(hpBarPrefab, Camera.main.WorldToScreenPoint(transform.position + new Vector3(0.05f, 0.3f, 0)), Quaternion.identity, UIparent.transform).GetComponent<Slider>();
@@ -108,9 +119,10 @@ public class Monster_info : MonoBehaviour
 
     private void Update()
     {
-  
-
-        
+        if (isBoss == true)
+        {
+            return;
+        }
         if (Monster_hpbar != null)
         {
             Monster_hpbar.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0.05f, 0.8f, 0));
@@ -124,6 +136,10 @@ public class Monster_info : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (isBoss == true)
+        {
+            return;
+        }
         if (isfollow && playerTransform != null)
         {
 
@@ -176,6 +192,10 @@ public class Monster_info : MonoBehaviour
 
         if (Monster_HP <= 0)
         {
+            if (monsterType == MonsterType.human || monsterType == MonsterType.heavy)
+            {
+                BossCtrl.instance.isCall = true;
+            }
             my_anim.SetTrigger("isDead");
             Invoke("delete_monster", 0.5f);
 
@@ -248,7 +268,10 @@ public class Monster_info : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        
+        if (isBoss == true)
+        {
+            return;
+        }
         if (other.CompareTag("Player"))
         {
             playerTransform = other.transform;
@@ -281,6 +304,10 @@ public class Monster_info : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
+        if (isBoss == true)
+        {
+            return;
+        }
         if (collision.gameObject.CompareTag("Player") && monsterType == MonsterType.trap)
         {
             //Debug.Log("함정 좀비 가시권 안");
@@ -299,6 +326,10 @@ public class Monster_info : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
+        if (isBoss == true)
+        {
+            return;
+        }
         if (collision.CompareTag("Dust"))
         {
             dustDecreasingSpeed = 1f;
@@ -308,7 +339,10 @@ public class Monster_info : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-
+        if (isBoss == true)
+        {
+            return;
+        }
         if (collision.gameObject.CompareTag("Player") && !isAttacking)
         {
             isAttacking = true;
@@ -339,6 +373,10 @@ public class Monster_info : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
+        if (isBoss == true)
+        {
+            return;
+        }
         if (collision.gameObject.CompareTag("Player") && monsterType != MonsterType.trap)
         {
 
@@ -389,6 +427,10 @@ public class Monster_info : MonoBehaviour
     }
     private void OnCollisionExit2D(Collision2D collision)
     {
+        if (isBoss == true)
+        {
+            return;
+        }
         my_anim.SetBool("isRun", true);
         //Rb.constraints = RigidbodyConstraints2D.None;
         Rb.constraints = RigidbodyConstraints2D.FreezeRotation;
