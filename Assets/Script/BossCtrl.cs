@@ -1,10 +1,8 @@
-using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class BossCtrl : MonoBehaviour
 {
@@ -19,7 +17,6 @@ public class BossCtrl : MonoBehaviour
     public float shockCognitionRange = 30f;
     public float moveSpeed = 10f;
     public float shockSizeUpPerSecond = 1.0f;
-    public int maxHp = 750;
     public bool isActive = false;
     public bool isCall = false;
     [SerializeField] private bool isPattern = false;
@@ -27,27 +24,15 @@ public class BossCtrl : MonoBehaviour
     [SerializeField] private bool[] isPerformCrack = new bool[3] { false, false, false };
     [SerializeField] private float dustDecreasingSpeed = 1.0f;
     private Animator anim;
-    private Monster_info state;
-    public GameObject HPBarBackground;
-    public GameObject HPBar;
-    public CinemachineVirtualCamera virtualCamera;
-    public GameObject camera;
 
     private void Start()
     {
         instance = this;
         anim = GetComponent<Animator>();
-        state = GetComponent<Monster_info>();
     }
 
     private void Update()
-    {
-        HPBar.GetComponent<Image>().fillAmount = state.Monster_HP / maxHp;
-        if (state.Monster_HP <= 0)
-        {
-            Destroy(gameObject);
-            SceneManager.LoadScene("EndingScene");
-        }
+    { 
         if(isActive == false)
         {
             isCall = false;
@@ -108,7 +93,7 @@ public class BossCtrl : MonoBehaviour
             if (patternTime > 174)
             {
                 isPerformCrack[2] = true;
-                StartCoroutine(PerformCrack(6f, true));
+                StartCoroutine(PerformCrack(1.5f, false));
             }
             else
             {
@@ -147,36 +132,15 @@ public class BossCtrl : MonoBehaviour
         }
     }
 
-    public void InitBoss()
-    {
-        isActive = true;
-        state.Monster_HP = maxHp;
-        HPBar.SetActive(true);
-        HPBarBackground.SetActive(true);
-    }
-
     IEnumerator PerformCrack(float duration, bool isEnd)
     {
         isPattern = true;
         player.GetComponent<PlayerMove>().canMove = false;
         anim.SetTrigger("crack");
-        patternTime += duration;
         while (duration >= 0)
         {
-            if(duration > 4.4f && duration <4.6f)
-            {
-                anim.SetTrigger("crack");
-            }
-            if (duration > 2.9f && duration < 3.1f)
-            {
-                anim.SetTrigger("crack");
-            }
-            if (duration > 1.4f && duration < 1.6f)
-            {
-                anim.SetTrigger("crack");
-            }
-            //ÀÜÀçµéÀ» ÁÖ¾îÁø ¿µ¿ª¿¡ ·£´ý 1~4°³ ¶³¾îÁü
-            StartCoroutine(ShakeCamera());
+    
+        //ÀÜÀçµéÀ» ÁÖ¾îÁø ¿µ¿ª¿¡ ·£´ý 1~4°³ ¶³¾îÁü
             for(int i=0; i<Random.Range(1, 4); i++)
             {
                 Instantiate(fallObject[Random.Range(0, 3)], new Vector3(fallArea.transform.position.x + Random.Range(-fallArea.transform.localScale.x / 2, fallArea.transform.localScale.x / 2),
@@ -187,11 +151,12 @@ public class BossCtrl : MonoBehaviour
             if (isEnd == true)  
             {
                 Image gameoverBackgroundImage = gameoverBackground.GetComponent<Image>();
-                gameoverBackgroundImage.color = new Color(gameoverBackgroundImage.color.r, gameoverBackgroundImage.color.g, gameoverBackgroundImage.color.b, gameoverBackgroundImage.color.a + 0.08f);
+                gameoverBackgroundImage.color = new Color(gameoverBackgroundImage.color.r, gameoverBackgroundImage.color.g, gameoverBackgroundImage.color.b, gameoverBackgroundImage.color.a + 12);
             }
             duration -= 0.5f;
             yield return new WaitForSeconds(0.5f);
         }
+        patternTime += duration;
         player.GetComponent<PlayerMove>().canMove = true;
         isPattern = false;
     }
@@ -223,17 +188,5 @@ public class BossCtrl : MonoBehaviour
         patternTime += 2f;
         isCall = false;
         isPattern = false;
-    }
-
-    IEnumerator ShakeCamera()
-    {
-        virtualCamera.gameObject.SetActive(false);
-        for(int i=0; i<3; i++)
-        {
-            camera.transform.position = new Vector3(transform.position.x + Random.Range(-3, 4), transform.position.y + Random.Range(-3, 4), transform.position.z);
-            yield return new WaitForSeconds(0.1f);
-        }
-
-        virtualCamera.gameObject.SetActive(true);
     }
 }
