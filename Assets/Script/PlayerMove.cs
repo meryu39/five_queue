@@ -583,29 +583,30 @@ public class PlayerMove : MonoBehaviour
         if (other.CompareTag("Elevator")){
             Debug.Log("엘베 탔슴");
             SoundManager.instance.PlaySfx(SoundManager.Sfx.ElevatorMove);
-            if (other.gameObject == floor1to2)
-            {
-                MovePlayerToPosition(floor1to2_position);
-                map.floor = 2;
-                map.set_help();
-            }
-            else if (other.gameObject == floor2to3)
-            {
-                MovePlayerToPosition(floor2to3_position);
-                map.floor = 3;
-                map.set_help();
-            }
-            else if (other.gameObject == floor3to4)
-            {
-                MovePlayerToPosition(floor3to4_position);
-                map.floor = 4;
-                map.set_help();
-            }
-            else if (other.gameObject == floor4to3)
+            //if (other.gameObject == floor1to2)
+            //{
+            //    MovePlayerToPosition(floor1to2_position);
+            //    map.floor = 2;
+            //    map.set_help();
+            //}
+            //else if (other.gameObject == floor2to3)
+            //{
+            //    MovePlayerToPosition(floor2to3_position);
+            //    map.floor = 3;
+            //    map.set_help();
+            //}
+            //else if (other.gameObject == floor3to4)
+            //{
+            //    MovePlayerToPosition(floor3to4_position);
+            //    map.floor = 4;
+            //    map.set_help();
+            //}
+            if (other.gameObject == floor4to3)
             {
                 MovePlayerToPosition(floor4to3_position);
                 map.floor = 3;
                 map.set_help();
+                SoundManager.instance.PlayBgm(SoundManager.Bgm.Dungeon, true);
             }
             else if (other.gameObject == floor3to2)
             {
@@ -615,14 +616,18 @@ public class PlayerMove : MonoBehaviour
             }
             else if (other.gameObject == floor2to1)
             {
+                SoundManager.instance.PlayBgm(SoundManager.Bgm.Dungeon, false);
                 MovePlayerToPosition(floor2to1_position);
                 map.floor = 1;
                 map.set_help();
+                SoundManager.instance.PlayBgm(SoundManager.Bgm.Done, true);
             }
             else if (other.gameObject == floor1to0)
             {
+                SoundManager.instance.PlayBgm(SoundManager.Bgm.Done, false);
                 MovePlayerToPosition(floor1to0_position);
                 map.floor = 0;
+                SoundManager.instance.PlayBgm(SoundManager.Bgm.Boss, true);
             }
 
 

@@ -23,9 +23,10 @@ public class CutSceneController : MonoBehaviour
         {
             PressToSkip();
         }
-        else
+        else if(!CanMove)
         {
             CanMove = true;
+            SoundManager.instance.PlayBgm(SoundManager.Bgm.VIP, true);
         }
     }
 
@@ -33,6 +34,7 @@ public class CutSceneController : MonoBehaviour
     {
         if(Input.anyKeyDown) {
             cutScene[idx++].SetActive(false);
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.MiniButton);
         }
     }
 }

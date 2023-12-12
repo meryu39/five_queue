@@ -30,7 +30,6 @@ public class Map_Unit : MonoBehaviour
         switch (floor) {
             case 3:
                 Unit3F.SetActive(true);
-
                 break;
             case 2:
                 Unit2F.SetActive(true);
@@ -42,7 +41,6 @@ public class Map_Unit : MonoBehaviour
                 break;
             case 0:
                 UnitLobby.SetActive(true);
- 
                 break;
             /*case 5:
                 Unit5F.SetActive(true);
@@ -53,7 +51,7 @@ public class Map_Unit : MonoBehaviour
 
     public void set_help()
     {
-        helper.SetActive(true);
+        //helper.SetActive(true);
     }
     public void set_help_Not()
     {

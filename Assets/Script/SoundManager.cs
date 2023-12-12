@@ -2,15 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
+using static SoundManager;
 
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager instance;
 
     [Header("#BGM")]
-    public AudioClip bgmClip;
+    public AudioClip[] bgmClips;
     public float bgmVolume;
-    AudioSource bgmPlayer;
+    public int BGMchannelIndex;
+    AudioSource[] bgmPlayers;
+    int bgmchannel;
 
     [Header("#SFX")]
     public AudioClip[] sfxClips;
@@ -27,6 +30,9 @@ public class SoundManager : MonoBehaviour
                       UseDash, UseUlt1, UseUlt2
     }
 
+    public enum Bgm { VIP, Dungeon, Boss, Done}
+
+
 
     private void Awake()
     {
@@ -40,10 +46,16 @@ public class SoundManager : MonoBehaviour
         //배경을 플레이어 초기화
         GameObject bgmObject = new GameObject("BgmaPlayer");
         bgmObject.transform.parent = transform;
-        bgmPlayer = bgmObject.AddComponent<AudioSource>();
-        bgmPlayer.playOnAwake = false;
-        bgmPlayer.volume = bgmVolume;
-        bgmPlayer.clip = bgmClip;
+        bgmPlayers = new AudioSource[BGMchannelIndex];
+
+        for(int i= 0; i < bgmPlayers.Length; i++)
+        {
+            bgmPlayers[i] = bgmObject.AddComponent<AudioSource>();
+            bgmPlayers[i].playOnAwake = false;
+            bgmPlayers[i].volume = bgmVolume;
+        }
+
+        //bgmPlayer.clip = bgmClip;
 
         //효과음 초기화
         GameObject sfxObject = new GameObject("SfxPlayer");
@@ -55,6 +67,20 @@ public class SoundManager : MonoBehaviour
             sfxPlayers[index] = sfxObject.AddComponent<AudioSource>();
             sfxPlayers[index].playOnAwake=false;
             sfxPlayers[index].volume = sfxVolume;
+        }
+    }
+
+    public void PlayBgm(Bgm bgm, bool isPlay)
+    {
+        for (int index = 0; index < bgmPlayers.Length; index++)
+        {
+            int loopIndex = (index + bgmchannel) % bgmPlayers.Length;
+
+            bgmchannel = loopIndex;
+            bgmPlayers[loopIndex].clip = bgmClips[(int)bgm];
+            bgmPlayers[loopIndex].Play();
+
+            break;
         }
     }
 

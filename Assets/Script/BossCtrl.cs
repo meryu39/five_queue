@@ -47,6 +47,7 @@ public class BossCtrl : MonoBehaviour
         HPBar.GetComponent<Image>().fillAmount = state.Monster_HP / maxHp;
         if (state.Monster_HP <= 0)
         {
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.BossDie);
             Destroy(gameObject);
             SceneManager.LoadScene("EndingScene");
         }
@@ -68,6 +69,7 @@ public class BossCtrl : MonoBehaviour
             if (patternTime > 78)
             {
                 isPerformCrack[0] = true;
+                StartCoroutine(CrackSound());
                 StartCoroutine(PerformCrack(1.5f, false));
             }
             else
@@ -89,6 +91,7 @@ public class BossCtrl : MonoBehaviour
             if (patternTime > 157)
             {
                 isPerformCrack[1] = true;
+                StartCoroutine(CrackSound());
                 StartCoroutine(PerformCrack(1.5f, false));
             }
             else
@@ -110,6 +113,7 @@ public class BossCtrl : MonoBehaviour
             if (patternTime > 174)
             {
                 isPerformCrack[2] = true;
+                StartCoroutine(CrackSound());
                 StartCoroutine(PerformCrack(6f, true));
             }
             else
@@ -132,6 +136,7 @@ public class BossCtrl : MonoBehaviour
         }
         else if (isCall)
         {
+
             StartCoroutine(PerformCall());
         }
         else
@@ -159,6 +164,7 @@ public class BossCtrl : MonoBehaviour
 
     IEnumerator PerformCrack(float duration, bool isEnd)
     {
+
         isPattern = true;
         player.GetComponent<PlayerMove>().canMove = false;
         anim.SetTrigger("crack");
@@ -197,13 +203,22 @@ public class BossCtrl : MonoBehaviour
         player.GetComponent<PlayerMove>().canMove = true;
         isPattern = false;
     }
-
+    IEnumerator CrackSound()
+    {
+        yield return new WaitForSeconds(0.4f);
+        SoundManager.instance.PlaySfx(SoundManager.Sfx.BossAttack);
+        yield return new WaitForSeconds(0.5f);
+        SoundManager.instance.PlaySfx(SoundManager.Sfx.BossAttack);
+        yield return new WaitForSeconds(0.5f);
+        SoundManager.instance.PlaySfx(SoundManager.Sfx.BossAttack);
+    }
     IEnumerator PerformShock()
     {
         isPattern = true;
         anim.SetTrigger("shock");
         yield return new WaitForSeconds(0.5f);
         GameObject initObject = Instantiate(shockObject, transform.position, Quaternion.Euler(0, 0, 0));
+        SoundManager.instance.PlaySfx(SoundManager.Sfx.BossAttack);
         for (int i = 0; i < 10; i++)
         {
             initObject.transform.localScale = new Vector3(initObject.transform.localScale.x + shockSizeUpPerSecond, initObject.transform.localScale.y + shockSizeUpPerSecond, initObject.transform.localScale.z);
@@ -216,6 +231,7 @@ public class BossCtrl : MonoBehaviour
 
     IEnumerator PerformCall()
     {
+        SoundManager.instance.PlaySfx(SoundManager.Sfx.BossSummon);
         isPattern = true;
         anim.SetTrigger("call");
         yield return new WaitForSeconds(1f);
@@ -229,6 +245,7 @@ public class BossCtrl : MonoBehaviour
 
     IEnumerator ShakeCamera()
     {
+        SoundManager.instance.PlaySfx(SoundManager.Sfx.BossShaking);
         virtualCamera.gameObject.SetActive(false);
         for (int i = 0; i < 3; i++)
         {
