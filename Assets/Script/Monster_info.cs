@@ -21,6 +21,8 @@ public class Monster_info : MonoBehaviour
     public float MonsterAttack { get { return GetMonsterAttack(); } }
     [SerializeField]
     public float moveSpeed { get { return GetMoveSpeed(); } }
+
+    public float maxHP { get { return GetMAXHP(); } }
     private bool runner_start = false;
 
     private State state;
@@ -165,7 +167,7 @@ public class Monster_info : MonoBehaviour
     {
         if (Monster_hpbar != null)
         {
-            Monster_hpbar.value = (float)Monster_HP / 100;
+            Monster_hpbar.value = (float)Monster_HP / maxHP;
         }
         if(Monster_HP < 100)
         {
@@ -220,8 +222,29 @@ public class Monster_info : MonoBehaviour
             case MonsterType.trap:
                 return 0;
             default:
-                return 0;        }
+                return 0;        
+        }
     }
+
+   
+    private float GetMAXHP()
+    {
+        switch (monsterType)
+        {
+            case MonsterType.human:
+                return 100f;
+            case MonsterType.runner:
+                return 50f;
+            case MonsterType.heavy:
+                return 250f;
+            case MonsterType.trap:
+                return 25;
+            default:
+                return 0;
+        }
+    }
+  
+
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -295,16 +318,19 @@ public class Monster_info : MonoBehaviour
                 Monster_HP -= MonsterAttack;
                 state.SetEnergy(state.currentEnergy - 4f);
 
+
             }
             if (state.active_e == 0 || state.active_shift == 0)
             {
                 state.SetHP(state.currentHP - (0.8f * MonsterAttack));
                 state.SetEnergy(state.currentEnergy - 2f);
+         
             }
             else
             {
                 state.SetHP(state.currentHP - MonsterAttack);
             }
+            
             lastAttackTime = Time.time;
              
         }

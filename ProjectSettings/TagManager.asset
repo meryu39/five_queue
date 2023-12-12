@@ -7,12 +7,12 @@ TagManager:
   - Map
   - Monster
   - InteractionObject
-  - 'elevator '
   - RecyclingObject
   - Blood
   - Dust
   - Shock
   - moon
+  - Elevator
   layers:
   - Default
   - TransparentFX
