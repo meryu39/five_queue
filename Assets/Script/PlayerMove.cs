@@ -55,8 +55,6 @@ public class PlayerMove : MonoBehaviour
 
     //심호흡
     public GameObject healpart;
-    private Map_Unit map;
-
 
     [SerializeField] private TrailRenderer tr;
     
@@ -87,38 +85,11 @@ public class PlayerMove : MonoBehaviour
     private bool canUseFireextinguisher = true;
     public float fireextinguisherDelay = 0.1f;
 
-    public GameObject floor1to2;
-    public GameObject floor2to3;
-    public GameObject floor3to4;
 
 
-    public GameObject floor4to3;
-    public GameObject floor3to2;
-    public GameObject floor2to1;
-    public GameObject floor1to0;
-
-
-    public Vector3 floor1to2_position = new Vector3(-108.1226f, -48f, 0f);
-    public Vector3 floor2to3_position = new Vector3(65.94f, 30.11f, 0f);
-    public Vector3 floor3to4_position = new Vector3(-11f, -0.48f, 0f);
-
-    public Vector3 floor4to3_position = new Vector3(139.61f, 28.44f, 0f);
-    public Vector3 floor3to2_position = new Vector3(-44f, -66f, 0);
-    public Vector3 floor2to1_position = new Vector3(298.2f, 53f, 0);
-    public Vector3 floor1to0_position = new Vector3(-130.99f, 18.55f, 0);
-
-
-    private SpriteRenderer spriteRenderer;
-
-
-    public Material newMaterial;
-    public Material origin_Material;
 
     private void Awake()
     {
-        
-        
-        map = GameObject.Find("GameManager").GetComponent<Map_Unit>();
         playerRb = GetComponent<Rigidbody2D>(); //리자드바디 컴포넌트
         playerRb.velocity = Vector3.zero;
         myAnim = GetComponent<Animator>(); //애니메이터 컴포넌트
@@ -126,7 +97,16 @@ public class PlayerMove : MonoBehaviour
         //skill = GetComponent<Skill>();
 
         origin_playerdamage = state.PlayerAttackDamage;
-       
+        GameObject monsterObject = GameObject.FindWithTag("Monster"); // 몬스터의 태그를 사용하여 찾음
+        if(monsterObject != null)
+        {
+            //Debug.Log("몬스터태그찾음");
+        }
+        Monster_info monster = monsterObject.GetComponent<Monster_info>();
+        if(monster != null)
+        {
+            //Debug.Log("몬스터컴포넌트 됨");
+        }
         Image_PressF.SetActive(false);      //'F키를 누르시오' UI 비활성화 시켜놓기
         //투사체 오브젝트 정보 딕셔너리 구조로 저장
         for (int i = 0; i < projectile_object.Length; i++)
@@ -135,9 +115,6 @@ public class PlayerMove : MonoBehaviour
             projectile.Add(projectile_name[i], projectile_object[i]);
         }
         canUsePipe = true;
-
-        spriteRenderer = GetComponent<SpriteRenderer>();
-
     }
     private void Start()
     {
@@ -296,7 +273,6 @@ public class PlayerMove : MonoBehaviour
                 GameObject healEffect = Instantiate(healpart, healEffectPosition, Quaternion.identity);
                 Destroy(healEffect, 0.3f);
                 StartCoroutine(UltraIncreaseEnergyOverTime(10f));
-                
             }
         }
     }
@@ -356,14 +332,10 @@ public class PlayerMove : MonoBehaviour
 
         while (elapsedTime < duration)
         {
-
             // 시간이 흐를수록 currentEnergy를 증가시킴 (예시로 10초 동안 0에서 100까지 증가)
             state.currentEnergy = Mathf.Lerp(0f, 100f, elapsedTime / duration);
 
             elapsedTime += Time.deltaTime;
-            spriteRenderer.material = newMaterial;
-            state.currentEnergy = 100f;
-
             yield return null; // 한 프레임 대기
         }
 
@@ -441,9 +413,8 @@ public class PlayerMove : MonoBehaviour
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             SetPlayerDirection(mousePosition - new Vector2(transform.position.x, transform.position.y));
             Attacking = true;
-            spriteRenderer.material = newMaterial;  
+
             state.PlayerAttackDamage = state.PlayerAttackDamage * 6;
-            StartCoroutine(originsprite(0.8f));
 
         }
 
@@ -527,14 +498,6 @@ public class PlayerMove : MonoBehaviour
         GameObject bloodEffect = Instantiate(bloodprefab, position, Quaternion.identity);
         bloodEffect.transform.parent = parent;
     }
-
-    private void MovePlayerToPosition(Vector3 targetPosition)
-    {
-        transform.position = targetPosition;
-    }
-
-
-
     private void OnTriggerEnter2D(Collider2D other)
     {
    
@@ -544,7 +507,11 @@ public class PlayerMove : MonoBehaviour
             Debug.Log("몬스터가 닿았습니다");
             // 태그된 객체의 몬스터 인포 컴포넌트를 가져옴
             Monster_info monster = other.GetComponent<Monster_info>();
-    
+            if(monster.isBoss == true)
+            {
+                monster.Monster_HP -= state.PlayerAttackDamage;
+                return;
+            }
             if (monster != null)
             {
                 Debug.Log("공격 성공");
@@ -557,53 +524,6 @@ public class PlayerMove : MonoBehaviour
                 SpawnBloodEffect(monster.transform.position, monster.transform);
 
             }
-        }
-
-        if (other.CompareTag("Elevator")){
-            Debug.Log("엘베 탔슴");
-            if (other.gameObject == floor1to2)
-            {
-                MovePlayerToPosition(floor1to2_position);
-                map.floor = 2;
-                map.set_help();
-            }
-            else if (other.gameObject == floor2to3)
-            {
-                MovePlayerToPosition(floor2to3_position);
-                map.floor = 3;
-                map.set_help();
-            }
-            else if (other.gameObject == floor3to4)
-            {
-                MovePlayerToPosition(floor3to4_position);
-                map.floor = 4;
-                map.set_help();
-            }
-            else if (other.gameObject == floor4to3)
-            {
-                MovePlayerToPosition(floor4to3_position);
-                map.floor = 3;
-                map.set_help();
-            }
-            else if (other.gameObject == floor3to2)
-            {
-                MovePlayerToPosition(floor3to2_position);
-                map.floor = 2;
-                map.set_help();
-            }
-            else if (other.gameObject == floor2to1)
-            {
-                MovePlayerToPosition(floor2to1_position);
-                map.floor = 1;
-                map.set_help();
-            }
-            else if (other.gameObject == floor1to0)
-            {
-                MovePlayerToPosition(floor1to0_position);
-                map.floor = 0;
-            }
-
-
         }
        
     
@@ -772,12 +692,6 @@ public class PlayerMove : MonoBehaviour
         yield return new WaitForSeconds(coolTime);
         canUseFireextinguisher = true;
     }
-    private IEnumerator originsprite(float delay)
-    {
-        yield return new WaitForSeconds(delay);
 
-
-        spriteRenderer.material = origin_Material;
-    }
 
 }
