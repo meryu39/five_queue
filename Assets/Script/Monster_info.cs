@@ -275,12 +275,25 @@ public class Monster_info : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerTransform = other.transform;
+            if(monsterType == MonsterType.human)
+            {
+                SoundManager.instance.PlaySfx(SoundManager.Sfx.HumanZombieDetected);
+            }
             if (monsterType == MonsterType.runner && !runner_start)
             {
+                SoundManager.instance.PlaySfx(SoundManager.Sfx.CurvetDamaged);
                 my_anim.SetTrigger("isRush");
                 Vector2 directionToPlayer = (playerTransform.position - transform.position).normalized;
                 Rb.velocity = directionToPlayer * moveSpeed * 2f;
                 runner_start = false;
+            }
+            if(monsterType == MonsterType.heavy)
+            {
+                SoundManager.instance.PlaySfx(SoundManager.Sfx.HeavyZombieDetected);
+            }
+            if (monsterType == MonsterType.trap)
+            {
+                SoundManager.instance.PlaySfx(SoundManager.Sfx.TrapZombieDetected);
             }
 
             isfollow = true;
@@ -310,6 +323,7 @@ public class Monster_info : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Player") && monsterType == MonsterType.trap)
         {
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.CurvetDamaged);
             //Debug.Log("함정 좀비 가시권 안");
             if (Time.time - lastAttackTime >= attackCoolTime)
             {
@@ -451,6 +465,8 @@ public class Monster_info : MonoBehaviour
         // 플레이어 방향에 따른 스킬 프리팹의 방향 전환
         float angle = Mathf.Atan2(skillDirection.y, skillDirection.x) * Mathf.Rad2Deg;
         skill1.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+        SoundManager.instance.PlaySfx(SoundManager.Sfx.TrapZombieSplit);
+
         Destroy(skill1, 4f);
 
     }

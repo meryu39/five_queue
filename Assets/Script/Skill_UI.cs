@@ -99,6 +99,7 @@ public class Skill_UI : MonoBehaviour
 
         if (!buttonClicked[index])
         {
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.MiniButton);
             // 클릭된 버튼의 이미지 변경 및 플래그 설정
             switch (index)
             {
@@ -146,6 +147,7 @@ public class Skill_UI : MonoBehaviour
     {
         if (buttonClicked[index])
         {
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.MiniButton);
             // 클릭된 버튼의 이미지 변경 및 플래그 설정
             if (Input.GetMouseButtonDown(1)) 
             {

@@ -86,6 +86,7 @@ public class PlayerMove : MonoBehaviour
     public float bloodPackDelay = 0.1f;
     private bool canUseFireextinguisher = true;
     public float fireextinguisherDelay = 0.1f;
+    private bool weaponButtonDown = false;
 
     public GameObject floor1to2;
     public GameObject floor2to3;
@@ -179,6 +180,7 @@ public class PlayerMove : MonoBehaviour
         {
             if (interactionObjectCount > 0)
             {
+                SoundManager.instance.PlaySfx(SoundManager.Sfx.SlotFill);
                 InteractionManager.instance.Interact(interactionObject);
             }
         }
@@ -189,16 +191,19 @@ public class PlayerMove : MonoBehaviour
         //숫자 1, 2, 3번을 누르면 각각 아이템의 버리기 카운팅을 시작한다. dumpTime동안 떼지 않으면 아이템을 버린다.
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.ItemDump);
             isDump[0] = true;
             StartCoroutine(DumpItem(0));
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.ItemDump);
             isDump[1] = true;
             StartCoroutine(DumpItem(1));
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.ItemDump);
             isDump[2] = true;
             StartCoroutine(DumpItem(2));
         }
@@ -221,6 +226,10 @@ public class PlayerMove : MonoBehaviour
         if(Input.GetMouseButton(1))/*우클릭*/
         {
             UseWeapon();
+        }
+        if(Input.GetMouseButtonUp(1))
+        {
+            weaponButtonDown = false;
         }
     }
     private void FixedUpdate() 
@@ -268,6 +277,7 @@ public class PlayerMove : MonoBehaviour
         }
         if (Attacking)
         {
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.BasicAttackWind);
             myAnim.SetTrigger("isAttack"); //공격애니메이션 실행
             isAttack = false; //공격플래그 비활성화
             Attacking = false; //공격모션 비활성화
@@ -291,6 +301,7 @@ public class PlayerMove : MonoBehaviour
         {
             if (coolTimeUI != null && coolTimeUI.remainingTime == 0)
             {
+                SoundManager.instance.PlaySfx(SoundManager.Sfx.UseUlt1);
                 coolTimeUI.Trigger_Skill();
                 Vector3 healEffectPosition = new Vector3(transform.position.x, transform.position.y - 1f, transform.position.z);
                 GameObject healEffect = Instantiate(healpart, healEffectPosition, Quaternion.identity);
@@ -405,6 +416,7 @@ public class PlayerMove : MonoBehaviour
         if (skillnum == 2 && state.currentEnergy >= 15f)
 
         {
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.BasicAttackWind);
             state.SetEnergy(state.currentEnergy - 15f);
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             SetPlayerDirection(mousePosition - new Vector2(transform.position.x, transform.position.y));
@@ -415,6 +427,7 @@ public class PlayerMove : MonoBehaviour
         //심호흡
         if (skillnum == 3 && state.currentEnergy >= 30f)
         {
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.UseActive4);
             state.SetEnergy(state.currentEnergy - 30f);
             state.SetHP(state.currentHP + 25f);
             Vector3 healEffectPosition = new Vector3(transform.position.x, transform.position.y - 1f, transform.position.z);
@@ -425,6 +438,7 @@ public class PlayerMove : MonoBehaviour
         }
         //혈취처방
         if (skillnum == 5 && state.currentEnergy >=  10f) {
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.UseActive1);
             state.SetEnergy(state.currentEnergy - 10f);
             Trigger_skill1 = true;
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -436,6 +450,7 @@ public class PlayerMove : MonoBehaviour
         //엑스레이
         if(skillnum == 6 && state.currentEnergy >= 25f)
         {
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.UseActive3);
             state.SetEnergy(state.currentEnergy - 25f);
             Trigger_skill3 = true;
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -537,17 +552,23 @@ public class PlayerMove : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-   
+        
         // 충돌된 태그가 몬스터이고, 공격 모션이 실행되지 않았을 때, 공격 플래그가 활성화되지 않았을 때
         if (other.CompareTag("Monster") && !isAttack)
         {
             Debug.Log("몬스터가 닿았습니다");
             // 태그된 객체의 몬스터 인포 컴포넌트를 가져옴
             Monster_info monster = other.GetComponent<Monster_info>();
-    
+            if(monster.isBoss == true)
+            {
+                SoundManager.instance.PlaySfx(SoundManager.Sfx.BasicAttack);
+                monster.Monster_HP -= state.PlayerAttackDamage;
+                isAttack = true;
+                return;
+            }
             if (monster != null)
             {
-                Debug.Log("공격 성공");
+                SoundManager.instance.PlaySfx(SoundManager.Sfx.BasicAttack);
                 monster.my_anim.SetTrigger("isHurt");
                 // 몬스터 스크립트에 몬스터 체력에 state 스크립트의 공격값을 뺌
                 monster.Monster_HP -= state.PlayerAttackDamage;
@@ -561,6 +582,7 @@ public class PlayerMove : MonoBehaviour
 
         if (other.CompareTag("Elevator")){
             Debug.Log("엘베 탔슴");
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.ElevatorMove);
             if (other.gameObject == floor1to2)
             {
                 MovePlayerToPosition(floor1to2_position);
@@ -676,22 +698,27 @@ public class PlayerMove : MonoBehaviour
         usingItem.count--;
         if(usingItem.name == InteractionObjectName.BANDAGE)  //붕대
         {
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.ItemUse);
             state.SetHP(state.currentHP + state.maxHP * bandage_HPRecoveryPercent);
         }
         else if (usingItem.name == InteractionObjectName.PAINKILLER) //진통제
         {
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.ItemUse);
             state.SetEnergy(state.currentEnergy + state.maxEnergy * painkiller_energyRecoveryPercent);
         }
         else if (usingItem.name == InteractionObjectName.EPINEPHRINE)    //에피네프린
         {
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.Adrenaline);
             state.SetEnergy(state.currentEnergy + state.maxEnergy * epinephrine_energyRecoveryPercent);
         }
         else if (usingItem.name == InteractionObjectName.CAN)    //통조림
         {
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.ItemUse);
             state.SetHunger(state.currentHunger + can_hungerRecoveryAmount);
         }
         else if (usingItem.name == InteractionObjectName.CUPRAMEN)   //컵라면
         {
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.ItemUse);
             state.SetHunger(state.currentHunger + cupramen_hungerRecoveryAmount);
         }
     }
@@ -709,6 +736,7 @@ public class PlayerMove : MonoBehaviour
         }
         if (usingWeapon.name == InteractionObjectName.SCALPEL)
         {
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.Scalpel);
             usingWeapon.count--;
             weaponProjectileClone = Instantiate(projectile[usingWeapon.name], transform.position, Quaternion.Euler(0, 0, angle));
             weaponProjectileClone.GetComponent<ProjectileCtrl>().Init(usingWeapon.name, projectileDirection);
@@ -719,6 +747,7 @@ public class PlayerMove : MonoBehaviour
             {
                 return;
             }
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.BasicAttackWind);
             usingWeapon.count--;
             canUsePipe = false;
             pipeCount = (int)usingWeapon.count;
@@ -732,6 +761,11 @@ public class PlayerMove : MonoBehaviour
             {
                 return;
             }
+            if(!weaponButtonDown)
+            {
+                weaponButtonDown = true;
+                SoundManager.instance.PlaySfx(SoundManager.Sfx.BloodPack);
+            }
             canUseBloodpack = false;
             StartCoroutine(BloodpackCoolTime(bloodPackDelay));
             usingWeapon.count -= bloodPackDelay;
@@ -743,6 +777,11 @@ public class PlayerMove : MonoBehaviour
             if (canUseFireextinguisher == false)
             {
                 return;
+            }
+            if (!weaponButtonDown)
+            {
+                weaponButtonDown = true;
+                SoundManager.instance.PlaySfx(SoundManager.Sfx.FireExtinguisher);
             }
             canUseFireextinguisher = false;
             StartCoroutine(FireextinguisherCoolTime(fireextinguisherDelay));

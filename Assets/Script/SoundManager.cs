@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class SoundManager : MonoBehaviour
@@ -18,10 +19,20 @@ public class SoundManager : MonoBehaviour
     AudioSource[] sfxPlayers;
     int channelIndex;
 
+    public enum Sfx { Adrenaline, BasicAttack, BasicAttackWind, BloodPack, BossAttack, 
+                      BossDie, BossShaking, BossSummon, BrokenPipe, Cancel, CurvetDamaged, 
+                      DashZombieDetected, Door, ElevatorMove, FireExtinguisher, HeavyZombieDetected, 
+                      HumanZombieDetected, ItemDump, ItemUse, MenuSelect, MiniButton, Scalpel, SlotFill, 
+                      TrapZombieDetected, TrapZombieSplit, UseActive1, UseActive3, UseActive4, 
+                      UseDash, UseUlt1, UseUlt2
+    }
+
+
     private void Awake()
     {
         instance = this;
         Init();
+        DontDestroyOnLoad(instance);
     }
 
     void Init()
@@ -44,6 +55,21 @@ public class SoundManager : MonoBehaviour
             sfxPlayers[index] = sfxObject.AddComponent<AudioSource>();
             sfxPlayers[index].playOnAwake=false;
             sfxPlayers[index].volume = sfxVolume;
+        }
+    }
+
+    public void PlaySfx(Sfx sfx)
+    {
+        for(int index = 0; index < sfxPlayers.Length; index++)
+        {
+            int loopIndex = (index + channelIndex) % sfxPlayers.Length;
+
+            if (sfxPlayers[loopIndex].isPlaying)    continue;
+
+            channelIndex = loopIndex;
+            sfxPlayers[loopIndex].clip = sfxClips[(int)sfx];
+            sfxPlayers[loopIndex].Play();
+            break;
         }
     }
 }

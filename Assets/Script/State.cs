@@ -33,6 +33,7 @@ public class State : MonoBehaviour
 
     public float PlayerAttackDamage = 25;
     public int testIndex = 0;
+    private float previousHP;
     
 
     void Awake()
@@ -67,6 +68,11 @@ public class State : MonoBehaviour
             exp %= 100;
             skill_exp++;
         }
+        if(previousHP > currentHP)
+        {
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.CurvetDamaged);
+        }
+        previousHP = currentHP;
         //Debug.Log(currentHP + ", " + ++testIndex);
     }
 

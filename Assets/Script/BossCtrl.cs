@@ -38,6 +38,8 @@ public class BossCtrl : MonoBehaviour
         instance = this;
         anim = GetComponent<Animator>();
         state = GetComponent<Monster_info>();
+        HPBar.SetActive(false);
+        HPBarBackground.SetActive(false);
     }
 
     private void Update()
@@ -202,13 +204,13 @@ public class BossCtrl : MonoBehaviour
         anim.SetTrigger("shock");
         yield return new WaitForSeconds(0.5f);
         GameObject initObject = Instantiate(shockObject, transform.position, Quaternion.Euler(0, 0, 0));
-        Destroy(initObject, 0.6f);
         for (int i = 0; i < 10; i++)
         {
             initObject.transform.localScale = new Vector3(initObject.transform.localScale.x + shockSizeUpPerSecond, initObject.transform.localScale.y + shockSizeUpPerSecond, initObject.transform.localScale.z);
             yield return new WaitForSeconds(0.05f);
         }
         patternTime += 1f;
+        Destroy(initObject);
         isPattern = false;
     }
 

@@ -70,15 +70,19 @@ public class ProjectileCtrl : MonoBehaviour
             switch(projectileName)
             {
                 case ProjectileName.SCALPEL:
+                    SoundManager.instance.PlaySfx(SoundManager.Sfx.BasicAttack);
                     monster.Monster_HP -= SCALPEL_DAMAGE;
                     monster.StartCoroutine(monster.Bleeded(SCALPEL_BLEEDING_DAMAGE_PER_SECOND, SCALPEL_BLEEDING_TIME));
                     break;
                 case ProjectileName.PIPE:
+                    SoundManager.instance.PlaySfx(SoundManager.Sfx.BrokenPipe);
                     monster.Monster_HP -= PIPE_DAMAGE;
                     break;
                 case ProjectileName.BLOODPACK:
+  
                     break;
                 case ProjectileName.FIREEXTINGUISHER:
+
                     monster.Monster_HP -= FIREEXTINGUISHER_DAMAGE;
                     break;
             }
