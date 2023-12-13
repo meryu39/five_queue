@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: Assets/Scenes/seomap.unity
     guid: 87e5a78dc46063b488bda0b111bce0c1
   - enabled: 1
+    path: Assets/Scenes/EndingScene.unity
+    guid: 8e71c68e80c31e14d9286980bb8f7ebb
+  - enabled: 0
     path: Assets/Scenes/map.unity
     guid: 948bab2b21d51ee48b4c995a1dee4fcb
   - enabled: 0

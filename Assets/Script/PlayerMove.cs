@@ -44,6 +44,7 @@ public class PlayerMove : MonoBehaviour
     float skillCoolTIme = 3f;
     float lastskillTime = 0;
     float origin_playerdamage;
+    float attackDamageRatio = 1.0f;
     //혈취처방
     bool Trigger_skill1 = false;
     public GameObject R_sword;
@@ -167,6 +168,7 @@ public class PlayerMove : MonoBehaviour
         //마우스 좌클릭 + Attack 애니메이션이 진행중이지 않을 때,
         if ((Input.GetMouseButtonDown(0)) && !myAnim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
         {
+            attackDamageRatio = 1.0f;
             Attacking = true;
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             SetPlayerDirection(mousePos - new Vector2(transform.position.x, transform.position.y));
@@ -191,25 +193,26 @@ public class PlayerMove : MonoBehaviour
         //숫자 1, 2, 3번을 누르면 각각 아이템의 버리기 카운팅을 시작한다. dumpTime동안 떼지 않으면 아이템을 버린다.
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            SoundManager.instance.PlaySfx(SoundManager.Sfx.ItemDump);
+            
             isDump[0] = true;
             StartCoroutine(DumpItem(0));
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            SoundManager.instance.PlaySfx(SoundManager.Sfx.ItemDump);
+            
             isDump[1] = true;
             StartCoroutine(DumpItem(1));
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            SoundManager.instance.PlaySfx(SoundManager.Sfx.ItemDump);
+            
             isDump[2] = true;
             StartCoroutine(DumpItem(2));
         }
         //숫자 1, 2, 3번을 떼면 버리기 카운팅을 중단하고 해당 아이템을 사용한다.
         if (Input.GetKeyUp(KeyCode.Alpha1))
         {
+            
             isDump[0] = false;
             UseItem(0);
         }
@@ -328,8 +331,9 @@ public class PlayerMove : MonoBehaviour
     private IEnumerator Dash()
     {
 
+        SoundManager.instance.PlaySfx(SoundManager.Sfx.UseDash);
 
- 
+
         state.SetEnergy(state.currentEnergy - 10f);
 
         canDash = false;
@@ -386,37 +390,11 @@ public class PlayerMove : MonoBehaviour
     //스킬1
     void SkillEvenet(int skillnum)
     {
-        if(skillnum == 1 && state.currentEnergy >= 10f) {
-            state.SetEnergy(state.currentEnergy - 10f);
-
-            Trigger_skill1 = true;
-            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            SetPlayerDirection(mousePosition - new Vector2(transform.position.x, transform.position.y));
-            Attacking = true;
-
-
-
-            /*
-                    Vector2 skillDirection = (mousePosition - new Vector2(transform.position.x, transform.position.y)).normalized;
-                    skillDirection.y = 0;
-
-                    GameObject skill1 = Instantiate(혈취처방, transform.position, Quaternion.identity);
-                    Rigidbody2D skill1_rb = skill1.GetComponent<Rigidbody2D>();
-                    skill1_rb.velocity = skillDirection * SkillSpeed;
-
-                    //Atan2는 y,x좌표로 두 점 사이의 각도 계산 (플레이어 방향에 따른 프리팹의 방향전환 -> 스킬프리팹 방향)
-                    float angle = Mathf.Atan2(skillDirection.y, skillDirection.x) * Mathf.Rad2Deg;
-                    //스킬 프리팹 방향 전환
-                    skill1.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
-                    Destroy(skill1, 4f);
-            */
-
-        }
+        
 
 
         //집단복부절개
         if (skillnum == 2 && state.currentEnergy >= 15f)
-
         {
             SoundManager.instance.PlaySfx(SoundManager.Sfx.BasicAttackWind);
             state.SetEnergy(state.currentEnergy - 15f);
@@ -424,7 +402,7 @@ public class PlayerMove : MonoBehaviour
             SetPlayerDirection(mousePosition - new Vector2(transform.position.x, transform.position.y));
             myAnim.SetTrigger("isdao");
             isAttack = false;
-            state.PlayerAttackDamage = state.PlayerAttackDamage * 2;
+            attackDamageRatio = 2.0f;
         }
         //심호흡
         if (skillnum == 3 && state.currentEnergy >= 30f)
@@ -458,8 +436,8 @@ public class PlayerMove : MonoBehaviour
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             SetPlayerDirection(mousePosition - new Vector2(transform.position.x, transform.position.y));
             Attacking = true;
-            spriteRenderer.material = newMaterial;  
-            state.PlayerAttackDamage = state.PlayerAttackDamage * 6;
+            spriteRenderer.material = newMaterial;
+            attackDamageRatio = 6.0f;
             StartCoroutine(originsprite(0.8f));
 
         }
@@ -564,7 +542,7 @@ public class PlayerMove : MonoBehaviour
             if(monster.isBoss == true)
             {
                 SoundManager.instance.PlaySfx(SoundManager.Sfx.BasicAttack);
-                monster.Monster_HP -= state.PlayerAttackDamage;
+                monster.Monster_HP -= state.PlayerAttackDamage * attackDamageRatio;
                 isAttack = true;
                 return;
             }
@@ -573,7 +551,8 @@ public class PlayerMove : MonoBehaviour
                 SoundManager.instance.PlaySfx(SoundManager.Sfx.BasicAttack);
                 monster.my_anim.SetTrigger("isHurt");
                 // 몬스터 스크립트에 몬스터 체력에 state 스크립트의 공격값을 뺌
-                monster.Monster_HP -= state.PlayerAttackDamage;
+                monster.Monster_HP -= state.PlayerAttackDamage * attackDamageRatio;
+                
                 Debug.Log(state.PlayerAttackDamage);
                 // 공격 플래그 활성화
                 isAttack = true;
@@ -608,6 +587,7 @@ public class PlayerMove : MonoBehaviour
                 MovePlayerToPosition(floor4to3_position);
                 map.floor = 3;
                 map.set_help();
+                SoundManager.instance.PlayBgm(SoundManager.Bgm.VIP, false);
                 SoundManager.instance.PlayBgm(SoundManager.Bgm.Dungeon, true);
             }
             else if (other.gameObject == floor3to2)
@@ -626,12 +606,12 @@ public class PlayerMove : MonoBehaviour
             }
             else if (other.gameObject == floor1to0)
             {
-                SoundManager.instance.PlayBgm(SoundManager.Bgm.Done, false);
+                
                 MovePlayerToPosition(floor1to0_position);
                 map.floor = 0;
-                SoundManager.instance.PlayBgm(SoundManager.Bgm.Boss, true);
-                BossCtrl.instance.InitBoss();
+                SoundManager.instance.PlayBgm(SoundManager.Bgm.Done, false);
                 map.boss_sceen1.SetActive(true);
+                map.boss_sceen2.SetActive(true);
             }
 
 
@@ -675,10 +655,33 @@ public class PlayerMove : MonoBehaviour
 
         if(other.CompareTag("Shock"))
         {
-            state.SetHP(state.currentHP - 50f);
+            if (state.active_e == 4 || state.active_shift == 4)
+            {
+                BossCtrl.instance.GetComponent<Monster_info>().Monster_HP -= state.PlayerAttackDamage;
+            }
+            if (state.active_e == 0 || state.active_shift == 0)
+            {
+                state.SetHP(state.currentHP - 50f * 0.8f);
+                
+            }
+            else
+            {
+                state.SetHP(state.currentHP - 50f);
+            }
+            
         }
     }
-    
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.CompareTag("Dust"))
+        {
+            if (state.active_e == 1 || state.active_shift == 1)
+            {
+                attackDamageRatio = 2f;
+            }
+        }
+    }
 
     private void OnTriggerExit2D(Collider2D other)
     {
@@ -805,6 +808,7 @@ public class PlayerMove : MonoBehaviour
         yield return new WaitForSeconds(dumpTime);
         if (isDump[itemIndex] == true)
         {
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.ItemDump);
             state.item[itemIndex].count = 0;
         }
     }

@@ -5,6 +5,7 @@ using System.Net.NetworkInformation;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.IO.IsolatedStorage;
 
 public class BossCtrl : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class BossCtrl : MonoBehaviour
     public int maxHp = 750;
     public bool isActive = false;
     public bool isCall = false;
+    private float startTime;
     [SerializeField] private bool isPattern = false;
     [SerializeField] private float patternTime = 0;
     [SerializeField] private bool[] isPerformCrack = new bool[3] { false, false, false };
@@ -32,6 +34,7 @@ public class BossCtrl : MonoBehaviour
     public GameObject HPBar;
     public CinemachineVirtualCamera virtualCamera;
     public GameObject camera;
+    public GameObject ultimateUI;
 
     private void Start()
     {
@@ -63,10 +66,9 @@ public class BossCtrl : MonoBehaviour
 
     void ControllPattern()
     {
-        patternTime += Time.deltaTime;
-        if (patternTime > 75 && isPerformCrack[0] == false)
+        if (patternTime >= 75 && isPerformCrack[0] == false)
         {
-            if (patternTime > 78)
+            if (patternTime >= 78)
             {
                 isPerformCrack[0] = true;
                 StartCoroutine(CrackSound());
@@ -86,9 +88,9 @@ public class BossCtrl : MonoBehaviour
                 transform.Translate(direction * moveSpeed * dustDecreasingSpeed * Time.deltaTime);
             }
         }
-        else if (patternTime > 154 && isPerformCrack[1] == false)
+        else if (patternTime >= 154 && isPerformCrack[1] == false)
         {
-            if (patternTime > 157)
+            if (patternTime >= 157)
             {
                 isPerformCrack[1] = true;
                 StartCoroutine(CrackSound());
@@ -108,9 +110,9 @@ public class BossCtrl : MonoBehaviour
                 transform.Translate(direction * moveSpeed * dustDecreasingSpeed * Time.deltaTime);
             }
         }
-        else if (patternTime > 171 && isPerformCrack[2] == false)
+        else if (patternTime >= 172 && isPerformCrack[2] == false)
         {
-            if (patternTime > 174)
+            if (patternTime >= 174)
             {
                 isPerformCrack[2] = true;
                 StartCoroutine(CrackSound());
@@ -130,14 +132,13 @@ public class BossCtrl : MonoBehaviour
                 transform.Translate(direction * moveSpeed * dustDecreasingSpeed * Time.deltaTime);
             }
         }
+        else if (isCall)
+        {
+            StartCoroutine(PerformCall());
+        }
         else if (Mathf.Abs(Vector3.Magnitude(player.transform.position - transform.position)) < shockCognitionRange)
         {
             StartCoroutine(PerformShock());
-        }
-        else if (isCall)
-        {
-
-            StartCoroutine(PerformCall());
         }
         else
         {
@@ -156,19 +157,33 @@ public class BossCtrl : MonoBehaviour
 
     public void InitBoss()
     {
+        StartCoroutine(StartPattern());
         isActive = true;
         state.Monster_HP = maxHp;
         HPBar.SetActive(true);
         HPBarBackground.SetActive(true);
+        ultimateUI.SetActive(false);
+        player.GetComponent<State>().currentHunger = 2;
+        player.GetComponent<State>().decreaseHungerCoolTime = 9999f;
+        
+        SoundManager.instance.PlayBgm(SoundManager.Bgm.Boss, true);
     }
 
+    IEnumerator StartPattern()
+    {
+        for(int i=0; i<176; i++)
+        {
+            yield return new WaitForSeconds(1f);
+            patternTime += 1f;
+        }
+        
+    }
     IEnumerator PerformCrack(float duration, bool isEnd)
     {
 
         isPattern = true;
         player.GetComponent<PlayerMove>().canMove = false;
         anim.SetTrigger("crack");
-        patternTime += duration;
         while (duration >= 0)
         {
             if (duration > 4.4f && duration < 4.6f)
@@ -200,6 +215,10 @@ public class BossCtrl : MonoBehaviour
             duration -= 0.5f;
             yield return new WaitForSeconds(0.5f);
         }
+        if(isEnd == true)
+        {
+            player.GetComponent<State>().currentHP = -1;
+        }
         player.GetComponent<PlayerMove>().canMove = true;
         isPattern = false;
     }
@@ -224,7 +243,6 @@ public class BossCtrl : MonoBehaviour
             initObject.transform.localScale = new Vector3(initObject.transform.localScale.x + shockSizeUpPerSecond, initObject.transform.localScale.y + shockSizeUpPerSecond, initObject.transform.localScale.z);
             yield return new WaitForSeconds(0.05f);
         }
-        patternTime += 1f;
         Destroy(initObject);
         isPattern = false;
     }
@@ -238,7 +256,6 @@ public class BossCtrl : MonoBehaviour
         Instantiate(runnerMob, new Vector3(transform.position.x + 1.5f, transform.position.y, transform.position.z), Quaternion.Euler(0, 0, 0));
         Instantiate(runnerMob, new Vector3(transform.position.x - 1.5f, transform.position.y, transform.position.z), Quaternion.Euler(0, 0, 0));
         yield return new WaitForSeconds(1f);
-        patternTime += 2f;
         isCall = false;
         isPattern = false;
     }

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI; 
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 
 
@@ -30,6 +31,7 @@ public class State : MonoBehaviour
     //아이템, 무기와 관련된 변수들
     public Item[] item = new Item[3];                           //현재 소지 중인 아이템
     public Item auxiliaryWeapon = new Item();
+    public GameObject DeadImage;
 
     public float PlayerAttackDamage = 25;
     public int testIndex = 0;
@@ -113,7 +115,8 @@ public class State : MonoBehaviour
         if(currentHP <= 0)
         {
             currentHP = 0;
-            Debug.Log("플레이어 사망");
+            SceneManager.LoadScene("seomap");
+            DeadImage.SetActive(true);
         }
     }
 

@@ -281,7 +281,7 @@ public class Monster_info : MonoBehaviour
             }
             if (monsterType == MonsterType.runner && !runner_start)
             {
-                SoundManager.instance.PlaySfx(SoundManager.Sfx.CurvetDamaged);
+                SoundManager.instance.PlaySfx(SoundManager.Sfx.DashZombieDetected);
                 my_anim.SetTrigger("isRush");
                 Vector2 directionToPlayer = (playerTransform.position - transform.position).normalized;
                 Rb.velocity = directionToPlayer * moveSpeed * 2f;
@@ -323,11 +323,11 @@ public class Monster_info : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Player") && monsterType == MonsterType.trap)
         {
-            SoundManager.instance.PlaySfx(SoundManager.Sfx.CurvetDamaged);
             //Debug.Log("함정 좀비 가시권 안");
             if (Time.time - lastAttackTime >= attackCoolTime)
             {
                 boobing();
+                SoundManager.instance.PlaySfx(SoundManager.Sfx.TrapZombieSplit);
                 lastAttackTime = Time.time;
             }
         }
@@ -363,7 +363,7 @@ public class Monster_info : MonoBehaviour
             my_anim.SetTrigger("isAttack");
             if (state.active_e == 4 || state.active_shift == 4)
             {
-                Monster_HP -= MonsterAttack;
+                Monster_HP -= state.PlayerAttackDamage;
                 state.SetEnergy(state.currentEnergy - 4f);
 
 
@@ -451,21 +451,21 @@ public class Monster_info : MonoBehaviour
 
 
     }
-
+    
 
     void boobing()
     {
         float SkillSpeed = 3f;
         Vector2 skillDirection = (dashing.transform.position - transform.position).normalized;
 
-        GameObject skill1 = Instantiate(boob, trap_mouse.transform.position, Quaternion.identity);
+        GameObject skill1 = Instantiate(boob, trap_mouse.transform.position + Vector3.down * 0.4f, Quaternion.identity);
         Rigidbody2D skill1_rb = skill1.GetComponent<Rigidbody2D>();
         skill1_rb.velocity = skillDirection * SkillSpeed;
 
         // 플레이어 방향에 따른 스킬 프리팹의 방향 전환
         float angle = Mathf.Atan2(skillDirection.y, skillDirection.x) * Mathf.Rad2Deg;
         skill1.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
-        SoundManager.instance.PlaySfx(SoundManager.Sfx.TrapZombieSplit);
+        
 
         Destroy(skill1, 4f);
 

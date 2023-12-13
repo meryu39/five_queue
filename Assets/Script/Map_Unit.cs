@@ -64,11 +64,6 @@ public class Map_Unit : MonoBehaviour
         helper.SetActive(false);
     }
 
-    public void boss_sceen()
-    {
-        boss_sceen1.SetActive(false);
-        boss_sceen2.SetActive(true);
-    }
 
     public void delete_sceen()
     {

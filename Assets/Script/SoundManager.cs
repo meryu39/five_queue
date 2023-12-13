@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -36,6 +37,11 @@ public class SoundManager : MonoBehaviour
 
     private void Awake()
     {
+        if(instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
         instance = this;
         Init();
         DontDestroyOnLoad(instance);
@@ -53,6 +59,7 @@ public class SoundManager : MonoBehaviour
             bgmPlayers[i] = bgmObject.AddComponent<AudioSource>();
             bgmPlayers[i].playOnAwake = false;
             bgmPlayers[i].volume = bgmVolume;
+            bgmPlayers[i].loop = true;
         }
 
         //bgmPlayer.clip = bgmClip;
@@ -68,6 +75,7 @@ public class SoundManager : MonoBehaviour
             sfxPlayers[index].playOnAwake=false;
             sfxPlayers[index].volume = sfxVolume;
         }
+        sfxPlayers[28].volume = sfxVolume * 0.5f;
     }
 
     public void PlayBgm(Bgm bgm, bool isPlay)

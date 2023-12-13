@@ -82,60 +82,69 @@ public class Skill_UI : MonoBehaviour
     }
 
 
-    void exp_learn(int learn_cost)
+    bool exp_learn(int learn_cost)
     {
         if(state.skill_exp >= learn_cost)
         {
             state.skill_exp -= learn_cost;
-            
+            return true;
         }
         else
         {
+            return false;
             Debug.Log("exp가 부족해서 못배움");
         }
     }
     public void OnButtonClick(int index)
     {
+        bool canLearn;
         Debug.Log("버튼위에 올라갔으요");
         if (!buttonClicked[index])
         {
             
-            //SoundManager.instance.PlaySfx(SoundManager.Sfx.MiniButton);
+            SoundManager.instance.PlaySfx(SoundManager.Sfx.MiniButton);
             // 클릭된 버튼의 이미지 변경 및 플래그 설정
             switch (index)
             {
                 case 0:
-                    exp_learn(3);
+                    canLearn = exp_learn(3);
+                    if (!canLearn) break;
                     button1.image.sprite = get_skill;
                     buttonClicked[0] = true;
                     break;
                 case 1:
-                    exp_learn(3);
+                    canLearn = exp_learn(3);
+                    if (!canLearn) break;
                     button2.image.sprite = get_skill;
                     buttonClicked[1] = true;
                     break;
                 case 2:
-                    exp_learn(3);
+                    canLearn = exp_learn(3);
+                    if (!canLearn) break;
                     button3.image.sprite = get_skill;
                     buttonClicked[2] = true;
                     break;
                 case 3:
-                    exp_learn(3);
+                    canLearn = exp_learn(3);
+                    if (!canLearn) break;
                     button4.image.sprite = get_skill;
                     buttonClicked[3] = true;
                     break;
                 case 4:
-                    exp_learn(3);
+                    canLearn = exp_learn(3);
+                    if (!canLearn) break;
                     button5.image.sprite = get_skill;
                     buttonClicked[4] = true;
                     break;
                 case 5:
-                    exp_learn(2);
+                    canLearn = exp_learn(2);
+                    if (!canLearn) break;
                     button6.image.sprite = get_skill;
                     buttonClicked[5] = true;
                     break;
                 case 6:
-                    exp_learn(4);
+                    canLearn = exp_learn(4);
+                    if (!canLearn) break;
                     button7.image.sprite = get_skill;
                     buttonClicked[6] = true;
                     break;

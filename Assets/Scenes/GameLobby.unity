@@ -447,7 +447,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!114 &627908972
 MonoBehaviour:
@@ -461,8 +461,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02ce5f1fb1b0ef44d9bc81c1f31faab0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgmClip: {fileID: 0}
+  bgmClips:
+  - {fileID: 8300000, guid: fd279648e7245cc49bcf9ff21699d3c6, type: 3}
+  - {fileID: 8300000, guid: 4be83209afbe9754c85a8ace36940003, type: 3}
+  - {fileID: 8300000, guid: 811967d7380983b48888c5ea362b349a, type: 3}
+  - {fileID: 8300000, guid: 694c97eb6b1e0c746a5d6018c60ff76e, type: 3}
   bgmVolume: 0.2
+  BGMchannelIndex: 1
   sfxClips:
   - {fileID: 8300000, guid: 3353a611467ef3f4f984fccf861bbae3, type: 3}
   - {fileID: 8300000, guid: 6d400501c00a24443afab79c0f87fed2, type: 3}
@@ -555,7 +560,7 @@ VideoPlayer:
   m_TargetAudioSources:
   - {fileID: 0}
   m_DirectAudioVolumes:
-  - 1
+  - 0.5
   m_Url: 
   m_EnabledAudioTracks: 01
   m_DirectAudioMutes: 00
