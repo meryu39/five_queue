@@ -96,10 +96,11 @@ public class Skill_UI : MonoBehaviour
     }
     public void OnButtonClick(int index)
     {
-
+        Debug.Log("버튼위에 올라갔으요");
         if (!buttonClicked[index])
         {
-            SoundManager.instance.PlaySfx(SoundManager.Sfx.MiniButton);
+            
+            //SoundManager.instance.PlaySfx(SoundManager.Sfx.MiniButton);
             // 클릭된 버튼의 이미지 변경 및 플래그 설정
             switch (index)
             {

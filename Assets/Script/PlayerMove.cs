@@ -307,7 +307,8 @@ public class PlayerMove : MonoBehaviour
                 GameObject healEffect = Instantiate(healpart, healEffectPosition, Quaternion.identity);
                 Destroy(healEffect, 0.3f);
                 StartCoroutine(UltraIncreaseEnergyOverTime(10f));
-                
+
+
             }
         }
     }
@@ -379,6 +380,7 @@ public class PlayerMove : MonoBehaviour
         }
 
         state.currentEnergy = 100f;
+        spriteRenderer.material = origin_Material;
     }
 
     //스킬1
@@ -628,6 +630,8 @@ public class PlayerMove : MonoBehaviour
                 MovePlayerToPosition(floor1to0_position);
                 map.floor = 0;
                 SoundManager.instance.PlayBgm(SoundManager.Bgm.Boss, true);
+                BossCtrl.instance.InitBoss();
+                map.boss_sceen1.SetActive(true);
             }
 
 

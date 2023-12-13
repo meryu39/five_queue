@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+
 public class Map_Unit : MonoBehaviour
 {
 
@@ -11,8 +13,11 @@ public class Map_Unit : MonoBehaviour
     public GameObject Unit3F;
     public GameObject Unit2F;
     public GameObject Unit1F;
-
     public GameObject helper;
+
+    public GameObject boss_sceen1;
+    public GameObject boss_sceen2;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,13 +38,14 @@ public class Map_Unit : MonoBehaviour
                 break;
             case 2:
                 Unit2F.SetActive(true);
-
                 break;
             case 1:
+           
                 Unit1F.SetActive(true);
-
                 break;
             case 0:
+                
+
                 UnitLobby.SetActive(true);
                 break;
             /*case 5:
@@ -48,13 +54,27 @@ public class Map_Unit : MonoBehaviour
 */
         }
     }
-
+    
     public void set_help()
     {
-        //helper.SetActive(true);
+        helper.SetActive(true);
     }
     public void set_help_Not()
     {
         helper.SetActive(false);
+    }
+
+    public void boss_sceen()
+    {
+        boss_sceen1.SetActive(false);
+        boss_sceen2.SetActive(true);
+    }
+
+    public void delete_sceen()
+    {
+        if (Input.anyKeyDown)
+        {
+            helper.SetActive(false);
+        }
     }
 }
